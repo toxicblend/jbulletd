@@ -23,7 +23,7 @@
 
 package com.bulletphysics.collision.shapes;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * TriangleCallback provides a callback for each overlapping triangle when calling
@@ -37,6 +37,6 @@ import javax.vecmath.Vector3f;
  */
 public abstract class TriangleCallback {
 
-	public abstract void processTriangle(Vector3f[] triangle, int partId, int triangleIndex);
+	public abstract void processTriangle(Vector3d[] triangle, int partId, int triangleIndex);
 	
 }

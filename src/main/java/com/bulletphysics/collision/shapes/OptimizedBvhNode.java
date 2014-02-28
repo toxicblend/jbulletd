@@ -24,7 +24,7 @@
 package com.bulletphysics.collision.shapes;
 
 import java.io.Serializable;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * OptimizedBvhNode contains both internal and leaf node information.
@@ -35,8 +35,8 @@ public class OptimizedBvhNode implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public final Vector3f aabbMinOrg = new Vector3f();
-	public final Vector3f aabbMaxOrg = new Vector3f();
+	public final Vector3d aabbMinOrg = new Vector3d();
+	public final Vector3d aabbMaxOrg = new Vector3d();
 
 	public int escapeIndex;
 

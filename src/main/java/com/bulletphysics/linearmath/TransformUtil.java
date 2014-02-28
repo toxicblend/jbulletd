@@ -24,9 +24,9 @@
 package com.bulletphysics.linearmath;
 
 import com.bulletphysics.BulletGlobals;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Quat4d;
+import javax.vecmath.Vector3d;
 
 /**
  * Utility functions for transforms.
@@ -35,26 +35,26 @@ import javax.vecmath.Vector3f;
  */
 public class TransformUtil {
 	
-	public static final float SIMDSQRT12 = 0.7071067811865475244008443621048490f;
-	public static final float ANGULAR_MOTION_THRESHOLD = 0.5f*BulletGlobals.SIMD_HALF_PI;
+	public static final double SIMDSQRT12 = 0.7071067811865475244008443621048490f;
+	public static final double ANGULAR_MOTION_THRESHOLD = 0.5f*BulletGlobals.SIMD_HALF_PI;
 	
-	public static float recipSqrt(float x) {
-		return 1f / (float)Math.sqrt(x);  /* reciprocal square root */
+	public static double recipSqrt(double x) {
+		return 1f / (double)Math.sqrt(x);  /* reciprocal square root */
 	}
 
-	public static void planeSpace1(Vector3f n, Vector3f p, Vector3f q) {
+	public static void planeSpace1(Vector3d n, Vector3d p, Vector3d q) {
 		if (Math.abs(n.z) > SIMDSQRT12) {
 			// choose p in y-z plane
-			float a = n.y * n.y + n.z * n.z;
-			float k = recipSqrt(a);
+			double a = n.y * n.y + n.z * n.z;
+			double k = recipSqrt(a);
 			p.set(0, -n.z * k, n.y * k);
 			// set q = n x p
 			q.set(a * k, -n.x * p.z, n.x * p.y);
 		}
 		else {
 			// choose p in x-y plane
-			float a = n.x * n.x + n.y * n.y;
-			float k = recipSqrt(a);
+			double a = n.x * n.x + n.y * n.y;
+			double k = recipSqrt(a);
 			p.set(-n.y * k, n.x * k, 0);
 			// set q = n x p
 			q.set(-n.z * p.y, n.z * p.x, a * k);
@@ -62,7 +62,7 @@ public class TransformUtil {
 	}
 	
 	//@StaticAlloc
-	public static void integrateTransform(Transform curTrans, Vector3f linvel, Vector3f angvel, float timeStep, Transform predictedTransform) {
+	public static void integrateTransform(Transform curTrans, Vector3d linvel, Vector3d angvel, double timeStep, Transform predictedTransform) {
 		predictedTransform.origin.scaleAdd(timeStep, linvel, curTrans.origin);
 //	//#define QUATERNION_DERIVATIVE
 //	#ifdef QUATERNION_DERIVATIVE
@@ -73,8 +73,8 @@ public class TransformUtil {
 		// Exponential map
 		// google for "Practical Parameterization of Rotations Using the Exponential Map", F. Sebastian Grassia
 		
-		Vector3f axis = new Vector3f();
-		float fAngle = angvel.length();
+		Vector3d axis = new Vector3d();
+		double fAngle = angvel.length();
 
 		// limit the angular motion
 		if (fAngle * timeStep > ANGULAR_MOTION_THRESHOLD) {
@@ -87,48 +87,48 @@ public class TransformUtil {
 		}
 		else {
 			// sync(fAngle) = sin(c*fAngle)/t
-			axis.scale((float) Math.sin(0.5f * fAngle * timeStep) / fAngle, angvel);
+			axis.scale((double) Math.sin(0.5f * fAngle * timeStep) / fAngle, angvel);
 		}
-		Quat4f dorn = new Quat4f();
-		dorn.set(axis.x, axis.y, axis.z, (float) Math.cos(fAngle * timeStep * 0.5f));
-		Quat4f orn0 = curTrans.getRotation(new Quat4f());
+		Quat4d dorn = new Quat4d();
+		dorn.set(axis.x, axis.y, axis.z, (double) Math.cos(fAngle * timeStep * 0.5f));
+		Quat4d orn0 = curTrans.getRotation(new Quat4d());
 
-		Quat4f predictedOrn = new Quat4f();
+		Quat4d predictedOrn = new Quat4d();
 		predictedOrn.mul(dorn, orn0);
 		predictedOrn.normalize();
 //  #endif
 		predictedTransform.setRotation(predictedOrn);
 	}
 
-	public static void calculateVelocity(Transform transform0, Transform transform1, float timeStep, Vector3f linVel, Vector3f angVel) {
+	public static void calculateVelocity(Transform transform0, Transform transform1, double timeStep, Vector3d linVel, Vector3d angVel) {
 		linVel.sub(transform1.origin, transform0.origin);
 		linVel.scale(1f / timeStep);
 
-		Vector3f axis = new Vector3f();
-		float[] angle = new float[1];
+		Vector3d axis = new Vector3d();
+		double[] angle = new double[1];
 		calculateDiffAxisAngle(transform0, transform1, axis, angle);
 		angVel.scale(angle[0] / timeStep, axis);
 	}
 	
-	public static void calculateDiffAxisAngle(Transform transform0, Transform transform1, Vector3f axis, float[] angle) {
+	public static void calculateDiffAxisAngle(Transform transform0, Transform transform1, Vector3d axis, double[] angle) {
 // #ifdef USE_QUATERNION_DIFF
 //		btQuaternion orn0 = transform0.getRotation();
 //		btQuaternion orn1a = transform1.getRotation();
 //		btQuaternion orn1 = orn0.farthest(orn1a);
 //		btQuaternion dorn = orn1 * orn0.inverse();
 // #else
-		Matrix3f tmp = new Matrix3f();
+		Matrix3d tmp = new Matrix3d();
 		tmp.set(transform0.basis);
 		MatrixUtil.invert(tmp);
 
-		Matrix3f dmat = new Matrix3f();
+		Matrix3d dmat = new Matrix3d();
 		dmat.mul(transform1.basis, tmp);
 
-		Quat4f dorn = new Quat4f();
+		Quat4d dorn = new Quat4d();
 		MatrixUtil.getRotation(dmat, dorn);
 // #endif
 
-		// floating point inaccuracy can lead to w component > 1..., which breaks 
+		// doubleing point inaccuracy can lead to w component > 1..., which breaks 
 
 		dorn.normalize();
 
@@ -138,12 +138,12 @@ public class TransformUtil {
 		//axis[3] = btScalar(0.);
 
 		// check for axis length
-		float len = axis.lengthSquared();
+		double len = axis.lengthSquared();
 		if (len < BulletGlobals.FLT_EPSILON * BulletGlobals.FLT_EPSILON) {
 			axis.set(1f, 0f, 0f);
 		}
 		else {
-			axis.scale(1f / (float) Math.sqrt(len));
+			axis.scale(1f / Math.sqrt(len));
 		}
 	}
 	

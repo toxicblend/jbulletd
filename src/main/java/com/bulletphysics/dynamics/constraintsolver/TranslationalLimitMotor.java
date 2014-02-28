@@ -32,7 +32,7 @@ package com.bulletphysics.dynamics.constraintsolver;
 
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  *
@@ -42,13 +42,13 @@ public class TranslationalLimitMotor {
 	
 	//protected final BulletStack stack = BulletStack.get();
 	
-	public final Vector3f lowerLimit = new Vector3f(); //!< the constraint lower limits
-	public final Vector3f upperLimit = new Vector3f(); //!< the constraint upper limits
-	public final Vector3f accumulatedImpulse = new Vector3f();
+	public final Vector3d lowerLimit = new Vector3d(); //!< the constraint lower limits
+	public final Vector3d upperLimit = new Vector3d(); //!< the constraint upper limits
+	public final Vector3d accumulatedImpulse = new Vector3d();
 	
-	public float limitSoftness; //!< Softness for linear limit
-	public float damping; //!< Damping for linear limit
-	public float restitution; //! Bounce parameter for linear limit
+	public double limitSoftness; //!< Softness for linear limit
+	public double damping; //!< Damping for linear limit
+	public double restitution; //! Bounce parameter for linear limit
 
 	public TranslationalLimitMotor() {
 		lowerLimit.set(0f, 0f, 0f);
@@ -82,36 +82,36 @@ public class TranslationalLimitMotor {
 	}
 
 	//@StaticAlloc
-	public float solveLinearAxis(float timeStep, float jacDiagABInv, RigidBody body1, Vector3f pointInA, RigidBody body2, Vector3f pointInB, int limit_index, Vector3f axis_normal_on_a, Vector3f anchorPos) {
-		Vector3f tmp = new Vector3f();
-		Vector3f tmpVec = new Vector3f();
+	public double solveLinearAxis(double timeStep, double jacDiagABInv, RigidBody body1, Vector3d pointInA, RigidBody body2, Vector3d pointInB, int limit_index, Vector3d axis_normal_on_a, Vector3d anchorPos) {
+		Vector3d tmp = new Vector3d();
+		Vector3d tmpVec = new Vector3d();
 		
 		// find relative velocity
-		Vector3f rel_pos1 = new Vector3f();
+		Vector3d rel_pos1 = new Vector3d();
 		//rel_pos1.sub(pointInA, body1.getCenterOfMassPosition(tmpVec));
 		rel_pos1.sub(anchorPos, body1.getCenterOfMassPosition(tmpVec));
 
-		Vector3f rel_pos2 = new Vector3f();
+		Vector3d rel_pos2 = new Vector3d();
 		//rel_pos2.sub(pointInB, body2.getCenterOfMassPosition(tmpVec));
 		rel_pos2.sub(anchorPos, body2.getCenterOfMassPosition(tmpVec));
 
-		Vector3f vel1 = body1.getVelocityInLocalPoint(rel_pos1, new Vector3f());
-		Vector3f vel2 = body2.getVelocityInLocalPoint(rel_pos2, new Vector3f());
-		Vector3f vel = new Vector3f();
+		Vector3d vel1 = body1.getVelocityInLocalPoint(rel_pos1, new Vector3d());
+		Vector3d vel2 = body2.getVelocityInLocalPoint(rel_pos2, new Vector3d());
+		Vector3d vel = new Vector3d();
 		vel.sub(vel1, vel2);
 
-		float rel_vel = axis_normal_on_a.dot(vel);
+		double rel_vel = axis_normal_on_a.dot(vel);
 
 		// apply displacement correction
 
 		// positional error (zeroth order error)
 		tmp.sub(pointInA, pointInB);
-		float depth = -(tmp).dot(axis_normal_on_a);
-		float lo = -1e30f;
-		float hi = 1e30f;
+		double depth = -(tmp).dot(axis_normal_on_a);
+		double lo = -1e30f;
+		double hi = 1e30f;
 
-		float minLimit = VectorUtil.getCoord(lowerLimit, limit_index);
-		float maxLimit = VectorUtil.getCoord(upperLimit, limit_index);
+		double minLimit = VectorUtil.getCoord(lowerLimit, limit_index);
+		double maxLimit = VectorUtil.getCoord(upperLimit, limit_index);
 
 		// handle the limits
 		if (minLimit < maxLimit) {
@@ -133,14 +133,14 @@ public class TranslationalLimitMotor {
 			}
 		}
 
-		float normalImpulse = limitSoftness * (restitution * depth / timeStep - damping * rel_vel) * jacDiagABInv;
+		double normalImpulse = limitSoftness * (restitution * depth / timeStep - damping * rel_vel) * jacDiagABInv;
 
-		float oldNormalImpulse = VectorUtil.getCoord(accumulatedImpulse, limit_index);
-		float sum = oldNormalImpulse + normalImpulse;
+		double oldNormalImpulse = VectorUtil.getCoord(accumulatedImpulse, limit_index);
+		double sum = oldNormalImpulse + normalImpulse;
 		VectorUtil.setCoord(accumulatedImpulse, limit_index, sum > hi ? 0f : sum < lo ? 0f : sum);
 		normalImpulse = VectorUtil.getCoord(accumulatedImpulse, limit_index) - oldNormalImpulse;
 
-		Vector3f impulse_vector = new Vector3f();
+		Vector3d impulse_vector = new Vector3d();
 		impulse_vector.scale(normalImpulse, axis_normal_on_a);
 		body1.applyImpulse(impulse_vector, rel_pos1);
 

@@ -32,7 +32,7 @@ import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.TriangleCallback;
 import com.bulletphysics.collision.shapes.TriangleShape;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * For each triangle in the concave mesh that overlaps with the AABB of a convex
@@ -47,14 +47,14 @@ class ConvexTriangleCallback extends TriangleCallback {
 	private CollisionObject convexBody;
 	private CollisionObject triBody;
 
-	private final Vector3f aabbMin = new Vector3f();
-	private final Vector3f aabbMax = new Vector3f();
+	private final Vector3d aabbMin = new Vector3d();
+	private final Vector3d aabbMax = new Vector3d();
 
 	private ManifoldResult resultOut;
 
 	private Dispatcher dispatcher;
 	private DispatcherInfo dispatchInfoPtr;
-	private float collisionMarginTriangle;
+	private double collisionMarginTriangle;
 	
 	public int triangleCount;
 	public PersistentManifold manifoldPtr;
@@ -79,7 +79,7 @@ class ConvexTriangleCallback extends TriangleCallback {
 		dispatcher.releaseManifold(manifoldPtr);
 	}
 
-	public void setTimeStepAndCounters(float collisionMarginTriangle, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+	public void setTimeStepAndCounters(double collisionMarginTriangle, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
 		this.dispatchInfoPtr = dispatchInfo;
 		this.collisionMarginTriangle = collisionMarginTriangle;
 		this.resultOut = resultOut;
@@ -94,8 +94,8 @@ class ConvexTriangleCallback extends TriangleCallback {
 		CollisionShape convexShape = (CollisionShape)convexBody.getCollisionShape();
 		//CollisionShape* triangleShape = static_cast<btCollisionShape*>(triBody->m_collisionShape);
 		convexShape.getAabb(convexInTriangleSpace, aabbMin, aabbMax);
-		float extraMargin = collisionMarginTriangle;
-		Vector3f extra = new Vector3f();
+		double extraMargin = collisionMarginTriangle;
+		Vector3d extra = new Vector3d();
 		extra.set(extraMargin, extraMargin, extraMargin);
 
 		aabbMax.add(extra);
@@ -105,7 +105,7 @@ class ConvexTriangleCallback extends TriangleCallback {
 	private CollisionAlgorithmConstructionInfo ci = new CollisionAlgorithmConstructionInfo();
 	private TriangleShape tm = new TriangleShape();
 	
-	public void processTriangle(Vector3f[] triangle, int partId, int triangleIndex) {
+	public void processTriangle(Vector3d[] triangle, int partId, int triangleIndex) {
 		// just for debugging purposes
 		//printf("triangle %d",m_triangleCount++);
 
@@ -117,12 +117,12 @@ class ConvexTriangleCallback extends TriangleCallback {
 
 		// debug drawing of the overlapping triangles
 		if (dispatchInfoPtr != null && dispatchInfoPtr.debugDraw != null && dispatchInfoPtr.debugDraw.getDebugMode() > 0) {
-			Vector3f color = new Vector3f();
+			Vector3d color = new Vector3d();
 			color.set(255, 255, 0);
 			Transform tr = ob.getWorldTransform(new Transform());
 
-			Vector3f tmp1 = new Vector3f();
-			Vector3f tmp2 = new Vector3f();
+			Vector3d tmp1 = new Vector3d();
+			Vector3d tmp2 = new Vector3d();
 
 			tmp1.set(triangle[0]); tr.transform(tmp1);
 			tmp2.set(triangle[1]); tr.transform(tmp2);
@@ -170,12 +170,12 @@ class ConvexTriangleCallback extends TriangleCallback {
 		dispatcher.clearManifold(manifoldPtr);
 	}
 
-	public Vector3f getAabbMin(Vector3f out) {
+	public Vector3d getAabbMin(Vector3d out) {
 		out.set(aabbMin);
 		return out;
 	}
 
-	public Vector3f getAabbMax(Vector3f out) {
+	public Vector3d getAabbMax(Vector3d out) {
 		out.set(aabbMax);
 		return out;
 	}

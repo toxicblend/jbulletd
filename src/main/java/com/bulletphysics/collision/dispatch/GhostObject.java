@@ -30,8 +30,8 @@ import com.bulletphysics.linearmath.AabbUtil2;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.TransformUtil;
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Quat4d;
+import javax.vecmath.Vector3d;
 
 /**
  * GhostObject can keep track of all objects that are overlapping. By default, this
@@ -77,24 +77,24 @@ public class GhostObject extends CollisionObject {
 		}
 	}
 
-	public void convexSweepTest(ConvexShape castShape, Transform convexFromWorld, Transform convexToWorld, CollisionWorld.ConvexResultCallback resultCallback, float allowedCcdPenetration) {
+	public void convexSweepTest(ConvexShape castShape, Transform convexFromWorld, Transform convexToWorld, CollisionWorld.ConvexResultCallback resultCallback, double allowedCcdPenetration) {
 		Transform convexFromTrans = new Transform();
 		Transform convexToTrans = new Transform();
 
 		convexFromTrans.set(convexFromWorld);
 		convexToTrans.set(convexToWorld);
 
-		Vector3f castShapeAabbMin = new Vector3f();
-		Vector3f castShapeAabbMax = new Vector3f();
+		Vector3d castShapeAabbMin = new Vector3d();
+		Vector3d castShapeAabbMax = new Vector3d();
 
 		// compute AABB that encompasses angular movement
 		{
-			Vector3f linVel = new Vector3f();
-			Vector3f angVel = new Vector3f();
+			Vector3d linVel = new Vector3d();
+			Vector3d angVel = new Vector3d();
 			TransformUtil.calculateVelocity(convexFromTrans, convexToTrans, 1f, linVel, angVel);
 			Transform R = new Transform();
 			R.setIdentity();
-			R.setRotation(convexFromTrans.getRotation(new Quat4f()));
+			R.setRotation(convexFromTrans.getRotation(new Quat4d()));
 			castShape.calculateTemporalAabb(R, linVel, angVel, 1f, castShapeAabbMin, castShapeAabbMax);
 		}
 
@@ -108,12 +108,12 @@ public class GhostObject extends CollisionObject {
 			// only perform raycast if filterMask matches
 			if (resultCallback.needsCollision(collisionObject.getBroadphaseHandle())) {
 				//RigidcollisionObject* collisionObject = ctrl->GetRigidcollisionObject();
-				Vector3f collisionObjectAabbMin = new Vector3f();
-				Vector3f collisionObjectAabbMax = new Vector3f();
+				Vector3d collisionObjectAabbMin = new Vector3d();
+				Vector3d collisionObjectAabbMax = new Vector3d();
 				collisionObject.getCollisionShape().getAabb(collisionObject.getWorldTransform(tmpTrans), collisionObjectAabbMin, collisionObjectAabbMax);
 				AabbUtil2.aabbExpand(collisionObjectAabbMin, collisionObjectAabbMax, castShapeAabbMin, castShapeAabbMax);
-				float[] hitLambda = new float[]{1f}; // could use resultCallback.closestHitFraction, but needs testing
-				Vector3f hitNormal = new Vector3f();
+				double[] hitLambda = new double[]{1f}; // could use resultCallback.closestHitFraction, but needs testing
+				Vector3d hitNormal = new Vector3d();
 				if (AabbUtil2.rayAabb(convexFromWorld.origin, convexToWorld.origin, collisionObjectAabbMin, collisionObjectAabbMax, hitLambda, hitNormal)) {
 					CollisionWorld.objectQuerySingle(castShape, convexFromTrans, convexToTrans,
 					                                 collisionObject,
@@ -126,7 +126,7 @@ public class GhostObject extends CollisionObject {
 		}
 	}
 
-	public void rayTest(Vector3f rayFromWorld, Vector3f rayToWorld, CollisionWorld.RayResultCallback resultCallback) {
+	public void rayTest(Vector3d rayFromWorld, Vector3d rayToWorld, CollisionWorld.RayResultCallback resultCallback) {
 		Transform rayFromTrans = new Transform();
 		rayFromTrans.setIdentity();
 		rayFromTrans.origin.set(rayFromWorld);

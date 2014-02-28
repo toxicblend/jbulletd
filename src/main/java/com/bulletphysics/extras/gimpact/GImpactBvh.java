@@ -31,7 +31,7 @@ import com.bulletphysics.extras.gimpact.BoxCollision.AABB;
 import com.bulletphysics.extras.gimpact.BoxCollision.BoxBoxTransformCache;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.IntArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  *
@@ -180,7 +180,7 @@ class GImpactBvh {
 	/**
 	 * Returns the indices of the primitives in the primitive_manager field.
 	 */
-	public boolean rayQuery(Vector3f ray_dir, Vector3f ray_origin, IntArrayList collided_results) {
+	public boolean rayQuery(Vector3d ray_dir, Vector3d ray_origin, IntArrayList collided_results) {
 		int curIndex = 0;
 		int numNodes = getNodeCount();
 
@@ -354,7 +354,7 @@ class GImpactBvh {
 		} // else if node0 is not a leaf
 	}
 	
-	//public static float getAverageTreeCollisionTime();
+	//public static double getAverageTreeCollisionTime();
 
 	public static void find_collision(GImpactBvh boxset0, Transform trans0, GImpactBvh boxset1, Transform trans1, PairSet collision_pairs) {
 		if (boxset0.getNodeCount() == 0 || boxset1.getNodeCount() == 0) {

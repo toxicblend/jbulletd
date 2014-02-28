@@ -26,7 +26,7 @@ package com.bulletphysics.dynamics.constraintsolver;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.TransformUtil;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * SolverBody is an internal data structure for the constraint solver. Only necessary
@@ -38,19 +38,19 @@ public class SolverBody {
 	
 	//protected final BulletStack stack = BulletStack.get();
 
-	public final Vector3f angularVelocity = new Vector3f();
-	public float angularFactor;
-	public float invMass;
-	public float friction;
+	public final Vector3d angularVelocity = new Vector3d();
+	public double angularFactor;
+	public double invMass;
+	public double friction;
 	public RigidBody originalBody;
-	public final Vector3f linearVelocity = new Vector3f();
-	public final Vector3f centerOfMassPosition = new Vector3f();
+	public final Vector3d linearVelocity = new Vector3d();
+	public final Vector3d centerOfMassPosition = new Vector3d();
 
-	public final Vector3f pushVelocity = new Vector3f();
-	public final Vector3f turnVelocity = new Vector3f();
+	public final Vector3d pushVelocity = new Vector3d();
+	public final Vector3d turnVelocity = new Vector3d();
 	
-	public void getVelocityInLocalPoint(Vector3f rel_pos, Vector3f velocity) {
-		Vector3f tmp = new Vector3f();
+	public void getVelocityInLocalPoint(Vector3d rel_pos, Vector3d velocity) {
+		Vector3d tmp = new Vector3d();
 		tmp.cross(angularVelocity, rel_pos);
 		velocity.add(linearVelocity, tmp);
 	}
@@ -58,14 +58,14 @@ public class SolverBody {
 	/**
 	 * Optimization for the iterative solver: avoid calculating constant terms involving inertia, normal, relative position.
 	 */
-	public void internalApplyImpulse(Vector3f linearComponent, Vector3f angularComponent, float impulseMagnitude) {
+	public void internalApplyImpulse(Vector3d linearComponent, Vector3d angularComponent, double impulseMagnitude) {
 		if (invMass != 0f) {
 			linearVelocity.scaleAdd(impulseMagnitude, linearComponent, linearVelocity);
 			angularVelocity.scaleAdd(impulseMagnitude * angularFactor, angularComponent, angularVelocity);
 		}
 	}
 
-	public void internalApplyPushImpulse(Vector3f linearComponent, Vector3f angularComponent, float impulseMagnitude) {
+	public void internalApplyPushImpulse(Vector3d linearComponent, Vector3d angularComponent, double impulseMagnitude) {
 		if (invMass != 0f) {
 			pushVelocity.scaleAdd(impulseMagnitude, linearComponent, pushVelocity);
 			turnVelocity.scaleAdd(impulseMagnitude * angularFactor, angularComponent, turnVelocity);
@@ -80,7 +80,7 @@ public class SolverBody {
 		}
 	}
 
-	public void writebackVelocity(float timeStep) {
+	public void writebackVelocity(double timeStep) {
 		if (invMass != 0f) {
 			originalBody.setLinearVelocity(linearVelocity);
 			originalBody.setAngularVelocity(angularVelocity);

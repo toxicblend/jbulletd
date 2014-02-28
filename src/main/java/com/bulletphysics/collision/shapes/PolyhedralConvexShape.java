@@ -26,7 +26,7 @@ package com.bulletphysics.collision.shapes;
 import com.bulletphysics.linearmath.AabbUtil2;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * PolyhedralConvexShape is an internal interface class for polyhedral convex shapes.
@@ -35,51 +35,51 @@ import javax.vecmath.Vector3f;
  */
 public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 
-	private static Vector3f[] _directions = new Vector3f[] {
-		new Vector3f( 1f,  0f,  0f),
-		new Vector3f( 0f,  1f,  0f),
-		new Vector3f( 0f,  0f,  1f),
-		new Vector3f(-1f,  0f,  0f),
-		new Vector3f( 0f, -1f,  0f),
-		new Vector3f( 0f,  0f, -1f)
+	private static Vector3d[] _directions = new Vector3d[] {
+		new Vector3d( 1f,  0f,  0f),
+		new Vector3d( 0f,  1f,  0f),
+		new Vector3d( 0f,  0f,  1f),
+		new Vector3d(-1f,  0f,  0f),
+		new Vector3d( 0f, -1f,  0f),
+		new Vector3d( 0f,  0f, -1f)
 	};
 
-	private static Vector3f[] _supporting = new Vector3f[] {
-		new Vector3f(0f, 0f, 0f),
-		new Vector3f(0f, 0f, 0f),
-		new Vector3f(0f, 0f, 0f),
-		new Vector3f(0f, 0f, 0f),
-		new Vector3f(0f, 0f, 0f),
-		new Vector3f(0f, 0f, 0f)
+	private static Vector3d[] _supporting = new Vector3d[] {
+		new Vector3d(0f, 0f, 0f),
+		new Vector3d(0f, 0f, 0f),
+		new Vector3d(0f, 0f, 0f),
+		new Vector3d(0f, 0f, 0f),
+		new Vector3d(0f, 0f, 0f),
+		new Vector3d(0f, 0f, 0f)
 	};
 	
-	protected final Vector3f localAabbMin = new Vector3f(1f, 1f, 1f);
-	protected final Vector3f localAabbMax = new Vector3f(-1f, -1f, -1f);
+	protected final Vector3d localAabbMin = new Vector3d(1f, 1f, 1f);
+	protected final Vector3d localAabbMax = new Vector3d(-1f, -1f, -1f);
 	protected boolean isLocalAabbValid = false;
 
 //	/** optional Hull is for optional Separating Axis Test Hull collision detection, see Hull.cpp */
 //	public Hull optionalHull = null;
 	
 	@Override
-	public Vector3f localGetSupportingVertexWithoutMargin(Vector3f vec0, Vector3f out) {
+	public Vector3d localGetSupportingVertexWithoutMargin(Vector3d vec0, Vector3d out) {
 		int i;
-		Vector3f supVec = out;
+		Vector3d supVec = out;
 		supVec.set(0f, 0f, 0f);
 
-		float maxDot = -1e30f;
+		double maxDot = -1e30f;
 
-		Vector3f vec = new Vector3f(vec0);
-		float lenSqr = vec.lengthSquared();
+		Vector3d vec = new Vector3d(vec0);
+		double lenSqr = vec.lengthSquared();
 		if (lenSqr < 0.0001f) {
 			vec.set(1f, 0f, 0f);
 		}
 		else {
-			float rlen = 1f / (float) Math.sqrt(lenSqr);
+			double rlen = 1f / Math.sqrt(lenSqr);
 			vec.scale(rlen);
 		}
 
-		Vector3f vtx = new Vector3f();
-		float newDot;
+		Vector3d vtx = new Vector3d();
+		double newDot;
 
 		for (i = 0; i < getNumVertices(); i++) {
 			getVertex(i, vtx);
@@ -94,15 +94,15 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3f[] vectors, Vector3f[] supportVerticesOut, int numVectors) {
+	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3d[] vectors, Vector3d[] supportVerticesOut, int numVectors) {
 		int i;
 
-		Vector3f vtx = new Vector3f();
-		float newDot;
+		Vector3d vtx = new Vector3d();
+		double newDot;
 
 		// JAVA NOTE: rewritten as code used W coord for temporary usage in Vector3
 		// TODO: optimize it
-		float[] wcoords = new float[numVectors];
+		double[] wcoords = new double[numVectors];
 
 		for (i = 0; i < numVectors; i++) {
 			// TODO: used w in vector3:
@@ -111,7 +111,7 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 		}
 
 		for (int j = 0; j < numVectors; j++) {
-			Vector3f vec = vectors[j];
+			Vector3d vec = vectors[j];
 
 			for (i = 0; i < getNumVertices(); i++) {
 				getVertex(i, vtx);
@@ -128,33 +128,33 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
 		// not yet, return box inertia
 
-		float margin = getMargin();
+		double margin = getMargin();
 
 		Transform ident = new Transform();
 		ident.setIdentity();
-		Vector3f aabbMin = new Vector3f(), aabbMax = new Vector3f();
+		Vector3d aabbMin = new Vector3d(), aabbMax = new Vector3d();
 		getAabb(ident, aabbMin, aabbMax);
 
-		Vector3f halfExtents = new Vector3f();
+		Vector3d halfExtents = new Vector3d();
 		halfExtents.sub(aabbMax, aabbMin);
 		halfExtents.scale(0.5f);
 
-		float lx = 2f * (halfExtents.x + margin);
-		float ly = 2f * (halfExtents.y + margin);
-		float lz = 2f * (halfExtents.z + margin);
-		float x2 = lx * lx;
-		float y2 = ly * ly;
-		float z2 = lz * lz;
-		float scaledmass = mass * 0.08333333f;
+		double lx = 2f * (halfExtents.x + margin);
+		double ly = 2f * (halfExtents.y + margin);
+		double lz = 2f * (halfExtents.z + margin);
+		double x2 = lx * lx;
+		double y2 = ly * ly;
+		double z2 = lz * lz;
+		double scaledmass = mass * 0.08333333f;
 
 		inertia.set(y2 + z2, x2 + z2, x2 + y2);
 		inertia.scale(scaledmass);
 	}
 
-	private void getNonvirtualAabb(Transform trans, Vector3f aabbMin, Vector3f aabbMax, float margin) {
+	private void getNonvirtualAabb(Transform trans, Vector3d aabbMin, Vector3d aabbMax, double margin) {
 		// lazy evaluation of local aabb
 		assert (isLocalAabbValid);
 
@@ -162,11 +162,11 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 	}
 	
 	@Override
-	public void getAabb(Transform trans, Vector3f aabbMin, Vector3f aabbMax) {
+	public void getAabb(Transform trans, Vector3d aabbMin, Vector3d aabbMax) {
 		getNonvirtualAabb(trans, aabbMin, aabbMax, getMargin());
 	}
 
-	protected final void _PolyhedralConvexShape_getAabb(Transform trans, Vector3f aabbMin, Vector3f aabbMax) {
+	protected final void _PolyhedralConvexShape_getAabb(Transform trans, Vector3d aabbMin, Vector3d aabbMax) {
 		getNonvirtualAabb(trans, aabbMin, aabbMax, getMargin());
 	}
 
@@ -184,10 +184,10 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 		
 		//#else
 		//for (int i=0; i<3; i++) {
-		//	Vector3f vec = new Vector3f();
+		//	Vector3d vec = new Vector3d();
 		//	vec.set(0f, 0f, 0f);
 		//	VectorUtil.setCoord(vec, i, 1f);
-		//	Vector3f tmp = localGetSupportingVertex(vec, new Vector3f());
+		//	Vector3d tmp = localGetSupportingVertex(vec, new Vector3d());
 		//	VectorUtil.setCoord(localAabbMax, i, VectorUtil.getCoord(tmp, i) + collisionMargin);
 		//	VectorUtil.setCoord(vec, i, -1f);
 		//	localGetSupportingVertex(vec, tmp);
@@ -197,7 +197,7 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void setLocalScaling(Vector3f scaling) {
+	public void setLocalScaling(Vector3d scaling) {
 		super.setLocalScaling(scaling);
 		recalcLocalAabb();
 	}
@@ -206,16 +206,16 @@ public abstract class PolyhedralConvexShape extends ConvexInternalShape {
 
 	public abstract int getNumEdges();
 
-	public abstract void getEdge(int i, Vector3f pa, Vector3f pb);
+	public abstract void getEdge(int i, Vector3d pa, Vector3d pb);
 
-	public abstract void getVertex(int i, Vector3f vtx);
+	public abstract void getVertex(int i, Vector3d vtx);
 
 	public abstract int getNumPlanes();
 
-	public abstract void getPlane(Vector3f planeNormal, Vector3f planeSupport, int i);
+	public abstract void getPlane(Vector3d planeNormal, Vector3d planeSupport, int i);
 	
 //	public abstract  int getIndex(int i) const = 0 ; 
 	
-	public abstract boolean isInside(Vector3f pt, float tolerance);
+	public abstract boolean isInside(Vector3d pt, double tolerance);
 	
 }

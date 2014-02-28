@@ -24,7 +24,7 @@
 package com.bulletphysics.collision.broadphase;
 
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * SimpleBroadphase is just a unit-test for {@link AxisSweep3}, {@link AxisSweep3_32},
@@ -57,7 +57,7 @@ public class SimpleBroadphase extends BroadphaseInterface {
 		}
 	}
 
-	public BroadphaseProxy createProxy(Vector3f aabbMin, Vector3f aabbMax, BroadphaseNativeType shapeType, Object userPtr, short collisionFilterGroup, short collisionFilterMask, Dispatcher dispatcher, Object multiSapProxy) {
+	public BroadphaseProxy createProxy(Vector3d aabbMin, Vector3d aabbMax, BroadphaseNativeType shapeType, Object userPtr, short collisionFilterGroup, short collisionFilterMask, Dispatcher dispatcher, Object multiSapProxy) {
 		assert (aabbMin.x <= aabbMax.x && aabbMin.y <= aabbMax.y && aabbMin.z <= aabbMax.z);
 
 		SimpleBroadphaseProxy proxy = new SimpleBroadphaseProxy(aabbMin, aabbMax, shapeType, userPtr, collisionFilterGroup, collisionFilterMask, multiSapProxy);
@@ -72,7 +72,7 @@ public class SimpleBroadphase extends BroadphaseInterface {
 		pairCache.removeOverlappingPairsContainingProxy(proxyOrg, dispatcher);
 	}
 
-	public void setAabb(BroadphaseProxy proxy, Vector3f aabbMin, Vector3f aabbMax, Dispatcher dispatcher) {
+	public void setAabb(BroadphaseProxy proxy, Vector3d aabbMin, Vector3d aabbMax, Dispatcher dispatcher) {
 		SimpleBroadphaseProxy sbp = (SimpleBroadphaseProxy)proxy;
 		sbp.min.set(aabbMin);
 		sbp.max.set(aabbMax);
@@ -113,7 +113,7 @@ public class SimpleBroadphase extends BroadphaseInterface {
 		return pairCache;
 	}
 
-	public void getBroadphaseAabb(Vector3f aabbMin, Vector3f aabbMax) {
+	public void getBroadphaseAabb(Vector3d aabbMin, Vector3d aabbMax) {
 		aabbMin.set(-1e30f, -1e30f, -1e30f);
 		aabbMax.set(1e30f, 1e30f, 1e30f);
 	}

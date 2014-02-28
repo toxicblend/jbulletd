@@ -32,7 +32,7 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.ObjectArrayList;
 import com.bulletphysics.util.ObjectPool;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * Provides collision detection between two spheres.
@@ -83,12 +83,12 @@ public class SphereSphereCollisionAlgorithm extends CollisionAlgorithm {
 		SphereShape sphere0 = (SphereShape) col0.getCollisionShape();
 		SphereShape sphere1 = (SphereShape) col1.getCollisionShape();
 
-		Vector3f diff = new Vector3f();
+		Vector3d diff = new Vector3d();
 		diff.sub(col0.getWorldTransform(tmpTrans1).origin, col1.getWorldTransform(tmpTrans2).origin);
 
-		float len = diff.length();
-		float radius0 = sphere0.getRadius();
-		float radius1 = sphere1.getRadius();
+		double len = diff.length();
+		double radius0 = sphere0.getRadius();
+		double radius1 = sphere1.getRadius();
 
 		//#ifdef CLEAR_MANIFOLD
 		//manifoldPtr.clearManifold(); // don't do this, it disables warmstarting
@@ -102,23 +102,23 @@ public class SphereSphereCollisionAlgorithm extends CollisionAlgorithm {
 			return;
 		}
 		// distance (negative means penetration)
-		float dist = len - (radius0 + radius1);
+		double dist = len - (radius0 + radius1);
 
-		Vector3f normalOnSurfaceB = new Vector3f();
+		Vector3d normalOnSurfaceB = new Vector3d();
 		normalOnSurfaceB.set(1f, 0f, 0f);
 		if (len > BulletGlobals.FLT_EPSILON) {
 			normalOnSurfaceB.scale(1f / len, diff);
 		}
 
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 
 		// point on A (worldspace)
-		Vector3f pos0 = new Vector3f();
+		Vector3d pos0 = new Vector3d();
 		tmp.scale(radius0, normalOnSurfaceB);
 		pos0.sub(col0.getWorldTransform(tmpTrans1).origin, tmp);
 
 		// point on B (worldspace)
-		Vector3f pos1 = new Vector3f();
+		Vector3d pos1 = new Vector3d();
 		tmp.scale(radius1, normalOnSurfaceB);
 		pos1.add(col1.getWorldTransform(tmpTrans2).origin, tmp);
 
@@ -131,7 +131,7 @@ public class SphereSphereCollisionAlgorithm extends CollisionAlgorithm {
 	}
 
 	@Override
-	public float calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+	public double calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
 		return 1f;
 	}
 

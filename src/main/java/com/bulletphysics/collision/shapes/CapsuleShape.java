@@ -28,8 +28,8 @@ import com.bulletphysics.collision.broadphase.BroadphaseNativeType;
 import com.bulletphysics.linearmath.MatrixUtil;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Vector3d;
 
 /**
  * CapsuleShape represents a capsule around the Y axis, there is also the
@@ -53,36 +53,36 @@ public class CapsuleShape extends ConvexInternalShape {
 	CapsuleShape() {
 	}
 	
-	public CapsuleShape(float radius, float height) {
+	public CapsuleShape(double radius, double height) {
 		upAxis = 1;
 		implicitShapeDimensions.set(radius, 0.5f * height, radius);
 	}
 
 	@Override
-	public Vector3f localGetSupportingVertexWithoutMargin(Vector3f vec0, Vector3f out) {
-		Vector3f supVec = out;
+	public Vector3d localGetSupportingVertexWithoutMargin(Vector3d vec0, Vector3d out) {
+		Vector3d supVec = out;
 		supVec.set(0f, 0f, 0f);
 
-		float maxDot = -1e30f;
+		double maxDot = -1e30f;
 
-		Vector3f vec = new Vector3f(vec0);
-		float lenSqr = vec.lengthSquared();
+		Vector3d vec = new Vector3d(vec0);
+		double lenSqr = vec.lengthSquared();
 		if (lenSqr < 0.0001f) {
 			vec.set(1f, 0f, 0f);
 		}
 		else {
-			float rlen = 1f / (float) Math.sqrt(lenSqr);
+			double rlen = 1f / Math.sqrt(lenSqr);
 			vec.scale(rlen);
 		}
 
-		Vector3f vtx = new Vector3f();
-		float newDot;
+		Vector3d vtx = new Vector3d();
+		double newDot;
 
-		float radius = getRadius();
+		double radius = getRadius();
 
-		Vector3f tmp1 = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
-		Vector3f pos = new Vector3f();
+		Vector3d tmp1 = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
+		Vector3d pos = new Vector3d();
 
 		{
 			pos.set(0f, 0f, 0f);
@@ -119,33 +119,33 @@ public class CapsuleShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3f[] vectors, Vector3f[] supportVerticesOut, int numVectors) {
+	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3d[] vectors, Vector3d[] supportVerticesOut, int numVectors) {
 		// TODO: implement
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
 		// as an approximation, take the inertia of the box that bounds the spheres
 
 		Transform ident = new Transform();
 		ident.setIdentity();
 
-		float radius = getRadius();
+		double radius = getRadius();
 
-		Vector3f halfExtents = new Vector3f();
+		Vector3d halfExtents = new Vector3d();
 		halfExtents.set(radius, radius, radius);
 		VectorUtil.setCoord(halfExtents, getUpAxis(), radius + getHalfHeight());
 
-		float margin = BulletGlobals.CONVEX_DISTANCE_MARGIN;
+		double margin = BulletGlobals.CONVEX_DISTANCE_MARGIN;
 
-		float lx = 2f * (halfExtents.x + margin);
-		float ly = 2f * (halfExtents.y + margin);
-		float lz = 2f * (halfExtents.z + margin);
-		float x2 = lx * lx;
-		float y2 = ly * ly;
-		float z2 = lz * lz;
-		float scaledmass = mass * 0.08333333f;
+		double lx = 2f * (halfExtents.x + margin);
+		double ly = 2f * (halfExtents.y + margin);
+		double lz = 2f * (halfExtents.z + margin);
+		double x2 = lx * lx;
+		double y2 = ly * ly;
+		double z2 = lz * lz;
+		double scaledmass = mass * 0.08333333f;
 
 		inertia.x = scaledmass * (y2 + z2);
 		inertia.y = scaledmass * (x2 + z2);
@@ -158,10 +158,10 @@ public class CapsuleShape extends ConvexInternalShape {
 	}
 	
 	@Override
-	public void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax) {
-		Vector3f tmp = new Vector3f();
+	public void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax) {
+		Vector3d tmp = new Vector3d();
 
-		Vector3f halfExtents = new Vector3f();
+		Vector3d halfExtents = new Vector3d();
 		halfExtents.set(getRadius(), getRadius(), getRadius());
 		VectorUtil.setCoord(halfExtents, upAxis, getRadius() + getHalfHeight());
 
@@ -169,12 +169,12 @@ public class CapsuleShape extends ConvexInternalShape {
 		halfExtents.y += getMargin();
 		halfExtents.z += getMargin();
 
-		Matrix3f abs_b = new Matrix3f();
+		Matrix3d abs_b = new Matrix3d();
 		abs_b.set(t.basis);
 		MatrixUtil.absolute(abs_b);
 
-		Vector3f center = t.origin;
-		Vector3f extent = new Vector3f();
+		Vector3d center = t.origin;
+		Vector3d extent = new Vector3d();
 
 		abs_b.getRow(0, tmp);
 		extent.x = tmp.dot(halfExtents);
@@ -196,12 +196,12 @@ public class CapsuleShape extends ConvexInternalShape {
 		return upAxis;
 	}
 	
-	public float getRadius() {
+	public double getRadius() {
 		int radiusAxis = (upAxis + 2) % 3;
 		return VectorUtil.getCoord(implicitShapeDimensions, radiusAxis);
 	}
 
-	public float getHalfHeight() {
+	public double getHalfHeight() {
 		return VectorUtil.getCoord(implicitShapeDimensions, upAxis);
 	}
 

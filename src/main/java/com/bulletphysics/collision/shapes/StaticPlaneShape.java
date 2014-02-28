@@ -27,7 +27,7 @@ import com.bulletphysics.collision.broadphase.BroadphaseNativeType;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.TransformUtil;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * StaticPlaneShape simulates an infinite non-moving (static) collision plane.
@@ -36,56 +36,56 @@ import javax.vecmath.Vector3f;
  */
 public class StaticPlaneShape extends ConcaveShape {
 
-	protected final Vector3f localAabbMin = new Vector3f();
-	protected final Vector3f localAabbMax = new Vector3f();
+	protected final Vector3d localAabbMin = new Vector3d();
+	protected final Vector3d localAabbMax = new Vector3d();
 	
-	protected final Vector3f planeNormal = new Vector3f();
-	protected float planeConstant;
-	protected final Vector3f localScaling = new Vector3f(0f, 0f, 0f);
+	protected final Vector3d planeNormal = new Vector3d();
+	protected double planeConstant;
+	protected final Vector3d localScaling = new Vector3d(0f, 0f, 0f);
 
-	public StaticPlaneShape(Vector3f planeNormal, float planeConstant) {
+	public StaticPlaneShape(Vector3d planeNormal, double planeConstant) {
 		this.planeNormal.normalize(planeNormal);
 		this.planeConstant = planeConstant;
 	}
 
-	public Vector3f getPlaneNormal(Vector3f out) {
+	public Vector3d getPlaneNormal(Vector3d out) {
 		out.set(planeNormal);
 		return out;
 	}
 
-	public float getPlaneConstant() {
+	public double getPlaneConstant() {
 		return planeConstant;
 	}
 	
 	@Override
-	public void processAllTriangles(TriangleCallback callback, Vector3f aabbMin, Vector3f aabbMax) {
-		Vector3f tmp = new Vector3f();
-		Vector3f tmp1 = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+	public void processAllTriangles(TriangleCallback callback, Vector3d aabbMin, Vector3d aabbMax) {
+		Vector3d tmp = new Vector3d();
+		Vector3d tmp1 = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
-		Vector3f halfExtents = new Vector3f();
+		Vector3d halfExtents = new Vector3d();
 		halfExtents.sub(aabbMax, aabbMin);
 		halfExtents.scale(0.5f);
 
-		float radius = halfExtents.length();
-		Vector3f center = new Vector3f();
+		double radius = halfExtents.length();
+		Vector3d center = new Vector3d();
 		center.add(aabbMax, aabbMin);
 		center.scale(0.5f);
 
 		// this is where the triangles are generated, given AABB and plane equation (normal/constant)
 
-		Vector3f tangentDir0 = new Vector3f(), tangentDir1 = new Vector3f();
+		Vector3d tangentDir0 = new Vector3d(), tangentDir1 = new Vector3d();
 
 		// tangentDir0/tangentDir1 can be precalculated
 		TransformUtil.planeSpace1(planeNormal, tangentDir0, tangentDir1);
 
-		Vector3f supVertex0 = new Vector3f(), supVertex1 = new Vector3f();
+		Vector3d supVertex0 = new Vector3d(), supVertex1 = new Vector3d();
 
-		Vector3f projectedCenter = new Vector3f();
+		Vector3d projectedCenter = new Vector3d();
 		tmp.scale(planeNormal.dot(center) - planeConstant, planeNormal);
 		projectedCenter.sub(center, tmp);
 
-		Vector3f[] triangle = new Vector3f[] { new Vector3f(), new Vector3f(), new Vector3f() };
+		Vector3d[] triangle = new Vector3d[] { new Vector3d(), new Vector3d(), new Vector3d() };
 
 		tmp1.scale(radius, tangentDir0);
 		tmp2.scale(radius, tangentDir1);
@@ -121,7 +121,7 @@ public class StaticPlaneShape extends ConcaveShape {
 	}
 
 	@Override
-	public void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax) {
+	public void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax) {
 		aabbMin.set(-1e30f, -1e30f, -1e30f);
 		aabbMax.set(1e30f, 1e30f, 1e30f);
 	}
@@ -132,18 +132,18 @@ public class StaticPlaneShape extends ConcaveShape {
 	}
 
 	@Override
-	public void setLocalScaling(Vector3f scaling) {
+	public void setLocalScaling(Vector3d scaling) {
 		localScaling.set(scaling);
 	}
 
 	@Override
-	public Vector3f getLocalScaling(Vector3f out) {
+	public Vector3d getLocalScaling(Vector3d out) {
 		out.set(localScaling);
 		return out;
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
 		//moving concave objects not supported
 		inertia.set(0f, 0f, 0f);
 	}

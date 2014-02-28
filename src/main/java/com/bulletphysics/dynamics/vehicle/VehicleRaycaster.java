@@ -23,7 +23,7 @@
 
 package com.bulletphysics.dynamics.vehicle;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * VehicleRaycaster is provides interface for between vehicle simulation and raycasting.
@@ -32,6 +32,6 @@ import javax.vecmath.Vector3f;
  */
 public abstract class VehicleRaycaster {
 
-	public abstract Object castRay(Vector3f from, Vector3f to, VehicleRaycasterResult result);
+	public abstract Object castRay(Vector3d from, Vector3d to, VehicleRaycasterResult result);
 	
 }

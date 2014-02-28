@@ -34,7 +34,7 @@ import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
 import com.bulletphysics.dynamics.constraintsolver.ContactSolverInfo;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * SimpleDynamicsWorld serves as unit-test and to verify more complicated and
@@ -47,7 +47,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 
 	protected ConstraintSolver constraintSolver;
 	protected boolean ownsConstraintSolver;
-	protected final Vector3f gravity = new Vector3f(0f, 0f, -10f);
+	protected final Vector3d gravity = new Vector3d(0f, 0f, -10f);
 	
 	public SimpleDynamicsWorld(Dispatcher dispatcher, BroadphaseInterface pairCache, ConstraintSolver constraintSolver, CollisionConfiguration collisionConfiguration) {
 		super(dispatcher, pairCache, collisionConfiguration);
@@ -55,7 +55,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 		this.ownsConstraintSolver = false;
 	}
 
-	protected void predictUnconstraintMotion(float timeStep) {
+	protected void predictUnconstraintMotion(double timeStep) {
 		Transform tmpTrans = new Transform();
 		
 		for (int i = 0; i < collisionObjects.size(); i++) {
@@ -74,7 +74,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 		}
 	}
 	
-	protected void integrateTransforms(float timeStep) {
+	protected void integrateTransforms(double timeStep) {
 		Transform predictedTrans = new Transform();
 		for (int i = 0; i < collisionObjects.size(); i++) {
 			CollisionObject colObj = collisionObjects.getQuick(i);
@@ -92,7 +92,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 	 * maxSubSteps/fixedTimeStep for interpolation is currently ignored for SimpleDynamicsWorld, use DiscreteDynamicsWorld instead.
 	 */
 	@Override
-	public int stepSimulation(float timeStep, int maxSubSteps, float fixedTimeStep) {
+	public int stepSimulation(double timeStep, int maxSubSteps, double fixedTimeStep) {
 		// apply gravity, predict motion
 		predictUnconstraintMotion(timeStep);
 
@@ -143,7 +143,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 	}
 
 	@Override
-	public void setGravity(Vector3f gravity) {
+	public void setGravity(Vector3d gravity) {
 		this.gravity.set(gravity);
 		for (int i = 0; i < collisionObjects.size(); i++) {
 			CollisionObject colObj = collisionObjects.getQuick(i);
@@ -155,7 +155,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 	}
 
 	@Override
-	public Vector3f getGravity(Vector3f out) {
+	public Vector3d getGravity(Vector3d out) {
 		out.set(gravity);
 		return out;
 	}
@@ -178,7 +178,7 @@ public class SimpleDynamicsWorld extends DynamicsWorld {
 	public void updateAabbs() {
 		Transform tmpTrans = new Transform();
 		Transform predictedTrans = new Transform();
-		Vector3f minAabb = new Vector3f(), maxAabb = new Vector3f();
+		Vector3d minAabb = new Vector3d(), maxAabb = new Vector3d();
 
 		for (int i = 0; i < collisionObjects.size(); i++) {
 			CollisionObject colObj = collisionObjects.getQuick(i);

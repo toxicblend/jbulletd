@@ -55,7 +55,7 @@ public abstract class CollisionAlgorithm {
 
 	public abstract void processCollision(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut);
 
-	public abstract float calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut);
+	public abstract double calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut);
 	
 	public abstract void getAllContactManifolds(ObjectArrayList<PersistentManifold> manifoldArray);
 	

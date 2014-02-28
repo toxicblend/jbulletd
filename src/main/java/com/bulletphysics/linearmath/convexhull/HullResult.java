@@ -25,7 +25,7 @@ package com.bulletphysics.linearmath.convexhull;
 
 import com.bulletphysics.util.IntArrayList;
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * Contains resulting polygonal representation.<p>
@@ -45,7 +45,7 @@ public class HullResult {
 	public int numOutputVertices = 0;
 	
 	/** Array of vertices. */
-	public final ObjectArrayList<Vector3f> outputVertices = new ObjectArrayList<Vector3f>();
+	public final ObjectArrayList<Vector3d> outputVertices = new ObjectArrayList<Vector3d>();
 	
 	/** Number of faces produced. */
 	public int numFaces = 0;

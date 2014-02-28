@@ -36,7 +36,7 @@ public class CompoundShapeChild {
 	public final Transform transform = new Transform();
 	public CollisionShape childShape;
 	public BroadphaseNativeType childShapeType;
-	public float childMargin;
+	public double childMargin;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -54,7 +54,11 @@ public class CompoundShapeChild {
 		hash = 19 * hash + transform.hashCode();
 		hash = 19 * hash + childShape.hashCode();
 		hash = 19 * hash + childShapeType.hashCode();
-		hash = 19 * hash + Float.floatToIntBits(childMargin);
+		{
+		  // this is what Double.hashCode does
+		  long bits = Double.doubleToLongBits(childMargin);
+		  hash = 19 * hash + (int)(bits ^ (bits >>> 32));
+		}
 		return hash;
 	}
 

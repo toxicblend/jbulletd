@@ -26,7 +26,7 @@ package com.bulletphysics.collision.shapes;
 import com.bulletphysics.collision.broadphase.BroadphaseNativeType;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * CollisionShape class provides an interface for collision shapes that can be
@@ -41,14 +41,14 @@ public abstract class CollisionShape {
 	protected Object userPointer;
 	
 	///getAabb returns the axis aligned bounding box in the coordinate frame of the given transform t.
-	public abstract void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax);
+	public abstract void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax);
 
-	public void getBoundingSphere(Vector3f center, float[] radius) {
-		Vector3f tmp = new Vector3f();
+	public void getBoundingSphere(Vector3d center, double[] radius) {
+		Vector3d tmp = new Vector3d();
 
 		Transform tr = new Transform();
 		tr.setIdentity();
-		Vector3f aabbMin = new Vector3f(), aabbMax = new Vector3f();
+		Vector3d aabbMin = new Vector3d(), aabbMax = new Vector3d();
 
 		getAabb(tr, aabbMin, aabbMax);
 
@@ -60,9 +60,9 @@ public abstract class CollisionShape {
 	}
 
 	///getAngularMotionDisc returns the maximus radius needed for Conservative Advancement to handle time-of-impact with rotations.
-	public float getAngularMotionDisc() {
-		Vector3f center = new Vector3f();
-		float[] disc = new float[1]; // TODO: stack
+	public double getAngularMotionDisc() {
+		Vector3d center = new Vector3d();
+		double[] disc = new double[1]; // TODO: stack
 		getBoundingSphere(center, disc);
 		disc[0] += center.length();
 		return disc[0];
@@ -70,19 +70,19 @@ public abstract class CollisionShape {
 
 	///calculateTemporalAabb calculates the enclosing aabb for the moving object over interval [0..timeStep)
 	///result is conservative
-	public void calculateTemporalAabb(Transform curTrans, Vector3f linvel, Vector3f angvel, float timeStep, Vector3f temporalAabbMin, Vector3f temporalAabbMax) {
+	public void calculateTemporalAabb(Transform curTrans, Vector3d linvel, Vector3d angvel, double timeStep, Vector3d temporalAabbMin, Vector3d temporalAabbMax) {
 		//start with static aabb
 		getAabb(curTrans, temporalAabbMin, temporalAabbMax);
 
-		float temporalAabbMaxx = temporalAabbMax.x;
-		float temporalAabbMaxy = temporalAabbMax.y;
-		float temporalAabbMaxz = temporalAabbMax.z;
-		float temporalAabbMinx = temporalAabbMin.x;
-		float temporalAabbMiny = temporalAabbMin.y;
-		float temporalAabbMinz = temporalAabbMin.z;
+		double temporalAabbMaxx = temporalAabbMax.x;
+		double temporalAabbMaxy = temporalAabbMax.y;
+		double temporalAabbMaxz = temporalAabbMax.z;
+		double temporalAabbMinx = temporalAabbMin.x;
+		double temporalAabbMiny = temporalAabbMin.y;
+		double temporalAabbMinz = temporalAabbMin.z;
 
 		// add linear motion
-		Vector3f linMotion = new Vector3f(linvel);
+		Vector3d linMotion = new Vector3d(linvel);
 		linMotion.scale(timeStep);
 
 		//todo: simd would have a vector max/min operation, instead of per-element access
@@ -106,8 +106,8 @@ public abstract class CollisionShape {
 		}
 
 		//add conservative angular motion
-		float angularMotion = angvel.length() * getAngularMotionDisc() * timeStep;
-		Vector3f angularMotion3d = new Vector3f();
+		double angularMotion = angvel.length() * getAngularMotionDisc() * timeStep;
+		Vector3d angularMotion3d = new Vector3d();
 		angularMotion3d.set(angularMotion, angularMotion, angularMotion);
 		temporalAabbMin.set(temporalAabbMinx, temporalAabbMiny, temporalAabbMinz);
 		temporalAabbMax.set(temporalAabbMaxx, temporalAabbMaxy, temporalAabbMaxz);
@@ -140,20 +140,20 @@ public abstract class CollisionShape {
 
 	public abstract BroadphaseNativeType getShapeType();
 
-	public abstract void setLocalScaling(Vector3f scaling);
+	public abstract void setLocalScaling(Vector3d scaling);
 	
 	// TODO: returns const
-	public abstract Vector3f getLocalScaling(Vector3f out);
+	public abstract Vector3d getLocalScaling(Vector3d out);
 
-	public abstract void calculateLocalInertia(float mass, Vector3f inertia);
+	public abstract void calculateLocalInertia(double mass, Vector3d inertia);
 
 
 //debugging support
 	public abstract String getName();
 //#endif //__SPU__
-	public abstract void setMargin(float margin);
+	public abstract void setMargin(double margin);
 
-	public abstract float getMargin();
+	public abstract double getMargin();
 	
 	// optional user data pointer
 	public void setUserPointer(Object userPtr) {

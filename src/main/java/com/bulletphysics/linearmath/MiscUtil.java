@@ -24,7 +24,7 @@
 package com.bulletphysics.linearmath;
 
 import java.util.Comparator;
-import com.bulletphysics.util.FloatArrayList;
+import com.bulletphysics.util.DoubleArrayList;
 import com.bulletphysics.util.IntArrayList;
 import com.bulletphysics.util.ObjectArrayList;
 
@@ -73,7 +73,7 @@ public class MiscUtil {
 	/**
 	 * Resizes list to exact size, filling with given value when expanding.
 	 */
-	public static void resize(FloatArrayList list, int size, float value) {
+	public static void resize(DoubleArrayList list, int size, double value) {
 		while (list.size() < size) {
 			list.add(value);
 		}
@@ -117,7 +117,7 @@ public class MiscUtil {
 		return -1;
 	}
 	
-	public static float GEN_clamped(float a, float lb, float ub) {
+	public static double GEN_clamped(double a, double lb, double ub) {
 		return a < lb ? lb : (ub < a ? ub : a);
 	}
 

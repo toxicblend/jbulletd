@@ -30,8 +30,8 @@ import com.bulletphysics.linearmath.AabbUtil2;
 import com.bulletphysics.linearmath.ScalarUtil;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 /**
  * BoxShape is a box primitive around the origin, its sides axis aligned with length
@@ -42,21 +42,21 @@ import javax.vecmath.Vector4f;
  */
 public class BoxShape extends PolyhedralConvexShape {
 
-	public BoxShape(Vector3f boxHalfExtents) {
-		Vector3f margin = new Vector3f(getMargin(), getMargin(), getMargin());
+	public BoxShape(Vector3d boxHalfExtents) {
+		Vector3d margin = new Vector3d(getMargin(), getMargin(), getMargin());
 		VectorUtil.mul(implicitShapeDimensions, boxHalfExtents, localScaling);
 		implicitShapeDimensions.sub(margin);
 	}
 
-	public Vector3f getHalfExtentsWithMargin(Vector3f out) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(out);
-		Vector3f margin = new Vector3f();
+	public Vector3d getHalfExtentsWithMargin(Vector3d out) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(out);
+		Vector3d margin = new Vector3d();
 		margin.set(getMargin(), getMargin(), getMargin());
 		halfExtents.add(margin);
 		return out;
 	}
 
-	public Vector3f getHalfExtentsWithoutMargin(Vector3f out) {
+	public Vector3d getHalfExtentsWithoutMargin(Vector3d out) {
 		out.set(implicitShapeDimensions); // changed in Bullet 2.63: assume the scaling and margin are included
 		return out;
 	}
@@ -67,10 +67,10 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public Vector3f localGetSupportingVertex(Vector3f vec, Vector3f out) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(out);
+	public Vector3d localGetSupportingVertex(Vector3d vec, Vector3d out) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(out);
 		
-		float margin = getMargin();
+		double margin = getMargin();
 		halfExtents.x += margin;
 		halfExtents.y += margin;
 		halfExtents.z += margin;
@@ -83,8 +83,8 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public Vector3f localGetSupportingVertexWithoutMargin(Vector3f vec, Vector3f out) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(out);
+	public Vector3d localGetSupportingVertexWithoutMargin(Vector3d vec, Vector3d out) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(out);
 
 		out.set(
 				ScalarUtil.fsel(vec.x, halfExtents.x, -halfExtents.x),
@@ -94,11 +94,11 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3f[] vectors, Vector3f[] supportVerticesOut, int numVectors) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(new Vector3f());
+	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3d[] vectors, Vector3d[] supportVerticesOut, int numVectors) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(new Vector3d());
 
 		for (int i = 0; i < numVectors; i++) {
-			Vector3f vec = vectors[i];
+			Vector3d vec = vectors[i];
 			supportVerticesOut[i].set(ScalarUtil.fsel(vec.x, halfExtents.x, -halfExtents.x),
 					ScalarUtil.fsel(vec.y, halfExtents.y, -halfExtents.y),
 					ScalarUtil.fsel(vec.z, halfExtents.z, -halfExtents.z));
@@ -106,26 +106,26 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void setMargin(float margin) {
+	public void setMargin(double margin) {
 		// correct the implicitShapeDimensions for the margin
-		Vector3f oldMargin = new Vector3f();
+		Vector3d oldMargin = new Vector3d();
 		oldMargin.set(getMargin(), getMargin(), getMargin());
-		Vector3f implicitShapeDimensionsWithMargin = new Vector3f();
+		Vector3d implicitShapeDimensionsWithMargin = new Vector3d();
 		implicitShapeDimensionsWithMargin.add(implicitShapeDimensions, oldMargin);
 
 		super.setMargin(margin);
-		Vector3f newMargin = new Vector3f();
+		Vector3d newMargin = new Vector3d();
 		newMargin.set(getMargin(), getMargin(), getMargin());
 		implicitShapeDimensions.sub(implicitShapeDimensionsWithMargin, newMargin);
 	}
 
 	@Override
-	public void setLocalScaling(Vector3f scaling) {
-		Vector3f oldMargin = new Vector3f();
+	public void setLocalScaling(Vector3d scaling) {
+		Vector3d oldMargin = new Vector3d();
 		oldMargin.set(getMargin(), getMargin(), getMargin());
-		Vector3f implicitShapeDimensionsWithMargin = new Vector3f();
+		Vector3d implicitShapeDimensionsWithMargin = new Vector3d();
 		implicitShapeDimensionsWithMargin.add(implicitShapeDimensions, oldMargin);
-		Vector3f unScaledImplicitShapeDimensionsWithMargin = new Vector3f();
+		Vector3d unScaledImplicitShapeDimensionsWithMargin = new Vector3d();
 		VectorUtil.div(unScaledImplicitShapeDimensionsWithMargin, implicitShapeDimensionsWithMargin, localScaling);
 
 		super.setLocalScaling(scaling);
@@ -135,18 +135,18 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax) {
-		AabbUtil2.transformAabb(getHalfExtentsWithoutMargin(new Vector3f()), getMargin(), t, aabbMin, aabbMax);
+	public void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax) {
+		AabbUtil2.transformAabb(getHalfExtentsWithoutMargin(new Vector3d()), getMargin(), t, aabbMin, aabbMax);
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
 		//btScalar margin = btScalar(0.);
-		Vector3f halfExtents = getHalfExtentsWithMargin(new Vector3f());
+		Vector3d halfExtents = getHalfExtentsWithMargin(new Vector3d());
 
-		float lx = 2f * halfExtents.x;
-		float ly = 2f * halfExtents.y;
-		float lz = 2f * halfExtents.z;
+		double lx = 2f * halfExtents.x;
+		double ly = 2f * halfExtents.y;
+		double lz = 2f * halfExtents.z;
 
 		inertia.set(mass / 12f * (ly * ly + lz * lz),
 				mass / 12f * (lx * lx + lz * lz),
@@ -154,12 +154,12 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void getPlane(Vector3f planeNormal, Vector3f planeSupport, int i) {
+	public void getPlane(Vector3d planeNormal, Vector3d planeSupport, int i) {
 		// this plane might not be aligned...
-		Vector4f plane = new Vector4f();
+		Vector4d plane = new Vector4d();
 		getPlaneEquation(plane, i);
 		planeNormal.set(plane.x, plane.y, plane.z);
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 		tmp.negate(planeNormal);
 		localGetSupportingVertex(tmp, planeSupport);
 	}
@@ -180,16 +180,16 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void getVertex(int i, Vector3f vtx) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(new Vector3f());
+	public void getVertex(int i, Vector3d vtx) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(new Vector3d());
 
 		vtx.set(halfExtents.x * (1 - (i & 1)) - halfExtents.x * (i & 1),
 				halfExtents.y * (1 - ((i & 2) >> 1)) - halfExtents.y * ((i & 2) >> 1),
 				halfExtents.z * (1 - ((i & 4) >> 2)) - halfExtents.z * ((i & 4) >> 2));
 	}
 	
-	public void getPlaneEquation(Vector4f plane, int i) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(new Vector3f());
+	public void getPlaneEquation(Vector4d plane, int i) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(new Vector3d());
 
 		switch (i) {
 			case 0:
@@ -216,7 +216,7 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void getEdge(int i, Vector3f pa, Vector3f pb) {
+	public void getEdge(int i, Vector3d pa, Vector3d pb) {
 		int edgeVert0 = 0;
 		int edgeVert1 = 0;
 
@@ -280,8 +280,8 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public boolean isInside(Vector3f pt, float tolerance) {
-		Vector3f halfExtents = getHalfExtentsWithoutMargin(new Vector3f());
+	public boolean isInside(Vector3d pt, double tolerance) {
+		Vector3d halfExtents = getHalfExtentsWithoutMargin(new Vector3d());
 
 		//btScalar minDist = 2*tolerance;
 
@@ -307,7 +307,7 @@ public class BoxShape extends PolyhedralConvexShape {
 	}
 
 	@Override
-	public void getPreferredPenetrationDirection(int index, Vector3f penetrationVector) {
+	public void getPreferredPenetrationDirection(int index, Vector3d penetrationVector) {
 		switch (index) {
 			case 0:
 				penetrationVector.set(1f, 0f, 0f);

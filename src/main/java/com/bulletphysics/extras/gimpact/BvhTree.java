@@ -29,7 +29,7 @@ package com.bulletphysics.extras.gimpact;
 
 import com.bulletphysics.extras.gimpact.BoxCollision.AABB;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  *
@@ -41,18 +41,18 @@ class BvhTree {
 	protected BvhTreeNodeArray node_array = new BvhTreeNodeArray();
 	
 	protected int _calc_splitting_axis(BvhDataArray primitive_boxes, int startIndex, int endIndex) {
-		Vector3f means = new Vector3f();
+		Vector3d means = new Vector3d();
 		means.set(0f, 0f, 0f);
-		Vector3f variance = new Vector3f();
+		Vector3d variance = new Vector3d();
 		variance.set(0f, 0f, 0f);
 
 		int numIndices = endIndex - startIndex;
 
-		Vector3f center = new Vector3f();
-		Vector3f diff2 = new Vector3f();
+		Vector3d center = new Vector3d();
+		Vector3d diff2 = new Vector3d();
 
-		Vector3f tmp1 = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+		Vector3d tmp1 = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
 		for (int i=startIndex; i<endIndex; i++) {
 			primitive_boxes.getBoundMax(i, tmp1);
@@ -61,7 +61,7 @@ class BvhTree {
 			center.scale(0.5f);
 			means.add(center);
 		}
-		means.scale(1f / (float)numIndices);
+		means.scale(1f / (double)numIndices);
 
 		for (int i=startIndex; i<endIndex; i++) {
 			primitive_boxes.getBoundMax(i, tmp1);
@@ -72,7 +72,7 @@ class BvhTree {
 			VectorUtil.mul(diff2, diff2, diff2);
 			variance.add(diff2);
 		}
-		variance.scale(1f / (float)(numIndices - 1));
+		variance.scale(1f / (double)(numIndices - 1));
 
 		return VectorUtil.maxAxis(variance);
 	}
@@ -82,15 +82,15 @@ class BvhTree {
 		int numIndices = endIndex - startIndex;
 
 		// average of centers
-		float splitValue = 0.0f;
+		double splitValue = 0.0f;
 
-		Vector3f means = new Vector3f();
+		Vector3d means = new Vector3d();
 		means.set(0f, 0f, 0f);
 
-		Vector3f center = new Vector3f();
+		Vector3d center = new Vector3d();
 
-		Vector3f tmp1 = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+		Vector3d tmp1 = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
 		for (int i = startIndex; i < endIndex; i++) {
 			primitive_boxes.getBoundMax(i, tmp1);
@@ -99,7 +99,7 @@ class BvhTree {
 			center.scale(0.5f);
 			means.add(center);
 		}
-		means.scale(1f / (float) numIndices);
+		means.scale(1f / (double) numIndices);
 
 		splitValue = VectorUtil.getCoord(means, splitAxis);
 

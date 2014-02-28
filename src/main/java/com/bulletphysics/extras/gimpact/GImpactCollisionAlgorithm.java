@@ -46,8 +46,8 @@ import com.bulletphysics.linearmath.VectorUtil;
 import com.bulletphysics.util.IntArrayList;
 import com.bulletphysics.util.ObjectArrayList;
 import com.bulletphysics.util.ObjectPool;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 /**
  * Collision Algorithm for GImpact Shapes.<p>
@@ -342,7 +342,7 @@ public class GImpactCollisionAlgorithm extends CollisionAlgorithm {
 		gimpactInConcaveSpace.inverse();
 		gimpactInConcaveSpace.mul(body0.getWorldTransform(new Transform()));
 
-		Vector3f minAABB = new Vector3f(), maxAABB = new Vector3f();
+		Vector3d minAABB = new Vector3d(), maxAABB = new Vector3d();
 		shape0.getAabb(gimpactInConcaveSpace, minAABB, maxAABB);
 
 		shape1.processAllTriangles(tricallback, minAABB, maxAABB);
@@ -413,7 +413,7 @@ public class GImpactCollisionAlgorithm extends CollisionAlgorithm {
 		convex_algorithm = newAlgorithm(body0, body1);
 	}
 
-	protected void addContactPoint(CollisionObject body0, CollisionObject body1, Vector3f point, Vector3f normal, float distance) {
+	protected void addContactPoint(CollisionObject body0, CollisionObject body1, Vector3d point, Vector3d normal, double distance) {
 		resultOut.setShapeIdentifiers(part0, triface0, part1, triface1);
 		checkManifold(body0, body1);
 		resultOut.addContactPoint(normal, point, distance);
@@ -425,7 +425,7 @@ public class GImpactCollisionAlgorithm extends CollisionAlgorithm {
 	*/
 	
 	void collide_sat_triangles(CollisionObject body0, CollisionObject body1, GImpactMeshShapePart shape0, GImpactMeshShapePart shape1, PairSet pairs, int pair_count) {
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 
 		Transform orgtrans0 = body0.getWorldTransform(new Transform());
 		Transform orgtrans1 = body1.getWorldTransform(new Transform());
@@ -584,7 +584,7 @@ public class GImpactCollisionAlgorithm extends CollisionAlgorithm {
 		Transform orgtrans1 = body1.getWorldTransform(new Transform());
 
 		StaticPlaneShape planeshape = shape1;
-		Vector4f plane = new Vector4f();
+		Vector4d plane = new Vector4d();
 		PlaneShape.get_plane_equation_transformed(planeshape, orgtrans1, plane);
 
 		// test box against plane
@@ -598,18 +598,18 @@ public class GImpactCollisionAlgorithm extends CollisionAlgorithm {
 		}
 		shape0.lockChildShapes();
 
-		float margin = shape0.getMargin() + planeshape.getMargin();
+		double margin = shape0.getMargin() + planeshape.getMargin();
 
-		Vector3f vertex = new Vector3f();
+		Vector3d vertex = new Vector3d();
 
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 
 		int vi = shape0.getVertexCount();
 		while ((vi--) != 0) {
 			shape0.getVertex(vi, vertex);
 			orgtrans0.transform(vertex);
 
-			float distance = VectorUtil.dot3(vertex, plane) - plane.w - margin;
+			double distance = VectorUtil.dot3(vertex, plane) - plane.w - margin;
 
 			if (distance < 0f)//add contact
 			{
@@ -661,7 +661,7 @@ public class GImpactCollisionAlgorithm extends CollisionAlgorithm {
 	}
 
 	@Override
-	public float calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+	public double calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
 		return 1f;
 	}
 

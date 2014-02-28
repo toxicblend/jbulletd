@@ -23,7 +23,7 @@
 
 package com.bulletphysics.dynamics.vehicle;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * Vehicle raycaster result.
@@ -32,8 +32,8 @@ import javax.vecmath.Vector3f;
  */
 public class VehicleRaycasterResult {
 	
-	public final Vector3f hitPointInWorld  = new Vector3f();
-	public final Vector3f hitNormalInWorld  = new Vector3f();
-	public float distFraction = -1f;
+	public final Vector3d hitPointInWorld  = new Vector3d();
+	public final Vector3d hitNormalInWorld  = new Vector3d();
+	public double distFraction = -1f;
 
 }

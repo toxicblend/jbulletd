@@ -32,7 +32,7 @@ class Tri extends Int3 {
 	public Int3 n = new Int3();
 	public int id;
 	public int vmax;
-	public float rise;
+	public double rise;
 
 	public Tri(int a, int b, int c) {
 		super(a, b, c);

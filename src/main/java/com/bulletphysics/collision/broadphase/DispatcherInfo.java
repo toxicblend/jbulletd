@@ -32,16 +32,16 @@ import com.bulletphysics.linearmath.IDebugDraw;
  */
 public class DispatcherInfo {
 
-	public float timeStep;
+	public double timeStep;
 	public int stepCount;
 	public DispatchFunc dispatchFunc;
-	public float timeOfImpact;
+	public double timeOfImpact;
 	public boolean useContinuous;
 	public IDebugDraw debugDraw;
 	public boolean enableSatConvex;
 	public boolean enableSPU = true;
 	public boolean useEpa = true;
-	public float allowedCcdPenetration = 0.04f;
+	public double allowedCcdPenetration = 0.04f;
 	//btStackAlloc*	m_stackAllocator;
 
 	public DispatcherInfo() {

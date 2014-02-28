@@ -125,7 +125,7 @@ public class CompoundCollisionAlgorithm extends CollisionAlgorithm {
 	}
 
 	@Override
-	public float calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+	public double calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
 		CollisionObject colObj = isSwapped ? body1 : body0;
 		CollisionObject otherObj = isSwapped ? body0 : body1;
 
@@ -143,7 +143,7 @@ public class CompoundCollisionAlgorithm extends CollisionAlgorithm {
 		Transform tmpTrans = new Transform();
 		Transform orgTrans = new Transform();
 		Transform childTrans = new Transform();
-		float hitFraction = 1f;
+		double hitFraction = 1f;
 
 		int numChildren = childCollisionAlgorithms.size();
 		int i;
@@ -162,7 +162,7 @@ public class CompoundCollisionAlgorithm extends CollisionAlgorithm {
 
 			CollisionShape tmpShape = colObj.getCollisionShape();
 			colObj.internalSetTemporaryCollisionShape(childShape);
-			float frac = childCollisionAlgorithms.getQuick(i).calculateTimeOfImpact(colObj, otherObj, dispatchInfo, resultOut);
+			double frac = childCollisionAlgorithms.getQuick(i).calculateTimeOfImpact(colObj, otherObj, dispatchInfo, resultOut);
 			if (frac < hitFraction) {
 				hitFraction = frac;
 			}

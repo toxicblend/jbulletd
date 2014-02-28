@@ -30,8 +30,8 @@ package com.bulletphysics.extras.gimpact;
 import com.bulletphysics.collision.shapes.TriangleShape;
 import com.bulletphysics.extras.gimpact.BoxCollision.AABB;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 /**
  *
@@ -43,17 +43,17 @@ public class TriangleShapeEx extends TriangleShape {
 		super();
 	}
 
-	public TriangleShapeEx(Vector3f p0, Vector3f p1, Vector3f p2) {
+	public TriangleShapeEx(Vector3d p0, Vector3d p1, Vector3d p2) {
 		super(p0, p1, p2);
 	}
 
 	@Override
-	public void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax) {
-		Vector3f tv0 = new Vector3f(vertices1[0]);
+	public void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax) {
+		Vector3d tv0 = new Vector3d(vertices1[0]);
 		t.transform(tv0);
-		Vector3f tv1 = new Vector3f(vertices1[1]);
+		Vector3d tv1 = new Vector3d(vertices1[1]);
 		t.transform(tv1);
-		Vector3f tv2 = new Vector3f(vertices1[2]);
+		Vector3d tv2 = new Vector3d(vertices1[2]);
 		t.transform(tv2);
 
 		AABB trianglebox = new AABB();
@@ -69,11 +69,11 @@ public class TriangleShapeEx extends TriangleShape {
 		t.transform(vertices1[2]);
 	}
 
-	public void buildTriPlane(Vector4f plane) {
-		Vector3f tmp1 = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+	public void buildTriPlane(Vector4d plane) {
+		Vector3d tmp1 = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
-		Vector3f normal = new Vector3f();
+		Vector3d normal = new Vector3d();
 		tmp1.sub(vertices1[1], vertices1[0]);
 		tmp2.sub(vertices1[2], vertices1[0]);
 		normal.cross(tmp1, tmp2);
@@ -83,19 +83,19 @@ public class TriangleShapeEx extends TriangleShape {
 	}
 
 	public boolean overlap_test_conservative(TriangleShapeEx other) {
-		float total_margin = getMargin() + other.getMargin();
+		double total_margin = getMargin() + other.getMargin();
 
-		Vector4f plane0 = new Vector4f();
+		Vector4d plane0 = new Vector4d();
 		buildTriPlane(plane0);
-		Vector4f plane1 = new Vector4f();
+		Vector4d plane1 = new Vector4d();
 		other.buildTriPlane(plane1);
 
 		// classify points on other triangle
-		float dis0 = ClipPolygon.distance_point_plane(plane0, other.vertices1[0]) - total_margin;
+		double dis0 = ClipPolygon.distance_point_plane(plane0, other.vertices1[0]) - total_margin;
 
-		float dis1 = ClipPolygon.distance_point_plane(plane0, other.vertices1[1]) - total_margin;
+		double dis1 = ClipPolygon.distance_point_plane(plane0, other.vertices1[1]) - total_margin;
 
-		float dis2 = ClipPolygon.distance_point_plane(plane0, other.vertices1[2]) - total_margin;
+		double dis2 = ClipPolygon.distance_point_plane(plane0, other.vertices1[2]) - total_margin;
 
 		if (dis0 > 0.0f && dis1 > 0.0f && dis2 > 0.0f) {
 			return false; // classify points on this triangle

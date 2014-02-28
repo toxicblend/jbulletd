@@ -31,7 +31,7 @@ import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
 import com.bulletphysics.dynamics.constraintsolver.ContactSolverInfo;
 import com.bulletphysics.dynamics.constraintsolver.TypedConstraint;
 import com.bulletphysics.dynamics.vehicle.RaycastVehicle;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * DynamicsWorld is the interface class for several dynamics implementation,
@@ -50,11 +50,11 @@ public abstract class DynamicsWorld extends CollisionWorld {
 		super(dispatcher, broadphasePairCache, collisionConfiguration);
 	}
 
-	public final int stepSimulation(float timeStep) {
+	public final int stepSimulation(double timeStep) {
 		return stepSimulation(timeStep, 1, 1f / 60f);
 	}
 
-	public final int stepSimulation(float timeStep, int maxSubSteps) {
+	public final int stepSimulation(double timeStep, int maxSubSteps) {
 		return stepSimulation(timeStep, maxSubSteps, 1f / 60f);
 	}
 
@@ -71,7 +71,7 @@ public abstract class DynamicsWorld extends CollisionWorld {
 	 * as second argument to stepSimulation, but in that case you have to keep the
 	 * timeStep constant.
 	 */
-	public abstract int stepSimulation(float timeStep, int maxSubSteps, float fixedTimeStep);
+	public abstract int stepSimulation(double timeStep, int maxSubSteps, double fixedTimeStep);
 
 	public abstract void debugDrawWorld();
 
@@ -101,9 +101,9 @@ public abstract class DynamicsWorld extends CollisionWorld {
 	 * Once a rigidbody is added to the dynamics world, it will get this gravity assigned.
 	 * Existing rigidbodies in the world get gravity assigned too, during this method.
 	 */
-	public abstract void setGravity(Vector3f gravity);
+	public abstract void setGravity(Vector3d gravity);
 	
-	public abstract Vector3f getGravity(Vector3f out);
+	public abstract Vector3d getGravity(Vector3d out);
 
 	public abstract void addRigidBody(RigidBody body);
 

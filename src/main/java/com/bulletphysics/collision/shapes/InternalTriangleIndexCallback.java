@@ -23,7 +23,7 @@
 
 package com.bulletphysics.collision.shapes;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * Callback for internal processing of triangles.
@@ -33,6 +33,6 @@ import javax.vecmath.Vector3f;
  */
 public abstract class InternalTriangleIndexCallback {
 
-	public abstract void internalProcessTriangleIndex(Vector3f[] triangle, int partId, int triangleIndex);
+	public abstract void internalProcessTriangleIndex(Vector3d[] triangle, int partId, int triangleIndex);
 	
 }

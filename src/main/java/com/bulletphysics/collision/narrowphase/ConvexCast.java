@@ -25,7 +25,7 @@ package com.bulletphysics.collision.narrowphase;
 
 import com.bulletphysics.linearmath.IDebugDraw;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ConvexCast is an interface for casting.
@@ -49,14 +49,14 @@ public abstract class ConvexCast {
 		public final Transform hitTransformA = new Transform();
 		public final Transform hitTransformB = new Transform();
 		
-		public final Vector3f normal = new Vector3f();
-		public final Vector3f hitPoint = new Vector3f();
-		public float fraction = 1e30f; // input and output
-		public float allowedPenetration = 0f;
+		public final Vector3d normal = new Vector3d();
+		public final Vector3d hitPoint = new Vector3d();
+		public double fraction = 1e30f; // input and output
+		public double allowedPenetration = 0f;
 		
 		public IDebugDraw debugDrawer;
 		
-		public void debugDraw(float fraction) {}
+		public void debugDraw(double fraction) {}
 		public void	drawCoordSystem(Transform trans) {}
 	}
 	

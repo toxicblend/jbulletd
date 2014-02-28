@@ -58,7 +58,7 @@ import com.bulletphysics.linearmath.ScalarUtil;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.TransformUtil;
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * DiscreteDynamicsWorld provides discrete rigid body simulation.
@@ -70,10 +70,10 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 	protected ConstraintSolver constraintSolver;
 	protected SimulationIslandManager islandManager;
 	protected final ObjectArrayList<TypedConstraint> constraints = new ObjectArrayList<TypedConstraint>();
-	protected final Vector3f gravity = new Vector3f(0f, -10f, 0f);
+	protected final Vector3d gravity = new Vector3d(0f, -10f, 0f);
 
 	//for variable timesteps
-	protected float localTime = 1f / 60f;
+	protected double localTime = 1f / 60f;
 	//for variable timesteps
 
 	protected boolean ownsIslandManager;
@@ -104,7 +104,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		ownsIslandManager = true;
 	}
 
-	protected void saveKinematicState(float timeStep) {
+	protected void saveKinematicState(double timeStep) {
 		for (int i = 0; i < collisionObjects.size(); i++) {
 			CollisionObject colObj = collisionObjects.getQuick(i);
 			RigidBody body = RigidBody.upcast(colObj);
@@ -124,7 +124,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 	public void debugDrawWorld() {
 		if (getDebugDrawer() != null && (getDebugDrawer().getDebugMode() & DebugDrawModes.DRAW_CONTACT_POINTS) != 0) {
 			int numManifolds = getDispatcher().getNumManifolds();
-			Vector3f color = new Vector3f();
+			Vector3d color = new Vector3d();
 			color.set(0f, 0f, 0f);
 			for (int i = 0; i < numManifolds; i++) {
 				PersistentManifold contactManifold = getDispatcher().getManifoldByIndexInternal(i);
@@ -143,15 +143,15 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 			int i;
 
 			Transform tmpTrans = new Transform();
-			Vector3f minAabb = new Vector3f();
-			Vector3f maxAabb = new Vector3f();
-			Vector3f colorvec = new Vector3f();
+			Vector3d minAabb = new Vector3d();
+			Vector3d maxAabb = new Vector3d();
+			Vector3d colorvec = new Vector3d();
 			
 			// todo: iterate over awake simulation islands!
 			for (i = 0; i < collisionObjects.size(); i++) {
 				CollisionObject colObj = collisionObjects.getQuick(i);
 				if (getDebugDrawer() != null && (getDebugDrawer().getDebugMode() & DebugDrawModes.DRAW_WIREFRAME) != 0) {
-					Vector3f color = new Vector3f();
+					Vector3d color = new Vector3d();
 					color.set(255f, 255f, 255f);
 					switch (colObj.getActivationState()) {
 						case CollisionObject.ACTIVE_TAG:
@@ -183,10 +183,10 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 				}
 			}
 
-			Vector3f wheelColor = new Vector3f();
-			Vector3f wheelPosWS = new Vector3f();
-			Vector3f axle = new Vector3f();
-			Vector3f tmp = new Vector3f();
+			Vector3d wheelColor = new Vector3d();
+			Vector3d wheelPosWS = new Vector3d();
+			Vector3d axle = new Vector3d();
+			Vector3d tmp = new Vector3d();
 
 			for (i = 0; i < vehicles.size(); i++) {
 				for (int v = 0; v < vehicles.getQuick(i).getNumWheels(); v++) {
@@ -254,8 +254,8 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		Transform interpolatedTransform = new Transform();
 		
 		Transform tmpTrans = new Transform();
-		Vector3f tmpLinVel = new Vector3f();
-		Vector3f tmpAngVel = new Vector3f();
+		Vector3d tmpLinVel = new Vector3d();
+		Vector3d tmpAngVel = new Vector3d();
 
 		// todo: iterate over awake simulation islands!
 		for (int i = 0; i < collisionObjects.size(); i++) {
@@ -289,7 +289,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 	}
 
 	@Override
-	public int stepSimulation(float timeStep, int maxSubSteps, float fixedTimeStep) {
+	public int stepSimulation(double timeStep, int maxSubSteps, double fixedTimeStep) {
 		startProfiling(timeStep);
 
 		long t0 = System.nanoTime();
@@ -355,7 +355,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 
-	protected void internalSingleStepSimulation(float timeStep) {
+	protected void internalSingleStepSimulation(double timeStep) {
 		BulletStats.pushProfile("internalSingleStepSimulation");
 		try {
 			// apply gravity, predict motion
@@ -400,7 +400,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 	}
 
 	@Override
-	public void setGravity(Vector3f gravity) {
+	public void setGravity(Vector3d gravity) {
 		this.gravity.set(gravity);
 		for (int i = 0; i < collisionObjects.size(); i++) {
 			CollisionObject colObj = collisionObjects.getQuick(i);
@@ -412,7 +412,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 	}
 	
 	@Override
-	public Vector3f getGravity(Vector3f out) {
+	public Vector3d getGravity(Vector3d out) {
 		out.set(gravity);
 		return out;
 	}
@@ -447,7 +447,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 
-	public void updateActions(float timeStep) {
+	public void updateActions(double timeStep) {
 		BulletStats.pushProfile("updateActions");
 		try {
 			for (int i=0; i<actions.size(); i++) {
@@ -459,7 +459,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 
-	protected void updateVehicles(float timeStep) {
+	protected void updateVehicles(double timeStep) {
 		BulletStats.pushProfile("updateVehicles");
 		try {
 			for (int i = 0; i < vehicles.size(); i++) {
@@ -472,10 +472,10 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 
-	protected void updateActivationState(float timeStep) {
+	protected void updateActivationState(double timeStep) {
 		BulletStats.pushProfile("updateActivationState");
 		try {
-			Vector3f tmp = new Vector3f();
+			Vector3d tmp = new Vector3d();
 
 			for (int i=0; i<collisionObjects.size(); i++) {
 				CollisionObject colObj = collisionObjects.getQuick(i);
@@ -672,10 +672,10 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 
-	protected void integrateTransforms(float timeStep) {
+	protected void integrateTransforms(double timeStep) {
 		BulletStats.pushProfile("integrateTransforms");
 		try {
-			Vector3f tmp = new Vector3f();
+			Vector3d tmp = new Vector3d();
 			Transform tmpTrans = new Transform();
 
 			Transform predictedTrans = new Transform();
@@ -689,7 +689,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 						body.predictIntegratedTransform(timeStep, predictedTrans);
 
 						tmp.sub(predictedTrans.origin, body.getWorldTransform(tmpTrans).origin);
-						float squareMotion = tmp.lengthSquared();
+						double squareMotion = tmp.lengthSquared();
 
 						if (body.getCcdSquareMotionThreshold() != 0f && body.getCcdSquareMotionThreshold() < squareMotion) {
 							BulletStats.pushProfile("CCD motion clamping");
@@ -729,7 +729,7 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 	
-	protected void predictUnconstraintMotion(float timeStep) {
+	protected void predictUnconstraintMotion(double timeStep) {
 		BulletStats.pushProfile("predictUnconstraintMotion");
 		try {
 			Transform tmpTrans = new Transform();
@@ -755,27 +755,27 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 	}
 	
-	protected void startProfiling(float timeStep) {
+	protected void startProfiling(double timeStep) {
 		//#ifndef BT_NO_PROFILE
         CProfileManager.reset();
 		//#endif //BT_NO_PROFILE
 	}
 
-	protected void debugDrawSphere(float radius, Transform transform, Vector3f color) {
-		Vector3f start = new Vector3f(transform.origin);
+	protected void debugDrawSphere(double radius, Transform transform, Vector3d color) {
+		Vector3d start = new Vector3d(transform.origin);
 
-		Vector3f xoffs = new Vector3f();
+		Vector3d xoffs = new Vector3d();
 		xoffs.set(radius, 0, 0);
 		transform.basis.transform(xoffs);
-		Vector3f yoffs = new Vector3f();
+		Vector3d yoffs = new Vector3d();
 		yoffs.set(0, radius, 0);
 		transform.basis.transform(yoffs);
-		Vector3f zoffs = new Vector3f();
+		Vector3d zoffs = new Vector3d();
 		zoffs.set(0, 0, radius);
 		transform.basis.transform(zoffs);
 
-		Vector3f tmp1 = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+		Vector3d tmp1 = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
 		// XY
 		tmp1.sub(start, xoffs);
@@ -820,13 +820,13 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		getDebugDrawer().drawLine(tmp1, tmp2, color);
 	}
 	
-	public void debugDrawObject(Transform worldTransform, CollisionShape shape, Vector3f color) {
-		Vector3f tmp = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+	public void debugDrawObject(Transform worldTransform, CollisionShape shape, Vector3d color) {
+		Vector3d tmp = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
 		// Draw a small simplex at the center of the object
 		{
-			Vector3f start = new Vector3f(worldTransform.origin);
+			Vector3d start = new Vector3d(worldTransform.origin);
 
 			tmp.set(1f, 0f, 0f);
 			worldTransform.basis.transform(tmp);
@@ -1072,22 +1072,22 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 	
 //	private static class DebugDrawcallback implements TriangleCallback, InternalTriangleIndexCallback {
 //		private IDebugDraw debugDrawer;
-//		private final Vector3f color = new Vector3f();
+//		private final Vector3d color = new Vector3d();
 //		private final Transform worldTrans = new Transform();
 //
-//		public DebugDrawcallback(IDebugDraw debugDrawer, Transform worldTrans, Vector3f color) {
+//		public DebugDrawcallback(IDebugDraw debugDrawer, Transform worldTrans, Vector3d color) {
 //			this.debugDrawer = debugDrawer;
 //			this.worldTrans.set(worldTrans);
 //			this.color.set(color);
 //		}
 //
-//		public void internalProcessTriangleIndex(Vector3f[] triangle, int partId, int triangleIndex) {
+//		public void internalProcessTriangleIndex(Vector3d[] triangle, int partId, int triangleIndex) {
 //			processTriangle(triangle,partId,triangleIndex);
 //		}
 //
-//		private final Vector3f wv0 = new Vector3f(),wv1 = new Vector3f(),wv2 = new Vector3f();
+//		private final Vector3d wv0 = new Vector3d(),wv1 = new Vector3d(),wv2 = new Vector3d();
 //
-//		public void processTriangle(Vector3f[] triangle, int partId, int triangleIndex) {
+//		public void processTriangle(Vector3d[] triangle, int partId, int triangleIndex) {
 //			wv0.set(triangle[0]);
 //			worldTrans.transform(wv0);
 //			wv1.set(triangle[1]);
@@ -1103,11 +1103,11 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 
 	private static class ClosestNotMeConvexResultCallback extends ClosestConvexResultCallback {
 		private CollisionObject me;
-		private float allowedPenetration = 0f;
+		private double allowedPenetration = 0f;
 		private OverlappingPairCache pairCache;
 		private Dispatcher dispatcher;
 
-		public ClosestNotMeConvexResultCallback(CollisionObject me, Vector3f fromA, Vector3f toA, OverlappingPairCache pairCache, Dispatcher dispatcher) {
+		public ClosestNotMeConvexResultCallback(CollisionObject me, Vector3d fromA, Vector3d toA, OverlappingPairCache pairCache, Dispatcher dispatcher) {
 			super(fromA, toA);
 			this.me = me;
 			this.pairCache = pairCache;
@@ -1115,16 +1115,16 @@ public class DiscreteDynamicsWorld extends DynamicsWorld {
 		}
 
 		@Override
-		public float addSingleResult(LocalConvexResult convexResult, boolean normalInWorldSpace) {
+		public double addSingleResult(LocalConvexResult convexResult, boolean normalInWorldSpace) {
 			if (convexResult.hitCollisionObject == me) {
 				return 1f;
 			}
 
-			Vector3f linVelA = new Vector3f(), linVelB = new Vector3f();
+			Vector3d linVelA = new Vector3d(), linVelB = new Vector3d();
 			linVelA.sub(convexToWorld, convexFromWorld);
 			linVelB.set(0f, 0f, 0f);//toB.getOrigin()-fromB.getOrigin();
 
-			Vector3f relativeVelocity = new Vector3f();
+			Vector3d relativeVelocity = new Vector3d();
 			relativeVelocity.sub(linVelA, linVelB);
 			// don't report time of impact for motion away from the contact normal (or causes minor penetration)
 			if (convexResult.hitNormalLocal.dot(relativeVelocity) >= -allowedPenetration) {

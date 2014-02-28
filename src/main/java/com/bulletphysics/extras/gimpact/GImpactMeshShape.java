@@ -34,7 +34,7 @@ import com.bulletphysics.collision.shapes.TriangleCallback;
 import com.bulletphysics.extras.gimpact.BoxCollision.AABB;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  *
@@ -57,7 +57,7 @@ public class GImpactMeshShape extends GImpactShapeInterface {
 	}
 
 	@Override
-	public void setLocalScaling(Vector3f scaling) {
+	public void setLocalScaling(Vector3d scaling) {
 		localScaling.set(scaling);
 
 		int i = mesh_parts.size();
@@ -70,7 +70,7 @@ public class GImpactMeshShape extends GImpactShapeInterface {
 	}
 
 	@Override
-	public void setMargin(float margin) {
+	public void setMargin(double margin) {
 		collisionMargin = margin;
 
 		int i = mesh_parts.size();
@@ -94,14 +94,14 @@ public class GImpactMeshShape extends GImpactShapeInterface {
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
 		//#ifdef CALC_EXACT_INERTIA
 		inertia.set(0f, 0f, 0f);
 
 		int i = getMeshPartCount();
-		float partmass = mass / (float) i;
+		double partmass = mass / (double) i;
 
-		Vector3f partinertia = new Vector3f();
+		Vector3d partinertia = new Vector3d();
 
 		while ((i--) != 0) {
 			getMeshPart(i).calculateLocalInertia(partmass, partinertia);
@@ -175,7 +175,7 @@ public class GImpactMeshShape extends GImpactShapeInterface {
 	}
 
 	@Override
-	public void getChildAabb(int child_index, Transform t, Vector3f aabbMin, Vector3f aabbMax) {
+	public void getChildAabb(int child_index, Transform t, Vector3d aabbMin, Vector3d aabbMax) {
 		assert (false);
 	}
 
@@ -207,11 +207,11 @@ public class GImpactMeshShape extends GImpactShapeInterface {
 	}
 
 	@Override
-	public void rayTest(Vector3f rayFrom, Vector3f rayTo, RayResultCallback resultCallback) {
+	public void rayTest(Vector3d rayFrom, Vector3d rayTo, RayResultCallback resultCallback) {
 	}
 
 	@Override
-	public void processAllTriangles(TriangleCallback callback, Vector3f aabbMin, Vector3f aabbMax) {
+	public void processAllTriangles(TriangleCallback callback, Vector3d aabbMin, Vector3d aabbMax) {
 		int i = mesh_parts.size();
 		while ((i--) != 0) {
 			mesh_parts.getQuick(i).processAllTriangles(callback, aabbMin, aabbMax);

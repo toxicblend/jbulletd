@@ -27,8 +27,8 @@ import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.BulletStats;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 
 /**
@@ -89,7 +89,7 @@ public class PersistentManifold {
 		int maxPenetrationIndex = -1;
 //#define KEEP_DEEPEST_POINT 1
 //#ifdef KEEP_DEEPEST_POINT
-		float maxPenetration = pt.getDistance();
+		double maxPenetration = pt.getDistance();
 		for (int i = 0; i < 4; i++) {
 			if (pointCache[i].getDistance() < maxPenetration) {
 				maxPenetrationIndex = i;
@@ -98,58 +98,58 @@ public class PersistentManifold {
 		}
 //#endif //KEEP_DEEPEST_POINT
 
-		float res0 = 0f, res1 = 0f, res2 = 0f, res3 = 0f;
+		double res0 = 0f, res1 = 0f, res2 = 0f, res3 = 0f;
 		if (maxPenetrationIndex != 0) {
-			Vector3f a0 = new Vector3f(pt.localPointA);
+			Vector3d a0 = new Vector3d(pt.localPointA);
 			a0.sub(pointCache[1].localPointA);
 
-			Vector3f b0 = new Vector3f(pointCache[3].localPointA);
+			Vector3d b0 = new Vector3d(pointCache[3].localPointA);
 			b0.sub(pointCache[2].localPointA);
 
-			Vector3f cross = new Vector3f();
+			Vector3d cross = new Vector3d();
 			cross.cross(a0, b0);
 
 			res0 = cross.lengthSquared();
 		}
 
 		if (maxPenetrationIndex != 1) {
-			Vector3f a1 = new Vector3f(pt.localPointA);
+			Vector3d a1 = new Vector3d(pt.localPointA);
 			a1.sub(pointCache[0].localPointA);
 
-			Vector3f b1 = new Vector3f(pointCache[3].localPointA);
+			Vector3d b1 = new Vector3d(pointCache[3].localPointA);
 			b1.sub(pointCache[2].localPointA);
 
-			Vector3f cross = new Vector3f();
+			Vector3d cross = new Vector3d();
 			cross.cross(a1, b1);
 			res1 = cross.lengthSquared();
 		}
 
 		if (maxPenetrationIndex != 2) {
-			Vector3f a2 = new Vector3f(pt.localPointA);
+			Vector3d a2 = new Vector3d(pt.localPointA);
 			a2.sub(pointCache[0].localPointA);
 
-			Vector3f b2 = new Vector3f(pointCache[3].localPointA);
+			Vector3d b2 = new Vector3d(pointCache[3].localPointA);
 			b2.sub(pointCache[1].localPointA);
 
-			Vector3f cross = new Vector3f();
+			Vector3d cross = new Vector3d();
 			cross.cross(a2, b2);
 
 			res2 = cross.lengthSquared();
 		}
 
 		if (maxPenetrationIndex != 3) {
-			Vector3f a3 = new Vector3f(pt.localPointA);
+			Vector3d a3 = new Vector3d(pt.localPointA);
 			a3.sub(pointCache[0].localPointA);
 
-			Vector3f b3 = new Vector3f(pointCache[2].localPointA);
+			Vector3d b3 = new Vector3d(pointCache[2].localPointA);
 			b3.sub(pointCache[1].localPointA);
 
-			Vector3f cross = new Vector3f();
+			Vector3d cross = new Vector3d();
 			cross.cross(a3, b3);
 			res3 = cross.lengthSquared();
 		}
 
-		Vector4f maxvec = new Vector4f();
+		Vector4d maxvec = new Vector4d();
 		maxvec.set(res0, res1, res2, res3);
 		int biggestarea = VectorUtil.closestAxis4(maxvec);
 		return biggestarea;
@@ -207,21 +207,21 @@ public class PersistentManifold {
 	}
 
 	// todo: get this margin from the current physics / collision environment
-	public float getContactBreakingThreshold() {
+	public double getContactBreakingThreshold() {
 		return BulletGlobals.getContactBreakingThreshold();
 	}
 
 	public int getCacheEntry(ManifoldPoint newPoint) {
-		float shortestDist = getContactBreakingThreshold() * getContactBreakingThreshold();
+		double shortestDist = getContactBreakingThreshold() * getContactBreakingThreshold();
 		int size = getNumContacts();
 		int nearestPoint = -1;
-		Vector3f diffA = new Vector3f();
+		Vector3d diffA = new Vector3d();
 		for (int i = 0; i < size; i++) {
 			ManifoldPoint mp = pointCache[i];
 
 			diffA.sub(mp.localPointA, newPoint.localPointA);
 
-			float distToManiPoint = diffA.dot(diffA);
+			double distToManiPoint = diffA.dot(diffA);
 			if (distToManiPoint < shortestDist) {
 				shortestDist = distToManiPoint;
 				nearestPoint = i;
@@ -283,9 +283,9 @@ public class PersistentManifold {
 //#define MAINTAIN_PERSISTENCY 1
 //#ifdef MAINTAIN_PERSISTENCY
 		int lifeTime = pointCache[insertIndex].getLifeTime();
-		float appliedImpulse = pointCache[insertIndex].appliedImpulse;
-		float appliedLateralImpulse1 = pointCache[insertIndex].appliedImpulseLateral1;
-		float appliedLateralImpulse2 = pointCache[insertIndex].appliedImpulseLateral2;
+		double appliedImpulse = pointCache[insertIndex].appliedImpulse;
+		double appliedLateralImpulse1 = pointCache[insertIndex].appliedImpulseLateral1;
+		double appliedLateralImpulse2 = pointCache[insertIndex].appliedImpulseLateral2;
 
 		assert (lifeTime >= 0);
 		Object cache = pointCache[insertIndex].userPersistentData;
@@ -310,7 +310,7 @@ public class PersistentManifold {
 
 	/// calculated new worldspace coordinates and depth, and reject points that exceed the collision margin
 	public void refreshContactPoints(Transform trA, Transform trB) {
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 		int i;
 //#ifdef DEBUG_PERSISTENCY
 //	printf("refreshContactPoints posA = (%f,%f,%f) posB = (%f,%f,%f)\n",
@@ -339,8 +339,8 @@ public class PersistentManifold {
 		}
 
 		// then 
-		float distance2d;
-		Vector3f projectedDifference = new Vector3f(), projectedPoint=new Vector3f();
+		double distance2d;
+		Vector3d projectedDifference = new Vector3d(), projectedPoint=new Vector3d();
 
 		for (i = getNumContacts() - 1; i >= 0; i--) {
 

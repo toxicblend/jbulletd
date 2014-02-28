@@ -25,7 +25,7 @@ package com.bulletphysics.linearmath;
 
 import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.dynamics.DynamicsWorld;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * IDebugDraw interface class allows hooking up a debug renderer to visually debug
@@ -43,42 +43,42 @@ public abstract class IDebugDraw {
 	
 	//protected final BulletStack stack = BulletStack.get();
 
-	public abstract void drawLine(Vector3f from, Vector3f to, Vector3f color);
+	public abstract void drawLine(Vector3d from, Vector3d to, Vector3d color);
 	
-	public void drawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f n0, Vector3f n1, Vector3f n2, Vector3f color, float alpha) {
+	public void drawTriangle(Vector3d v0, Vector3d v1, Vector3d v2, Vector3d n0, Vector3d n1, Vector3d n2, Vector3d color, double alpha) {
 		drawTriangle(v0, v1, v2, color, alpha);
 	}
 	
-	public void drawTriangle(Vector3f v0, Vector3f v1, Vector3f v2, Vector3f color, float alpha) {
+	public void drawTriangle(Vector3d v0, Vector3d v1, Vector3d v2, Vector3d color, double alpha) {
 		drawLine(v0, v1, color);
 		drawLine(v1, v2, color);
 		drawLine(v2, v0, color);
 	}
 
-	public abstract void drawContactPoint(Vector3f PointOnB, Vector3f normalOnB, float distance, int lifeTime, Vector3f color);
+	public abstract void drawContactPoint(Vector3d PointOnB, Vector3d normalOnB, double distance, int lifeTime, Vector3d color);
 
 	public abstract void reportErrorWarning(String warningString);
 
-	public abstract void draw3dText(Vector3f location, String textString);
+	public abstract void draw3dText(Vector3d location, String textString);
 
 	public abstract void setDebugMode(int debugMode);
 
 	public abstract int getDebugMode();
 
-	public void drawAabb(Vector3f from, Vector3f to, Vector3f color) {
-		Vector3f halfExtents = new Vector3f(to);
+	public void drawAabb(Vector3d from, Vector3d to, Vector3d color) {
+		Vector3d halfExtents = new Vector3d(to);
 		halfExtents.sub(from);
 		halfExtents.scale(0.5f);
 
-		Vector3f center = new Vector3f(to);
+		Vector3d center = new Vector3d(to);
 		center.add(from);
 		center.scale(0.5f);
 
 		int i, j;
 
-		Vector3f edgecoord = new Vector3f();
+		Vector3d edgecoord = new Vector3d();
 		edgecoord.set(1f, 1f, 1f);
-		Vector3f pa = new Vector3f(), pb = new Vector3f();
+		Vector3d pa = new Vector3d(), pb = new Vector3d();
 		for (i = 0; i < 4; i++) {
 			for (j = 0; j < 3; j++) {
 				pa.set(edgecoord.x * halfExtents.x, edgecoord.y * halfExtents.y, edgecoord.z * halfExtents.z);

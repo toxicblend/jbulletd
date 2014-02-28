@@ -32,7 +32,7 @@ import com.bulletphysics.collision.shapes.StaticPlaneShape;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.ObjectArrayList;
 import com.bulletphysics.util.ObjectPool;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ConvexPlaneCollisionAlgorithm provides convex/plane collision detection.
@@ -85,8 +85,8 @@ public class ConvexPlaneCollisionAlgorithm extends CollisionAlgorithm {
 		StaticPlaneShape planeShape = (StaticPlaneShape) planeObj.getCollisionShape();
 
 		boolean hasCollision = false;
-		Vector3f planeNormal = planeShape.getPlaneNormal(new Vector3f());
-		float planeConstant = planeShape.getPlaneConstant();
+		Vector3d planeNormal = planeShape.getPlaneNormal(new Vector3d());
+		double planeConstant = planeShape.getPlaneConstant();
 
 		Transform planeInConvex = new Transform();
 		convexObj.getWorldTransform(planeInConvex);
@@ -97,31 +97,31 @@ public class ConvexPlaneCollisionAlgorithm extends CollisionAlgorithm {
 		convexInPlaneTrans.inverse(planeObj.getWorldTransform(tmpTrans));
 		convexInPlaneTrans.mul(convexObj.getWorldTransform(tmpTrans));
 
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 		tmp.negate(planeNormal);
 		planeInConvex.basis.transform(tmp);
 
-		Vector3f vtx = convexShape.localGetSupportingVertex(tmp, new Vector3f());
-		Vector3f vtxInPlane = new Vector3f(vtx);
+		Vector3d vtx = convexShape.localGetSupportingVertex(tmp, new Vector3d());
+		Vector3d vtxInPlane = new Vector3d(vtx);
 		convexInPlaneTrans.transform(vtxInPlane);
 
-		float distance = (planeNormal.dot(vtxInPlane) - planeConstant);
+		double distance = (planeNormal.dot(vtxInPlane) - planeConstant);
 
-		Vector3f vtxInPlaneProjected = new Vector3f();
+		Vector3d vtxInPlaneProjected = new Vector3d();
 		tmp.scale(distance, planeNormal);
 		vtxInPlaneProjected.sub(vtxInPlane, tmp);
 
-		Vector3f vtxInPlaneWorld = new Vector3f(vtxInPlaneProjected);
+		Vector3d vtxInPlaneWorld = new Vector3d(vtxInPlaneProjected);
 		planeObj.getWorldTransform(tmpTrans).transform(vtxInPlaneWorld);
 
 		hasCollision = distance < manifoldPtr.getContactBreakingThreshold();
 		resultOut.setPersistentManifold(manifoldPtr);
 		if (hasCollision) {
 			// report a contact. internally this will be kept persistent, and contact reduction is done
-			Vector3f normalOnSurfaceB = new Vector3f(planeNormal);
+			Vector3d normalOnSurfaceB = new Vector3d(planeNormal);
 			planeObj.getWorldTransform(tmpTrans).basis.transform(normalOnSurfaceB);
 
-			Vector3f pOnB = new Vector3f(vtxInPlaneWorld);
+			Vector3d pOnB = new Vector3d(vtxInPlaneWorld);
 			resultOut.addContactPoint(normalOnSurfaceB, pOnB, distance);
 		}
 		if (ownManifold) {
@@ -132,7 +132,7 @@ public class ConvexPlaneCollisionAlgorithm extends CollisionAlgorithm {
 	}
 
 	@Override
-	public float calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+	public double calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
 		// not yet
 		return 1f;
 	}

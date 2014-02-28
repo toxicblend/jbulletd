@@ -29,7 +29,7 @@ import com.bulletphysics.collision.narrowphase.DiscreteCollisionDetectorInterfac
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.bulletphysics.collision.narrowphase.PersistentManifold;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ManifoldResult is helper class to manage contact results.
@@ -82,7 +82,7 @@ public class ManifoldResult extends DiscreteCollisionDetectorInterface.Result {
 		this.index1 = index1;
 	}
 
-	public void addContactPoint(Vector3f normalOnBInWorld, Vector3f pointInWorld, float depth) {
+	public void addContactPoint(Vector3d normalOnBInWorld, Vector3d pointInWorld, double depth) {
 		assert (manifoldPtr != null);
 		//order in manifold needs to match
 
@@ -92,11 +92,11 @@ public class ManifoldResult extends DiscreteCollisionDetectorInterface.Result {
 
 		boolean isSwapped = manifoldPtr.getBody0() != body0;
 
-		Vector3f pointA = new Vector3f();
+		Vector3d pointA = new Vector3d();
 		pointA.scaleAdd(depth, normalOnBInWorld, pointInWorld);
 
-		Vector3f localA = new Vector3f();
-		Vector3f localB = new Vector3f();
+		Vector3d localA = new Vector3d();
+		Vector3d localB = new Vector3d();
 
 		if (isSwapped) {
 			rootTransB.invXform(pointA, localA);
@@ -148,10 +148,10 @@ public class ManifoldResult extends DiscreteCollisionDetectorInterface.Result {
 	}
 
 	///User can override this material combiner by implementing gContactAddedCallback and setting body0->m_collisionFlags |= btCollisionObject::customMaterialCallback;
-	private static float calculateCombinedFriction(CollisionObject body0, CollisionObject body1) {
-		float friction = body0.getFriction() * body1.getFriction();
+	private static double calculateCombinedFriction(CollisionObject body0, CollisionObject body1) {
+		double friction = body0.getFriction() * body1.getFriction();
 
-		float MAX_FRICTION = 10f;
+		double MAX_FRICTION = 10f;
 		if (friction < -MAX_FRICTION) {
 			friction = -MAX_FRICTION;
 		}
@@ -161,7 +161,7 @@ public class ManifoldResult extends DiscreteCollisionDetectorInterface.Result {
 		return friction;
 	}
 
-	private static float calculateCombinedRestitution(CollisionObject body0, CollisionObject body1) {
+	private static double calculateCombinedRestitution(CollisionObject body0, CollisionObject body1) {
 		return body0.getRestitution() * body1.getRestitution();
 	}
 

@@ -23,7 +23,7 @@
 
 package com.bulletphysics.collision.narrowphase;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * SimplexSolverInterface can incrementally calculate distance between origin and
@@ -37,23 +37,23 @@ public abstract class SimplexSolverInterface {
 
 	public abstract void reset();
 
-	public abstract void addVertex(Vector3f w, Vector3f p, Vector3f q);
+	public abstract void addVertex(Vector3d w, Vector3d p, Vector3d q);
 	
-	public abstract boolean closest(Vector3f v);
+	public abstract boolean closest(Vector3d v);
 
-	public abstract float maxVertex();
+	public abstract double maxVertex();
 
 	public abstract boolean fullSimplex();
 
-	public abstract int getSimplex(Vector3f[] pBuf, Vector3f[] qBuf, Vector3f[] yBuf);
+	public abstract int getSimplex(Vector3d[] pBuf, Vector3d[] qBuf, Vector3d[] yBuf);
 
-	public abstract boolean inSimplex(Vector3f w);
+	public abstract boolean inSimplex(Vector3d w);
 	
-	public abstract void backup_closest(Vector3f v);
+	public abstract void backup_closest(Vector3d v);
 
 	public abstract boolean emptySimplex();
 
-	public abstract void compute_points(Vector3f p1, Vector3f p2);
+	public abstract void compute_points(Vector3d p1, Vector3d p2);
 
 	public abstract int numVertices();
 	

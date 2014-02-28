@@ -23,7 +23,7 @@
 
 package com.bulletphysics.dynamics.vehicle;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * 
@@ -31,17 +31,17 @@ import javax.vecmath.Vector3f;
  */
 public class WheelInfoConstructionInfo {
 
-	public final Vector3f chassisConnectionCS = new Vector3f();
-	public final Vector3f wheelDirectionCS = new Vector3f();
-	public final Vector3f wheelAxleCS = new Vector3f();
-	public float suspensionRestLength;
-	public float maxSuspensionTravelCm;
-	public float wheelRadius;
+	public final Vector3d chassisConnectionCS = new Vector3d();
+	public final Vector3d wheelDirectionCS = new Vector3d();
+	public final Vector3d wheelAxleCS = new Vector3d();
+	public double suspensionRestLength;
+	public double maxSuspensionTravelCm;
+	public double wheelRadius;
 	
-	public float suspensionStiffness;
-	public float wheelsDampingCompression;
-	public float wheelsDampingRelaxation;
-	public float frictionSlip;
+	public double suspensionStiffness;
+	public double wheelsDampingCompression;
+	public double wheelsDampingRelaxation;
+	public double frictionSlip;
 	public boolean bIsFrontWheel;
 	
 }

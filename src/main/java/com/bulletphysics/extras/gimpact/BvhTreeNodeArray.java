@@ -37,7 +37,7 @@ class BvhTreeNodeArray {
 
 	private int size = 0;
 	
-	private float[] bound = new float[0];
+	private double[] bound = new double[0];
 	private int[] escapeIndexOrDataIndex = new int[0];
 
 	public void clear() {
@@ -45,7 +45,7 @@ class BvhTreeNodeArray {
 	}
 
 	public void resize(int newSize) {
-		float[] newBound = new float[newSize*6];
+		double[] newBound = new double[newSize*6];
 		int[] newEIODI = new int[newSize];
 		
 		System.arraycopy(bound, 0, newBound, 0, size*6);

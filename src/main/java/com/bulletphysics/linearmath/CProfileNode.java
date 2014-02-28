@@ -42,7 +42,7 @@ class CProfileNode {
 
 	protected String name;
 	protected int totalCalls;
-	protected float totalTime;
+	protected double totalTime;
 	protected long startTime;
 	protected int recursionCounter;
 	
@@ -122,7 +122,7 @@ class CProfileNode {
 		if (--recursionCounter == 0 && totalCalls != 0) {
 			long time = BulletStats.profileGetTicks();
 			time -= startTime;
-			totalTime += (float) time / BulletStats.profileGetTickRate();
+			totalTime += (double) time / BulletStats.profileGetTickRate();
 		}
 		return (recursionCounter == 0);
 	}
@@ -135,7 +135,7 @@ class CProfileNode {
 		return totalCalls;
 	}
 
-	public float getTotalTime() {
+	public double getTotalTime() {
 		return totalTime;
 	}
 	

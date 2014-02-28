@@ -38,7 +38,7 @@ import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.VectorUtil;
 import com.bulletphysics.util.ObjectArrayList;
 import com.bulletphysics.util.ObjectPool;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ConvexConcaveCollisionAlgorithm supports collision between convex shapes
@@ -72,7 +72,7 @@ public class ConvexConcaveCollisionAlgorithm extends CollisionAlgorithm {
 			ConcaveShape concaveShape = (ConcaveShape)triOb.getCollisionShape();
 
 			if (convexBody.getCollisionShape().isConvex()) {
-				float collisionMarginTriangle = concaveShape.getMargin();
+				double collisionMarginTriangle = concaveShape.getMargin();
 
 				resultOut.setPersistentManifold(btConvexTriangleCallback.manifoldPtr);
 				btConvexTriangleCallback.setTimeStepAndCounters(collisionMarginTriangle, dispatchInfo, resultOut);
@@ -84,16 +84,16 @@ public class ConvexConcaveCollisionAlgorithm extends CollisionAlgorithm {
 
 				concaveShape.processAllTriangles(
 						btConvexTriangleCallback,
-						btConvexTriangleCallback.getAabbMin(new Vector3f()),
-						btConvexTriangleCallback.getAabbMax(new Vector3f()));
+						btConvexTriangleCallback.getAabbMin(new Vector3d()),
+						btConvexTriangleCallback.getAabbMax(new Vector3d()));
 				resultOut.refreshContactPoints();
 			}
 		}
 	}
 
 	@Override
-	public float calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
-		Vector3f tmp = new Vector3f();
+	public double calculateTimeOfImpact(CollisionObject body0, CollisionObject body1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+		Vector3d tmp = new Vector3d();
 
 		CollisionObject convexbody = isSwapped ? body1 : body0;
 		CollisionObject triBody = isSwapped ? body0 : body1;
@@ -103,7 +103,7 @@ public class ConvexConcaveCollisionAlgorithm extends CollisionAlgorithm {
 		// only perform CCD above a certain threshold, this prevents blocking on the long run
 		// because object in a blocked ccd state (hitfraction<1) get their linear velocity halved each frame...
 		tmp.sub(convexbody.getInterpolationWorldTransform(new Transform()).origin, convexbody.getWorldTransform(new Transform()).origin);
-		float squareMot0 = tmp.lengthSquared();
+		double squareMot0 = tmp.lengthSquared();
 		if (squareMot0 < convexbody.getCcdSquareMotionThreshold()) {
 			return 1f;
 		}
@@ -124,19 +124,19 @@ public class ConvexConcaveCollisionAlgorithm extends CollisionAlgorithm {
 		convexToLocal.mul(triInv, convexbody.getInterpolationWorldTransform(tmpTrans));
 
 		if (triBody.getCollisionShape().isConcave()) {
-			Vector3f rayAabbMin = new Vector3f(convexFromLocal.origin);
+			Vector3d rayAabbMin = new Vector3d(convexFromLocal.origin);
 			VectorUtil.setMin(rayAabbMin, convexToLocal.origin);
 
-			Vector3f rayAabbMax = new Vector3f(convexFromLocal.origin);
+			Vector3d rayAabbMax = new Vector3d(convexFromLocal.origin);
 			VectorUtil.setMax(rayAabbMax, convexToLocal.origin);
 
-			float ccdRadius0 = convexbody.getCcdSweptSphereRadius();
+			double ccdRadius0 = convexbody.getCcdSweptSphereRadius();
 
 			tmp.set(ccdRadius0, ccdRadius0, ccdRadius0);
 			rayAabbMin.sub(tmp);
 			rayAabbMax.add(tmp);
 
-			float curHitFraction = 1f; // is this available?
+			double curHitFraction = 1f; // is this available?
 			LocalTriangleSphereCastCallback raycastCallback = new LocalTriangleSphereCastCallback(convexFromLocal, convexToLocal, convexbody.getCcdSweptSphereRadius(), curHitFraction);
 
 			raycastCallback.hitFraction = convexbody.getHitFraction();
@@ -176,12 +176,12 @@ public class ConvexConcaveCollisionAlgorithm extends CollisionAlgorithm {
 		public final Transform ccdSphereToTrans = new Transform();
 		public final Transform meshTransform = new Transform();
 
-		public float ccdSphereRadius;
-		public float hitFraction;
+		public double ccdSphereRadius;
+		public double hitFraction;
 		
 		private final Transform ident = new Transform();
 		
-		public LocalTriangleSphereCastCallback(Transform from, Transform to, float ccdSphereRadius, float hitFraction) {
+		public LocalTriangleSphereCastCallback(Transform from, Transform to, double ccdSphereRadius, double hitFraction) {
 			this.ccdSphereFromTrans.set(from);
 			this.ccdSphereToTrans.set(to);
 			this.ccdSphereRadius = ccdSphereRadius;
@@ -191,7 +191,7 @@ public class ConvexConcaveCollisionAlgorithm extends CollisionAlgorithm {
 			ident.setIdentity();
 		}
 		
-		public void processTriangle(Vector3f[] triangle, int partId, int triangleIndex) {
+		public void processTriangle(Vector3d[] triangle, int partId, int triangleIndex) {
 			// do a swept sphere for now
 			
 			//btTransform ident;

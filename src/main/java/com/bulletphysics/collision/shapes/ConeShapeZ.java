@@ -30,7 +30,7 @@ package com.bulletphysics.collision.shapes;
  */
 public class ConeShapeZ extends ConeShape {
 
-	public ConeShapeZ(float radius, float height) {
+	public ConeShapeZ(double radius, double height) {
 		super(radius, height);
 		setConeUpIndex(2);
 	}

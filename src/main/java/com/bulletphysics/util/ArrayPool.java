@@ -49,8 +49,8 @@ public class ArrayPool<T> {
 	public ArrayPool(Class componentType) {
 		this.componentType = componentType;
 		
-		if (componentType == float.class) {
-			comparator = floatComparator;
+		if (componentType == double.class) {
+			comparator = doubleComparator;
 		}
 		else if (componentType == int.class) {
 			comparator = intComparator;
@@ -130,10 +130,10 @@ public class ArrayPool<T> {
 	
 	////////////////////////////////////////////////////////////////////////////
 
-	private static Comparator floatComparator = new Comparator() {
+	private static Comparator doubleComparator = new Comparator() {
 		public int compare(Object o1, Object o2) {
-			int len1 = (o1 instanceof IntValue)? ((IntValue)o1).value : ((float[])o1).length;
-			int len2 = (o2 instanceof IntValue)? ((IntValue)o2).value : ((float[])o2).length;
+			int len1 = (o1 instanceof IntValue)? ((IntValue)o1).value : ((double[])o1).length;
+			int len2 = (o2 instanceof IntValue)? ((IntValue)o2).value : ((double[])o2).length;
 			return len1 > len2? 1 : len1 < len2 ? -1 : 0;
 		}
 	};

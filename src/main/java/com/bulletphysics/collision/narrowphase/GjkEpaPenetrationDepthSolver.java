@@ -26,7 +26,7 @@ package com.bulletphysics.collision.narrowphase;
 import com.bulletphysics.collision.shapes.ConvexShape;
 import com.bulletphysics.linearmath.IDebugDraw;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * GjkEpaPenetrationDepthSolver uses the Expanding Polytope Algorithm to calculate
@@ -41,10 +41,10 @@ public class GjkEpaPenetrationDepthSolver extends ConvexPenetrationDepthSolver {
 	public boolean calcPenDepth(SimplexSolverInterface simplexSolver,
 												  ConvexShape pConvexA, ConvexShape pConvexB,
 												  Transform transformA, Transform transformB,
-												  Vector3f v, Vector3f wWitnessOnA, Vector3f wWitnessOnB,
+												  Vector3d v, Vector3d wWitnessOnA, Vector3d wWitnessOnB,
 												  IDebugDraw debugDraw/*, btStackAlloc* stackAlloc*/)
 	{
-		float radialmargin = 0f;
+		double radialmargin = 0f;
 
 		// JAVA NOTE: 2.70b1: update when GjkEpaSolver2 is ported
 		

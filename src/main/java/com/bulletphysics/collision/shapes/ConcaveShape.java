@@ -23,7 +23,7 @@
 
 package com.bulletphysics.collision.shapes;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ConcaveShape class provides an interface for non-moving (static) concave shapes.
@@ -32,15 +32,15 @@ import javax.vecmath.Vector3f;
  */
 public abstract class ConcaveShape extends CollisionShape {
 
-	protected float collisionMargin = 0f;
+	protected double collisionMargin = 0f;
 
-	public abstract void processAllTriangles(TriangleCallback callback, Vector3f aabbMin, Vector3f aabbMax);
+	public abstract void processAllTriangles(TriangleCallback callback, Vector3d aabbMin, Vector3d aabbMax);
 
-	public float getMargin() {
+	public double getMargin() {
 		return collisionMargin;
 	}
 
-	public void setMargin(float margin) {
+	public void setMargin(double margin) {
 		this.collisionMargin = margin;
 	}
 	

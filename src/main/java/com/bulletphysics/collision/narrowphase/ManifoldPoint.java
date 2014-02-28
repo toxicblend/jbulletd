@@ -23,7 +23,7 @@
 
 package com.bulletphysics.collision.narrowphase;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ManifoldPoint collects and maintains persistent contactpoints. Used to improve
@@ -33,16 +33,16 @@ import javax.vecmath.Vector3f;
  */
 public class ManifoldPoint {
 
-	public final Vector3f localPointA = new Vector3f();
-	public final Vector3f localPointB = new Vector3f();
-	public final Vector3f positionWorldOnB = new Vector3f();
+	public final Vector3d localPointA = new Vector3d();
+	public final Vector3d localPointB = new Vector3d();
+	public final Vector3d positionWorldOnB = new Vector3d();
 	///m_positionWorldOnA is redundant information, see getPositionWorldOnA(), but for clarity
-	public final Vector3f positionWorldOnA = new Vector3f();
-	public final Vector3f normalWorldOnB = new Vector3f();
+	public final Vector3d positionWorldOnA = new Vector3d();
+	public final Vector3d normalWorldOnB = new Vector3d();
 	
-	public float distance1;
-	public float combinedFriction;
-	public float combinedRestitution;
+	public double distance1;
+	public double combinedFriction;
+	public double combinedRestitution;
 	
 	// BP mod, store contact triangles.
 	public int partId0;
@@ -51,15 +51,15 @@ public class ManifoldPoint {
 	public int index1;
 	
 	public Object userPersistentData;
-	public float appliedImpulse;
+	public double appliedImpulse;
 	
 	public boolean lateralFrictionInitialized;
-	public float appliedImpulseLateral1;
-	public float appliedImpulseLateral2;
+	public double appliedImpulseLateral1;
+	public double appliedImpulseLateral2;
 	public int lifeTime; //lifetime of the contactpoint in frames
 
-	public final Vector3f lateralFrictionDir1 = new Vector3f();
-	public final Vector3f lateralFrictionDir2 = new Vector3f();
+	public final Vector3d lateralFrictionDir1 = new Vector3d();
+	public final Vector3d lateralFrictionDir2 = new Vector3d();
 	
 	public ManifoldPoint() {
 		this.userPersistentData = null;
@@ -68,11 +68,11 @@ public class ManifoldPoint {
 		this.lifeTime = 0;
 	}
 	
-	public ManifoldPoint(Vector3f pointA, Vector3f pointB, Vector3f normal, float distance) {
+	public ManifoldPoint(Vector3d pointA, Vector3d pointB, Vector3d normal, double distance) {
 		init(pointA, pointB, normal, distance);
 	}
 
-	public void init(Vector3f pointA, Vector3f pointB, Vector3f normal, float distance) {
+	public void init(Vector3d pointA, Vector3d pointB, Vector3d normal, double distance) {
 		this.localPointA.set(pointA);
 		this.localPointB.set(pointB);
 		this.normalWorldOnB.set(normal);
@@ -87,7 +87,7 @@ public class ManifoldPoint {
 		this.lifeTime = 0;
 	}
 
-	public float getDistance() {
+	public double getDistance() {
 		return distance1;
 	}
 
@@ -118,18 +118,18 @@ public class ManifoldPoint {
 		lateralFrictionDir2.set(p.lateralFrictionDir2);
 	}
 	
-	public Vector3f getPositionWorldOnA(Vector3f out) {
+	public Vector3d getPositionWorldOnA(Vector3d out) {
 		out.set(positionWorldOnA);
 		return out;
 		//return m_positionWorldOnB + m_normalWorldOnB * m_distance1;
 	}
 
-	public Vector3f getPositionWorldOnB(Vector3f out) {
+	public Vector3d getPositionWorldOnB(Vector3d out) {
 		out.set(positionWorldOnB);
 		return out;
 	}
 
-	public void setDistance(float dist) {
+	public void setDistance(double dist) {
 		distance1 = dist;
 	}
 	

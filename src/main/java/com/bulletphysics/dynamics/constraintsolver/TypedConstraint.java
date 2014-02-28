@@ -24,7 +24,7 @@
 package com.bulletphysics.dynamics.constraintsolver;
 
 import com.bulletphysics.dynamics.RigidBody;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * TypedConstraint is the base class for Bullet constraints and vehicles.
@@ -52,7 +52,7 @@ public abstract class TypedConstraint {
 	
 	protected RigidBody rbA;
 	protected RigidBody rbB;
-	protected float appliedImpulse = 0f;
+	protected double appliedImpulse = 0f;
 
 	public TypedConstraint(TypedConstraintType type) {
 		this(type, getFixed(), getFixed());
@@ -66,12 +66,12 @@ public abstract class TypedConstraint {
 		this.constraintType = type;
 		this.rbA = rbA;
 		this.rbB = rbB;
-		getFixed().setMassProps(0f, new Vector3f(0f, 0f, 0f));
+		getFixed().setMassProps(0f, new Vector3d(0f, 0f, 0f));
 	}
 	
 	public abstract void buildJacobian();
 
-	public abstract void solveConstraint(float timeStep);
+	public abstract void solveConstraint(double timeStep);
 	
 	public RigidBody getRigidBodyA() {
 		return rbA;
@@ -101,7 +101,7 @@ public abstract class TypedConstraint {
 		this.userConstraintId = userConstraintId;
 	}
 
-	public float getAppliedImpulse() {
+	public double getAppliedImpulse() {
 		return appliedImpulse;
 	}
 

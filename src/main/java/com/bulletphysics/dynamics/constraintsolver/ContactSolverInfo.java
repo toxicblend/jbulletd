@@ -30,20 +30,20 @@ package com.bulletphysics.dynamics.constraintsolver;
  */
 public class ContactSolverInfo {
 
-	public float tau = 0.6f;
-	public float damping = 1f;
-	public float friction = 0.3f;
-	public float timeStep;
-	public float restitution = 0f;
+	public double tau = 0.6f;
+	public double damping = 1f;
+	public double friction = 0.3f;
+	public double timeStep;
+	public double restitution = 0f;
 	public int numIterations = 10;
-	public float maxErrorReduction = 20f;
-	public float sor = 1.3f;
-	public float erp = 0.2f; // used as Baumgarte factor
-	public float erp2 = 0.1f; // used in Split Impulse
+	public double maxErrorReduction = 20f;
+	public double sor = 1.3f;
+	public double erp = 0.2f; // used as Baumgarte factor
+	public double erp2 = 0.1f; // used in Split Impulse
 	public boolean splitImpulse = false;
-	public float splitImpulsePenetrationThreshold = -0.02f;
-	public float linearSlop = 0f;
-	public float warmstartingFactor = 0.85f;
+	public double splitImpulsePenetrationThreshold = -0.02f;
+	public double linearSlop = 0f;
+	public double warmstartingFactor = 0.85f;
 	
 	public int solverMode = SolverMode.SOLVER_RANDMIZE_ORDER | SolverMode.SOLVER_CACHE_FRIENDLY | SolverMode.SOLVER_USE_WARMSTARTING;
 

@@ -35,8 +35,8 @@ package com.bulletphysics.dynamics.constraintsolver;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.VectorUtil;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Vector3d;
 
 // JAVA NOTE: SliderConstraint from 2.71
 
@@ -46,81 +46,81 @@ import javax.vecmath.Vector3f;
  */
 public class SliderConstraint extends TypedConstraint {
 	
-	public static final float SLIDER_CONSTRAINT_DEF_SOFTNESS    = 1.0f;
-	public static final float SLIDER_CONSTRAINT_DEF_DAMPING     = 1.0f;
-	public static final float SLIDER_CONSTRAINT_DEF_RESTITUTION = 0.7f;
+	public static final double SLIDER_CONSTRAINT_DEF_SOFTNESS    = 1.0f;
+	public static final double SLIDER_CONSTRAINT_DEF_DAMPING     = 1.0f;
+	public static final double SLIDER_CONSTRAINT_DEF_RESTITUTION = 0.7f;
 	
 	protected final Transform frameInA = new Transform();
 	protected final Transform frameInB = new Transform();
 	// use frameA fo define limits, if true
 	protected boolean useLinearReferenceFrameA;
 	// linear limits
-	protected float lowerLinLimit;
-	protected float upperLinLimit;
+	protected double lowerLinLimit;
+	protected double upperLinLimit;
 	// angular limits
-	protected float lowerAngLimit;
-	protected float upperAngLimit;
+	protected double lowerAngLimit;
+	protected double upperAngLimit;
 	// softness, restitution and damping for different cases
 	// DirLin - moving inside linear limits
 	// LimLin - hitting linear limit
 	// DirAng - moving inside angular limits
 	// LimAng - hitting angular limit
 	// OrthoLin, OrthoAng - against constraint axis
-	protected float softnessDirLin;
-	protected float restitutionDirLin;
-	protected float dampingDirLin;
-	protected float softnessDirAng;
-	protected float restitutionDirAng;
-	protected float dampingDirAng;
-	protected float softnessLimLin;
-	protected float restitutionLimLin;
-	protected float dampingLimLin;
-	protected float softnessLimAng;
-	protected float restitutionLimAng;
-	protected float dampingLimAng;
-	protected float softnessOrthoLin;
-	protected float restitutionOrthoLin;
-	protected float dampingOrthoLin;
-	protected float softnessOrthoAng;
-	protected float restitutionOrthoAng;
-	protected float dampingOrthoAng;
+	protected double softnessDirLin;
+	protected double restitutionDirLin;
+	protected double dampingDirLin;
+	protected double softnessDirAng;
+	protected double restitutionDirAng;
+	protected double dampingDirAng;
+	protected double softnessLimLin;
+	protected double restitutionLimLin;
+	protected double dampingLimLin;
+	protected double softnessLimAng;
+	protected double restitutionLimAng;
+	protected double dampingLimAng;
+	protected double softnessOrthoLin;
+	protected double restitutionOrthoLin;
+	protected double dampingOrthoLin;
+	protected double softnessOrthoAng;
+	protected double restitutionOrthoAng;
+	protected double dampingOrthoAng;
 	
 	// for interlal use
 	protected boolean solveLinLim;
 	protected boolean solveAngLim;
 
 	protected JacobianEntry[] jacLin = new JacobianEntry[/*3*/] { new JacobianEntry(), new JacobianEntry(), new JacobianEntry() };
-	protected float[] jacLinDiagABInv = new float[3];
+	protected double[] jacLinDiagABInv = new double[3];
 
 	protected JacobianEntry[] jacAng = new JacobianEntry[/*3*/] { new JacobianEntry(), new JacobianEntry(), new JacobianEntry() };
 
-	protected float timeStep;
+	protected double timeStep;
 	protected final Transform calculatedTransformA = new Transform();
 	protected final Transform calculatedTransformB = new Transform();
 
-	protected final Vector3f sliderAxis = new Vector3f();
-	protected final Vector3f realPivotAInW = new Vector3f();
-	protected final Vector3f realPivotBInW = new Vector3f();
-	protected final Vector3f projPivotInW = new Vector3f();
-	protected final Vector3f delta = new Vector3f();
-	protected final Vector3f depth = new Vector3f();
-	protected final Vector3f relPosA = new Vector3f();
-	protected final Vector3f relPosB = new Vector3f();
+	protected final Vector3d sliderAxis = new Vector3d();
+	protected final Vector3d realPivotAInW = new Vector3d();
+	protected final Vector3d realPivotBInW = new Vector3d();
+	protected final Vector3d projPivotInW = new Vector3d();
+	protected final Vector3d delta = new Vector3d();
+	protected final Vector3d depth = new Vector3d();
+	protected final Vector3d relPosA = new Vector3d();
+	protected final Vector3d relPosB = new Vector3d();
 
-	protected float linPos;
+	protected double linPos;
 
-	protected float angDepth;
-	protected float kAngle;
+	protected double angDepth;
+	protected double kAngle;
 
 	protected boolean poweredLinMotor;
-	protected float targetLinMotorVelocity;
-	protected float maxLinMotorForce;
-	protected float accumulatedLinMotorImpulse;
+	protected double targetLinMotorVelocity;
+	protected double maxLinMotorForce;
+	protected double accumulatedLinMotorImpulse;
 	
 	protected boolean poweredAngMotor;
-	protected float targetAngMotorVelocity;
-	protected float maxAngMotorForce;
-	protected float accumulatedAngMotorImpulse;
+	protected double targetAngMotorVelocity;
+	protected double maxAngMotorForce;
+	protected double accumulatedAngMotorImpulse;
 
     public SliderConstraint() {
 		super(TypedConstraintType.SLIDER_CONSTRAINT_TYPE);
@@ -182,7 +182,7 @@ public class SliderConstraint extends TypedConstraint {
 	}
 
 	@Override
-	public void solveConstraint(float timeStep) {
+	public void solveConstraint(double timeStep) {
 		this.timeStep = timeStep;
 		if (useLinearReferenceFrameA) {
 			solveConstraintInt(rbA, rbB);
@@ -212,35 +212,35 @@ public class SliderConstraint extends TypedConstraint {
 		return out;
 	}
 	
-	public float getLowerLinLimit() {
+	public double getLowerLinLimit() {
 		return lowerLinLimit;
 	}
 
-	public void setLowerLinLimit(float lowerLimit) {
+	public void setLowerLinLimit(double lowerLimit) {
 		this.lowerLinLimit = lowerLimit;
 	}
 
-	public float getUpperLinLimit() {
+	public double getUpperLinLimit() {
 		return upperLinLimit;
 	}
 
-	public void setUpperLinLimit(float upperLimit) {
+	public void setUpperLinLimit(double upperLimit) {
 		this.upperLinLimit = upperLimit;
 	}
 
-	public float getLowerAngLimit() {
+	public double getLowerAngLimit() {
 		return lowerAngLimit;
 	}
 
-	public void setLowerAngLimit(float lowerLimit) {
+	public void setLowerAngLimit(double lowerLimit) {
 		this.lowerAngLimit = lowerLimit;
 	}
 
-	public float getUpperAngLimit() {
+	public double getUpperAngLimit() {
 		return upperAngLimit;
 	}
 
-	public void setUpperAngLimit(float upperLimit) {
+	public void setUpperAngLimit(double upperLimit) {
 		this.upperAngLimit = upperLimit;
 	}
 
@@ -248,147 +248,147 @@ public class SliderConstraint extends TypedConstraint {
 		return useLinearReferenceFrameA;
 	}
 	
-	public float getSoftnessDirLin() {
+	public double getSoftnessDirLin() {
 		return softnessDirLin;
 	}
 
-	public float getRestitutionDirLin() {
+	public double getRestitutionDirLin() {
 		return restitutionDirLin;
 	}
 
-	public float getDampingDirLin() {
+	public double getDampingDirLin() {
 		return dampingDirLin;
 	}
 
-	public float getSoftnessDirAng() {
+	public double getSoftnessDirAng() {
 		return softnessDirAng;
 	}
 
-	public float getRestitutionDirAng() {
+	public double getRestitutionDirAng() {
 		return restitutionDirAng;
 	}
 
-	public float getDampingDirAng() {
+	public double getDampingDirAng() {
 		return dampingDirAng;
 	}
 
-	public float getSoftnessLimLin() {
+	public double getSoftnessLimLin() {
 		return softnessLimLin;
 	}
 
-	public float getRestitutionLimLin() {
+	public double getRestitutionLimLin() {
 		return restitutionLimLin;
 	}
 
-	public float getDampingLimLin() {
+	public double getDampingLimLin() {
 		return dampingLimLin;
 	}
 
-	public float getSoftnessLimAng() {
+	public double getSoftnessLimAng() {
 		return softnessLimAng;
 	}
 
-	public float getRestitutionLimAng() {
+	public double getRestitutionLimAng() {
 		return restitutionLimAng;
 	}
 
-	public float getDampingLimAng() {
+	public double getDampingLimAng() {
 		return dampingLimAng;
 	}
 
-	public float getSoftnessOrthoLin() {
+	public double getSoftnessOrthoLin() {
 		return softnessOrthoLin;
 	}
 
-	public float getRestitutionOrthoLin() {
+	public double getRestitutionOrthoLin() {
 		return restitutionOrthoLin;
 	}
 
-	public float getDampingOrthoLin() {
+	public double getDampingOrthoLin() {
 		return dampingOrthoLin;
 	}
 
-	public float getSoftnessOrthoAng() {
+	public double getSoftnessOrthoAng() {
 		return softnessOrthoAng;
 	}
 
-	public float getRestitutionOrthoAng() {
+	public double getRestitutionOrthoAng() {
 		return restitutionOrthoAng;
 	}
 
-	public float getDampingOrthoAng() {
+	public double getDampingOrthoAng() {
 		return dampingOrthoAng;
 	}
 	
-	public void setSoftnessDirLin(float softnessDirLin) {
+	public void setSoftnessDirLin(double softnessDirLin) {
 		this.softnessDirLin = softnessDirLin;
 	}
 
-	public void setRestitutionDirLin(float restitutionDirLin) {
+	public void setRestitutionDirLin(double restitutionDirLin) {
 		this.restitutionDirLin = restitutionDirLin;
 	}
 
-	public void setDampingDirLin(float dampingDirLin) {
+	public void setDampingDirLin(double dampingDirLin) {
 		this.dampingDirLin = dampingDirLin;
 	}
 
-	public void setSoftnessDirAng(float softnessDirAng) {
+	public void setSoftnessDirAng(double softnessDirAng) {
 		this.softnessDirAng = softnessDirAng;
 	}
 
-	public void setRestitutionDirAng(float restitutionDirAng) {
+	public void setRestitutionDirAng(double restitutionDirAng) {
 		this.restitutionDirAng = restitutionDirAng;
 	}
 
-	public void setDampingDirAng(float dampingDirAng) {
+	public void setDampingDirAng(double dampingDirAng) {
 		this.dampingDirAng = dampingDirAng;
 	}
 
-	public void setSoftnessLimLin(float softnessLimLin) {
+	public void setSoftnessLimLin(double softnessLimLin) {
 		this.softnessLimLin = softnessLimLin;
 	}
 
-	public void setRestitutionLimLin(float restitutionLimLin) {
+	public void setRestitutionLimLin(double restitutionLimLin) {
 		this.restitutionLimLin = restitutionLimLin;
 	}
 
-	public void setDampingLimLin(float dampingLimLin) {
+	public void setDampingLimLin(double dampingLimLin) {
 		this.dampingLimLin = dampingLimLin;
 	}
 
-	public void setSoftnessLimAng(float softnessLimAng) {
+	public void setSoftnessLimAng(double softnessLimAng) {
 		this.softnessLimAng = softnessLimAng;
 	}
 
-	public void setRestitutionLimAng(float restitutionLimAng) {
+	public void setRestitutionLimAng(double restitutionLimAng) {
 		this.restitutionLimAng = restitutionLimAng;
 	}
 
-	public void setDampingLimAng(float dampingLimAng) {
+	public void setDampingLimAng(double dampingLimAng) {
 		this.dampingLimAng = dampingLimAng;
 	}
 
-	public void setSoftnessOrthoLin(float softnessOrthoLin) {
+	public void setSoftnessOrthoLin(double softnessOrthoLin) {
 		this.softnessOrthoLin = softnessOrthoLin;
 	}
 
-	public void setRestitutionOrthoLin(float restitutionOrthoLin) {
+	public void setRestitutionOrthoLin(double restitutionOrthoLin) {
 		this.restitutionOrthoLin = restitutionOrthoLin;
 	}
 
-	public void setDampingOrthoLin(float dampingOrthoLin) {
+	public void setDampingOrthoLin(double dampingOrthoLin) {
 		this.dampingOrthoLin = dampingOrthoLin;
 	}
 
-	public void setSoftnessOrthoAng(float softnessOrthoAng) {
+	public void setSoftnessOrthoAng(double softnessOrthoAng) {
 		this.softnessOrthoAng = softnessOrthoAng;
 	}
 
-	public void setRestitutionOrthoAng(float restitutionOrthoAng) {
+	public void setRestitutionOrthoAng(double restitutionOrthoAng) {
 		this.restitutionOrthoAng = restitutionOrthoAng;
 	}
 
-	public void setDampingOrthoAng(float dampingOrthoAng) {
+	public void setDampingOrthoAng(double dampingOrthoAng) {
 		this.dampingOrthoAng = dampingOrthoAng;
 	}
 
@@ -400,19 +400,19 @@ public class SliderConstraint extends TypedConstraint {
 		return poweredLinMotor;
 	}
 
-	public void setTargetLinMotorVelocity(float targetLinMotorVelocity) {
+	public void setTargetLinMotorVelocity(double targetLinMotorVelocity) {
 		this.targetLinMotorVelocity = targetLinMotorVelocity;
 	}
 
-	public float getTargetLinMotorVelocity() {
+	public double getTargetLinMotorVelocity() {
 		return targetLinMotorVelocity;
 	}
 
-	public void setMaxLinMotorForce(float maxLinMotorForce) {
+	public void setMaxLinMotorForce(double maxLinMotorForce) {
 		this.maxLinMotorForce = maxLinMotorForce;
 	}
 
-	public float getMaxLinMotorForce() {
+	public double getMaxLinMotorForce() {
 		return maxLinMotorForce;
 	}
 
@@ -424,23 +424,23 @@ public class SliderConstraint extends TypedConstraint {
 		return poweredAngMotor;
 	}
 
-	public void setTargetAngMotorVelocity(float targetAngMotorVelocity) {
+	public void setTargetAngMotorVelocity(double targetAngMotorVelocity) {
 		this.targetAngMotorVelocity = targetAngMotorVelocity;
 	}
 
-	public float getTargetAngMotorVelocity() {
+	public double getTargetAngMotorVelocity() {
 		return targetAngMotorVelocity;
 	}
 
-	public void setMaxAngMotorForce(float maxAngMotorForce) {
+	public void setMaxAngMotorForce(double maxAngMotorForce) {
 		this.maxAngMotorForce = maxAngMotorForce;
 	}
 
-	public float getMaxAngMotorForce() {
+	public double getMaxAngMotorForce() {
 		return this.maxAngMotorForce;
 	}
 
-	public float getLinearPos() {
+	public double getLinearPos() {
 		return this.linPos;
 	}
 
@@ -450,7 +450,7 @@ public class SliderConstraint extends TypedConstraint {
 		return solveLinLim;
 	}
 
-	public float getLinDepth() {
+	public double getLinDepth() {
 		return depth.x;
 	}
 
@@ -458,7 +458,7 @@ public class SliderConstraint extends TypedConstraint {
 		return solveAngLim;
 	}
 
-	public float getAngDepth() {
+	public double getAngDepth() {
 		return angDepth;
 	}
 	
@@ -468,8 +468,8 @@ public class SliderConstraint extends TypedConstraint {
 		Transform tmpTrans = new Transform();
 		Transform tmpTrans1 = new Transform();
 		Transform tmpTrans2 = new Transform();
-		Vector3f tmp = new Vector3f();
-		Vector3f tmp2 = new Vector3f();
+		Vector3d tmp = new Vector3d();
+		Vector3d tmp2 = new Vector3d();
 
 		// calculate transforms
 		calculatedTransformA.mul(rbA.getCenterOfMassTransform(tmpTrans), frameInA);
@@ -482,16 +482,16 @@ public class SliderConstraint extends TypedConstraint {
 		projPivotInW.scaleAdd(sliderAxis.dot(delta), sliderAxis, realPivotAInW);
 		relPosA.sub(projPivotInW, rbA.getCenterOfMassPosition(tmp));
 		relPosB.sub(realPivotBInW, rbB.getCenterOfMassPosition(tmp));
-		Vector3f normalWorld = new Vector3f();
+		Vector3d normalWorld = new Vector3d();
 
 		// linear part
 		for (int i=0; i<3; i++) {
 			calculatedTransformA.basis.getColumn(i, normalWorld);
 
-			Matrix3f mat1 = rbA.getCenterOfMassTransform(tmpTrans1).basis;
+			Matrix3d mat1 = rbA.getCenterOfMassTransform(tmpTrans1).basis;
 			mat1.transpose();
 
-			Matrix3f mat2 = rbB.getCenterOfMassTransform(tmpTrans2).basis;
+			Matrix3d mat2 = rbB.getCenterOfMassTransform(tmpTrans2).basis;
 			mat2.transpose();
 
 			jacLin[i].init(
@@ -513,10 +513,10 @@ public class SliderConstraint extends TypedConstraint {
 		for (int i=0; i<3; i++) {
 			calculatedTransformA.basis.getColumn(i, normalWorld);
 
-			Matrix3f mat1 = rbA.getCenterOfMassTransform(tmpTrans1).basis;
+			Matrix3d mat1 = rbA.getCenterOfMassTransform(tmpTrans1).basis;
 			mat1.transpose();
 
-			Matrix3f mat2 = rbB.getCenterOfMassTransform(tmpTrans2).basis;
+			Matrix3d mat2 = rbB.getCenterOfMassTransform(tmpTrans2).basis;
 			mat2.transpose();
 
 			jacAng[i].init(
@@ -528,7 +528,7 @@ public class SliderConstraint extends TypedConstraint {
 		}
 		testAngLimits();
 
-		Vector3f axisA = new Vector3f();
+		Vector3d axisA = new Vector3d();
 		calculatedTransformA.basis.getColumn(0, axisA);
 		kAngle = 1f / (rbA.computeAngularImpulseDenominator(axisA) + rbB.computeAngularImpulseDenominator(axisA));
 		// clear accumulator for motors
@@ -537,27 +537,27 @@ public class SliderConstraint extends TypedConstraint {
 	}
 	
 	public void solveConstraintInt(RigidBody rbA, RigidBody rbB) {
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 
 		// linear
-		Vector3f velA = rbA.getVelocityInLocalPoint(relPosA, new Vector3f());
-		Vector3f velB = rbB.getVelocityInLocalPoint(relPosB, new Vector3f());
-		Vector3f vel = new Vector3f();
+		Vector3d velA = rbA.getVelocityInLocalPoint(relPosA, new Vector3d());
+		Vector3d velB = rbB.getVelocityInLocalPoint(relPosB, new Vector3d());
+		Vector3d vel = new Vector3d();
 		vel.sub(velA, velB);
 
-		Vector3f impulse_vector = new Vector3f();
+		Vector3d impulse_vector = new Vector3d();
 
 		for (int i=0; i<3; i++) {
-			Vector3f normal = jacLin[i].linearJointAxis;
-			float rel_vel = normal.dot(vel);
+			Vector3d normal = jacLin[i].linearJointAxis;
+			double rel_vel = normal.dot(vel);
 			// calculate positional error
-			float depth = VectorUtil.getCoord(this.depth, i);
+			double depth = VectorUtil.getCoord(this.depth, i);
 			// get parameters
-			float softness = (i != 0)? softnessOrthoLin : (solveLinLim? softnessLimLin : softnessDirLin);
-			float restitution = (i != 0)? restitutionOrthoLin : (solveLinLim? restitutionLimLin : restitutionDirLin);
-			float damping = (i != 0)? dampingOrthoLin : (solveLinLim? dampingLimLin : dampingDirLin);
+			double softness = (i != 0)? softnessOrthoLin : (solveLinLim? softnessLimLin : softnessDirLin);
+			double restitution = (i != 0)? restitutionOrthoLin : (solveLinLim? restitutionLimLin : restitutionDirLin);
+			double damping = (i != 0)? dampingOrthoLin : (solveLinLim? dampingLimLin : dampingDirLin);
 			// calcutate and apply impulse
-			float normalImpulse = softness * (restitution * depth / timeStep - damping * rel_vel) * jacLinDiagABInv[i];
+			double normalImpulse = softness * (restitution * depth / timeStep - damping * rel_vel) * jacLinDiagABInv[i];
 			impulse_vector.scale(normalImpulse, normal);
 			rbA.applyImpulse(impulse_vector, relPosA);
 			tmp.negate(impulse_vector);
@@ -566,15 +566,15 @@ public class SliderConstraint extends TypedConstraint {
 			if (poweredLinMotor && (i == 0)) {
 				// apply linear motor
 				if (accumulatedLinMotorImpulse < maxLinMotorForce) {
-					float desiredMotorVel = targetLinMotorVelocity;
-					float motor_relvel = desiredMotorVel + rel_vel;
+					double desiredMotorVel = targetLinMotorVelocity;
+					double motor_relvel = desiredMotorVel + rel_vel;
 					normalImpulse = -motor_relvel * jacLinDiagABInv[i];
 					// clamp accumulated impulse
-					float new_acc = accumulatedLinMotorImpulse + Math.abs(normalImpulse);
+					double new_acc = accumulatedLinMotorImpulse + Math.abs(normalImpulse);
 					if (new_acc > maxLinMotorForce) {
 						new_acc = maxLinMotorForce;
 					}
-					float del = new_acc - accumulatedLinMotorImpulse;
+					double del = new_acc - accumulatedLinMotorImpulse;
 					if (normalImpulse < 0f) {
 						normalImpulse = -del;
 					}
@@ -593,44 +593,44 @@ public class SliderConstraint extends TypedConstraint {
 
 		// angular
 		// get axes in world space
-		Vector3f axisA = new Vector3f();
+		Vector3d axisA = new Vector3d();
 		calculatedTransformA.basis.getColumn(0, axisA);
-		Vector3f axisB = new Vector3f();
+		Vector3d axisB = new Vector3d();
 		calculatedTransformB.basis.getColumn(0, axisB);
 
-		Vector3f angVelA = rbA.getAngularVelocity(new Vector3f());
-		Vector3f angVelB = rbB.getAngularVelocity(new Vector3f());
+		Vector3d angVelA = rbA.getAngularVelocity(new Vector3d());
+		Vector3d angVelB = rbB.getAngularVelocity(new Vector3d());
 
-		Vector3f angVelAroundAxisA = new Vector3f();
+		Vector3d angVelAroundAxisA = new Vector3d();
 		angVelAroundAxisA.scale(axisA.dot(angVelA), axisA);
-		Vector3f angVelAroundAxisB = new Vector3f();
+		Vector3d angVelAroundAxisB = new Vector3d();
 		angVelAroundAxisB.scale(axisB.dot(angVelB), axisB);
 
-		Vector3f angAorthog = new Vector3f();
+		Vector3d angAorthog = new Vector3d();
 		angAorthog.sub(angVelA, angVelAroundAxisA);
-		Vector3f angBorthog = new Vector3f();
+		Vector3d angBorthog = new Vector3d();
 		angBorthog.sub(angVelB, angVelAroundAxisB);
-		Vector3f velrelOrthog = new Vector3f();
+		Vector3d velrelOrthog = new Vector3d();
 		velrelOrthog.sub(angAorthog, angBorthog);
 
 		// solve orthogonal angular velocity correction
-		float len = velrelOrthog.length();
+		double len = velrelOrthog.length();
 		if (len > 0.00001f) {
-			Vector3f normal = new Vector3f();
+			Vector3d normal = new Vector3d();
 			normal.normalize(velrelOrthog);
-			float denom = rbA.computeAngularImpulseDenominator(normal) + rbB.computeAngularImpulseDenominator(normal);
+			double denom = rbA.computeAngularImpulseDenominator(normal) + rbB.computeAngularImpulseDenominator(normal);
 			velrelOrthog.scale((1f / denom) * dampingOrthoAng * softnessOrthoAng);
 		}
 
 		// solve angular positional correction
-		Vector3f angularError = new Vector3f();
+		Vector3d angularError = new Vector3d();
 		angularError.cross(axisA, axisB);
 		angularError.scale(1f / timeStep);
-		float len2 = angularError.length();
+		double len2 = angularError.length();
 		if (len2 > 0.00001f) {
-			Vector3f normal2 = new Vector3f();
+			Vector3d normal2 = new Vector3d();
 			normal2.normalize(angularError);
-			float denom2 = rbA.computeAngularImpulseDenominator(normal2) + rbB.computeAngularImpulseDenominator(normal2);
+			double denom2 = rbA.computeAngularImpulseDenominator(normal2) + rbB.computeAngularImpulseDenominator(normal2);
 			angularError.scale((1f / denom2) * restitutionOrthoAng * softnessOrthoAng);
 		}
 
@@ -640,7 +640,7 @@ public class SliderConstraint extends TypedConstraint {
 		rbA.applyTorqueImpulse(tmp);
 		tmp.sub(velrelOrthog, angularError);
 		rbB.applyTorqueImpulse(tmp);
-		float impulseMag;
+		double impulseMag;
 
 		// solve angular limits
 		if (solveAngLim) {
@@ -653,7 +653,7 @@ public class SliderConstraint extends TypedConstraint {
 			impulseMag = tmp.dot(axisA) * dampingDirAng + angDepth * restitutionDirAng / timeStep;
 			impulseMag *= kAngle * softnessDirAng;
 		}
-		Vector3f impulse = new Vector3f();
+		Vector3d impulse = new Vector3d();
 		impulse.scale(impulseMag, axisA);
 		rbA.applyTorqueImpulse(impulse);
 		tmp.negate(impulse);
@@ -662,20 +662,20 @@ public class SliderConstraint extends TypedConstraint {
 		// apply angular motor
 		if (poweredAngMotor) {
 			if (accumulatedAngMotorImpulse < maxAngMotorForce) {
-				Vector3f velrel = new Vector3f();
+				Vector3d velrel = new Vector3d();
 				velrel.sub(angVelAroundAxisA, angVelAroundAxisB);
-				float projRelVel = velrel.dot(axisA);
+				double projRelVel = velrel.dot(axisA);
 
-				float desiredMotorVel = targetAngMotorVelocity;
-				float motor_relvel = desiredMotorVel - projRelVel;
+				double desiredMotorVel = targetAngMotorVelocity;
+				double motor_relvel = desiredMotorVel - projRelVel;
 
-				float angImpulse = kAngle * motor_relvel;
+				double angImpulse = kAngle * motor_relvel;
 				// clamp accumulated impulse
-				float new_acc = accumulatedAngMotorImpulse + Math.abs(angImpulse);
+				double new_acc = accumulatedAngMotorImpulse + Math.abs(angImpulse);
 				if (new_acc > maxAngMotorForce) {
 					new_acc = maxAngMotorForce;
 				}
-				float del = new_acc - accumulatedAngMotorImpulse;
+				double del = new_acc - accumulatedAngMotorImpulse;
 				if (angImpulse < 0f) {
 					angImpulse = -del;
 				} else {
@@ -684,7 +684,7 @@ public class SliderConstraint extends TypedConstraint {
 				accumulatedAngMotorImpulse = new_acc;
 
 				// apply clamped impulse
-				Vector3f motorImp = new Vector3f();
+				Vector3d motorImp = new Vector3d();
 				motorImp.scale(angImpulse, axisA);
 				rbA.applyTorqueImpulse(motorImp);
 				tmp.negate(motorImp);
@@ -711,7 +711,7 @@ public class SliderConstraint extends TypedConstraint {
 		calculatedTransformA.basis.getColumn(0, sliderAxis); // along X
 		delta.sub(realPivotBInW, realPivotAInW);
 		projPivotInW.scaleAdd(sliderAxis.dot(delta), sliderAxis, realPivotAInW);
-		Vector3f normalWorld = new Vector3f();
+		Vector3d normalWorld = new Vector3d();
 		// linear part
 		for (int i=0; i<3; i++) {
 			calculatedTransformA.basis.getColumn(i, normalWorld);
@@ -744,14 +744,14 @@ public class SliderConstraint extends TypedConstraint {
 		angDepth = 0f;
 		solveAngLim = false;
 		if (lowerAngLimit <= upperAngLimit) {
-			Vector3f axisA0 = new Vector3f();
+			Vector3d axisA0 = new Vector3d();
 			calculatedTransformA.basis.getColumn(1, axisA0);
-			Vector3f axisA1 = new Vector3f();
+			Vector3d axisA1 = new Vector3d();
 			calculatedTransformA.basis.getColumn(2, axisA1);
-			Vector3f axisB0 = new Vector3f();
+			Vector3d axisB0 = new Vector3d();
 			calculatedTransformB.basis.getColumn(1, axisB0);
 
-			float rot = (float) Math.atan2(axisB0.dot(axisA1), axisB0.dot(axisA0));
+			double rot = (double) Math.atan2(axisB0.dot(axisA1), axisB0.dot(axisA0));
 			if (rot < lowerAngLimit) {
 				angDepth = rot - lowerAngLimit;
 				solveAngLim = true;
@@ -765,10 +765,10 @@ public class SliderConstraint extends TypedConstraint {
 	
 	// access for PE Solver
 	
-	public Vector3f getAncorInA(Vector3f out) {
+	public Vector3d getAncorInA(Vector3d out) {
 		Transform tmpTrans = new Transform();
 
-		Vector3f ancorInA = out;
+		Vector3d ancorInA = out;
 		ancorInA.scaleAdd((lowerLinLimit + upperLinLimit) * 0.5f, sliderAxis, realPivotAInW);
 		rbA.getCenterOfMassTransform(tmpTrans);
 		tmpTrans.inverse();
@@ -776,8 +776,8 @@ public class SliderConstraint extends TypedConstraint {
 		return ancorInA;
 	}
 
-	public Vector3f getAncorInB(Vector3f out) {
-		Vector3f ancorInB = out;
+	public Vector3d getAncorInB(Vector3d out) {
+		Vector3d ancorInB = out;
 		ancorInB.set(frameInB.origin);
 		return ancorInB;
 	}

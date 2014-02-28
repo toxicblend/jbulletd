@@ -39,7 +39,7 @@ import com.bulletphysics.collision.shapes.ConvexShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.ObjectArrayList;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * ConvexConvexAlgorithm collision algorithm implements time of impact, convex
@@ -136,8 +136,8 @@ public class ConvexConvexAlgorithm extends CollisionAlgorithm {
 	private static boolean disableCcd = false;
 	
 	@Override
-	public float calculateTimeOfImpact(CollisionObject col0, CollisionObject col1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
-		Vector3f tmp = new Vector3f();
+	public double calculateTimeOfImpact(CollisionObject col0, CollisionObject col1, DispatcherInfo dispatchInfo, ManifoldResult resultOut) {
+		Vector3d tmp = new Vector3d();
 		
 		Transform tmpTrans1 = new Transform();
 		Transform tmpTrans2 = new Transform();
@@ -146,13 +146,13 @@ public class ConvexConvexAlgorithm extends CollisionAlgorithm {
 
 		// Linear motion for one of objects needs to exceed m_ccdSquareMotionThreshold
 		// col0->m_worldTransform,
-		float resultFraction = 1f;
+		double resultFraction = 1f;
 
 		tmp.sub(col0.getInterpolationWorldTransform(tmpTrans1).origin, col0.getWorldTransform(tmpTrans2).origin);
-		float squareMot0 = tmp.lengthSquared();
+		double squareMot0 = tmp.lengthSquared();
 
 		tmp.sub(col1.getInterpolationWorldTransform(tmpTrans1).origin, col1.getWorldTransform(tmpTrans2).origin);
-		float squareMot1 = tmp.lengthSquared();
+		double squareMot1 = tmp.lengthSquared();
 
 		if (squareMot0 < col0.getCcdSquareMotionThreshold() &&
 				squareMot1 < col1.getCcdSquareMotionThreshold()) {

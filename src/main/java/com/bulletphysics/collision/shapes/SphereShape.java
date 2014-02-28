@@ -25,7 +25,7 @@ package com.bulletphysics.collision.shapes;
 
 import com.bulletphysics.collision.broadphase.BroadphaseNativeType;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * SphereShape implements an implicit sphere, centered around a local origin with radius.
@@ -34,28 +34,28 @@ import javax.vecmath.Vector3f;
  */
 public class SphereShape extends ConvexInternalShape {
 	
-	public SphereShape(float radius) {
+	public SphereShape(double radius) {
 		implicitShapeDimensions.x = radius;
 		collisionMargin = radius;
 	}
 
 	@Override
-	public Vector3f localGetSupportingVertexWithoutMargin(Vector3f vec, Vector3f out) {
+	public Vector3d localGetSupportingVertexWithoutMargin(Vector3d vec, Vector3d out) {
 		out.set(0f, 0f, 0f);
 		return out;
 	}
 
 	@Override
-	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3f[] vectors, Vector3f[] supportVerticesOut, int numVectors) {
+	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3d[] vectors, Vector3d[] supportVerticesOut, int numVectors) {
 		for (int i = 0; i < numVectors; i++) {
 			supportVerticesOut[i].set(0f, 0f, 0f);
 		}
 	}
 
 	@Override
-	public void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax) {
-		Vector3f center = t.origin;
-		Vector3f extent = new Vector3f();
+	public void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax) {
+		Vector3d center = t.origin;
+		Vector3d extent = new Vector3d();
 		extent.set(getMargin(), getMargin(), getMargin());
 		aabbMin.sub(center, extent);
 		aabbMax.add(center, extent);
@@ -67,8 +67,8 @@ public class SphereShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
-		float elem = 0.4f * mass * getMargin() * getMargin();
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
+		double elem = 0.4f * mass * getMargin() * getMargin();
 		inertia.set(elem, elem, elem);
 	}
 
@@ -77,17 +77,17 @@ public class SphereShape extends ConvexInternalShape {
 		return "SPHERE";
 	}
 	
-	public float getRadius() {
+	public double getRadius() {
 		return implicitShapeDimensions.x * localScaling.x;
 	}
 
 	@Override
-	public void setMargin(float margin) {
+	public void setMargin(double margin) {
 		super.setMargin(margin);
 	}
 
 	@Override
-	public float getMargin() {
+	public double getMargin() {
 		// to improve gjk behaviour, use radius+margin as the full margin, so never get into the penetration case
 		// this means, non-uniform scaling is not supported anymore
 		return getRadius();

@@ -28,7 +28,7 @@
 package com.bulletphysics.extras.gimpact;
 
 import com.bulletphysics.extras.gimpact.BoxCollision.AABB;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  *
@@ -38,7 +38,7 @@ class BvhDataArray {
 
 	private int size = 0;
 	
-	float[] bound = new float[0];
+	double[] bound = new double[0];
 	int[] data = new int[0];
 
 	public int size() {
@@ -46,7 +46,7 @@ class BvhDataArray {
 	}
 
 	public void resize(int newSize) {
-		float[] newBound = new float[newSize*6];
+		double[] newBound = new double[newSize*6];
 		int[] newData = new int[newSize];
 		
 		System.arraycopy(bound, 0, newBound, 0, size*6);
@@ -62,12 +62,12 @@ class BvhDataArray {
 		int pos1 = idx1*6;
 		int pos2 = idx2*6;
 		
-		float b0 = bound[pos1+0];
-		float b1 = bound[pos1+1];
-		float b2 = bound[pos1+2];
-		float b3 = bound[pos1+3];
-		float b4 = bound[pos1+4];
-		float b5 = bound[pos1+5];
+		double b0 = bound[pos1+0];
+		double b1 = bound[pos1+1];
+		double b2 = bound[pos1+2];
+		double b3 = bound[pos1+3];
+		double b4 = bound[pos1+4];
+		double b5 = bound[pos1+5];
 		int d = data[idx1];
 		
 		bound[pos1+0] = bound[pos2+0];
@@ -94,13 +94,13 @@ class BvhDataArray {
 		return out;
 	}
 
-	public Vector3f getBoundMin(int idx, Vector3f out) {
+	public Vector3d getBoundMin(int idx, Vector3d out) {
 		int pos = idx*6;
 		out.set(bound[pos+0], bound[pos+1], bound[pos+2]);
 		return out;
 	}
 
-	public Vector3f getBoundMax(int idx, Vector3f out) {
+	public Vector3d getBoundMax(int idx, Vector3d out) {
 		int pos = idx*6;
 		out.set(bound[pos+3], bound[pos+4], bound[pos+5]);
 		return out;

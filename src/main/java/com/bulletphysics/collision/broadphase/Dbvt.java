@@ -32,7 +32,7 @@ import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.IntArrayList;
 import com.bulletphysics.util.ObjectArrayList;
 import java.util.Collections;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  *
@@ -151,11 +151,11 @@ public class Dbvt {
 		insertleaf(this, root, leaf);
 	}
 
-	public boolean update(Node leaf, DbvtAabbMm volume, Vector3f velocity, float margin) {
+	public boolean update(Node leaf, DbvtAabbMm volume, Vector3d velocity, double margin) {
 		if (leaf.volume.Contain(volume)) {
 			return false;
 		}
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 		tmp.set(margin, margin, margin);
 		volume.Expand(tmp);
 		volume.SignedExpand(velocity);
@@ -163,7 +163,7 @@ public class Dbvt {
 		return true;
 	}
 
-	public boolean update(Node leaf, DbvtAabbMm volume, Vector3f velocity) {
+	public boolean update(Node leaf, DbvtAabbMm volume, Vector3d velocity) {
 		if (leaf.volume.Contain(volume)) {
 			return false;
 		}
@@ -172,11 +172,11 @@ public class Dbvt {
 		return true;
 	}
 
-	public boolean update(Node leaf, DbvtAabbMm volume, float margin) {
+	public boolean update(Node leaf, DbvtAabbMm volume, double margin) {
 		if (leaf.volume.Contain(volume)) {
 			return false;
 		}
-		Vector3f tmp = new Vector3f();
+		Vector3d tmp = new Vector3d();
 		tmp.set(margin, margin, margin);
 		volume.Expand(tmp);
 		update(leaf, volume);
@@ -352,12 +352,12 @@ public class Dbvt {
 		}
 	}
 
-	public static void collideRAY(Node root, Vector3f origin, Vector3f direction, ICollide policy) {
+	public static void collideRAY(Node root, Vector3d origin, Vector3d direction, ICollide policy) {
 		//DBVT_CHECKTYPE
 		if (root != null) {
-			Vector3f normal = new Vector3f();
+			Vector3d normal = new Vector3d();
 			normal.normalize(direction);
-			Vector3f invdir = new Vector3f();
+			Vector3d invdir = new Vector3d();
 			invdir.set(1f / normal.x, 1f / normal.y, 1f / normal.z);
 			int[] signs = new int[] { direction.x<0 ? 1:0, direction.y<0 ? 1:0, direction.z<0 ? 1:0 };
 			ObjectArrayList<Node> stack = new ObjectArrayList<Node>(SIMPLE_STACKSIZE);
@@ -378,7 +378,7 @@ public class Dbvt {
 		}
 	}
 
-	public static void collideKDOP(Node root, Vector3f[] normals, float[] offsets, int count, ICollide policy) {
+	public static void collideKDOP(Node root, Vector3d[] normals, double[] offsets, int count, ICollide policy) {
 		//DBVT_CHECKTYPE
 		if (root != null) {
 			int inside = (1 << count) - 1;
@@ -423,11 +423,11 @@ public class Dbvt {
 		}
 	}
 
-	public static void collideOCL(Node root, Vector3f[] normals, float[] offsets, Vector3f sortaxis, int count, ICollide policy) {
+	public static void collideOCL(Node root, Vector3d[] normals, double[] offsets, Vector3d sortaxis, int count, ICollide policy) {
 		collideOCL(root, normals, offsets, sortaxis, count, policy, true);
 	}
 
-	public static void collideOCL(Node root, Vector3f[] normals, float[] offsets, Vector3f sortaxis, int count, ICollide policy, boolean fullsort) {
+	public static void collideOCL(Node root, Vector3d[] normals, double[] offsets, Vector3d sortaxis, int count, ICollide policy, boolean fullsort) {
 		//DBVT_CHECKTYPE
 		if (root != null) {
 			int srtsgns = (sortaxis.x >= 0 ? 1 : 0) +
@@ -539,7 +539,7 @@ public class Dbvt {
 		}
 	}
 	
-	public static int nearest(IntArrayList i, ObjectArrayList<sStkNPS> a, float v, int l, int h) {
+	public static int nearest(IntArrayList i, ObjectArrayList<sStkNPS> a, double v, int l, int h) {
 		int m = 0;
 		while (l < h) {
 			m = (l + h) >> 1;
@@ -579,8 +579,8 @@ public class Dbvt {
 	}
 	
 	// volume+edge lengths
-	private static float size(DbvtAabbMm a) {
-		Vector3f edges = a.Lengths(new Vector3f());
+	private static double size(DbvtAabbMm a) {
+		Vector3d edges = a.Lengths(new Vector3d());
 		return (edges.x * edges.y * edges.z +
 		        edges.x + edges.y + edges.z);
 	}
@@ -713,8 +713,8 @@ public class Dbvt {
 		}
 	}
 	
-	private static void split(ObjectArrayList<Node> leaves, ObjectArrayList<Node> left, ObjectArrayList<Node> right, Vector3f org, Vector3f axis) {
-		Vector3f tmp = new Vector3f();
+	private static void split(ObjectArrayList<Node> leaves, ObjectArrayList<Node> left, ObjectArrayList<Node> right, Vector3d org, Vector3d axis) {
+		Vector3d tmp = new Vector3d();
 		MiscUtil.resize(left, 0, Node.class);
 		MiscUtil.resize(right, 0, Node.class);
 		for (int i=0, ni=leaves.size(); i<ni; i++) {
@@ -740,11 +740,11 @@ public class Dbvt {
 	private static void bottomup(Dbvt pdbvt, ObjectArrayList<Node> leaves) {
 		DbvtAabbMm tmpVolume = new DbvtAabbMm();
 		while (leaves.size() > 1) {
-			float minsize = BulletGlobals.SIMD_INFINITY;
+			double minsize = BulletGlobals.SIMD_INFINITY;
 			int[] minidx = new int[] { -1, -1 };
 			for (int i=0; i<leaves.size(); i++) {
 				for (int j=i+1; j<leaves.size(); j++) {
-					float sz = size(merge(leaves.getQuick(i).volume, leaves.getQuick(j).volume, tmpVolume));
+					double sz = size(merge(leaves.getQuick(i).volume, leaves.getQuick(j).volume, tmpVolume));
 					if (sz < minsize) {
 						minsize = sz;
 						minidx[0] = i;
@@ -765,13 +765,13 @@ public class Dbvt {
 		}
 	}
 
-	private static Vector3f[] axis = new Vector3f[] { new Vector3f(1, 0, 0), new Vector3f(0, 1, 0), new Vector3f(0, 0, 1) };
+	private static Vector3d[] axis = new Vector3d[] { new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1) };
 	
 	private static Node topdown(Dbvt pdbvt, ObjectArrayList<Node> leaves, int bu_treshold) {
 		if (leaves.size() > 1) {
 			if (leaves.size() > bu_treshold) {
 				DbvtAabbMm vol = bounds(leaves);
-				Vector3f org = vol.Center(new Vector3f());
+				Vector3d org = vol.Center(new Vector3d());
 				ObjectArrayList[] sets = new ObjectArrayList[2];
 				for (int i=0; i<sets.length; i++) {
 					sets[i] = new ObjectArrayList();
@@ -780,7 +780,7 @@ public class Dbvt {
 				int bestmidp = leaves.size();
 				int[][] splitcount = new int[/*3*/][/*2*/]{{0, 0}, {0, 0}, {0, 0}};
 
-				Vector3f x = new Vector3f();
+				Vector3d x = new Vector3d();
 
 				for (int i=0; i<leaves.size(); i++) {
 					leaves.getQuick(i).volume.Center(x);
@@ -905,12 +905,12 @@ public class Dbvt {
 	public static class sStkNPS {
 		public Node node;
 		public int mask;
-		public float value;
+		public double value;
 
 		public sStkNPS() {
 		}
 
-		public sStkNPS(Node n, int m, float v) {
+		public sStkNPS(Node n, int m, double v) {
 			node = n;
 			mask = m;
 			value = v;
@@ -940,7 +940,7 @@ public class Dbvt {
 		public void Process(Node n) {
 		}
 
-		public void Process(Node n, float f) {
+		public void Process(Node n, double f) {
 			Process(n);
 		}
 

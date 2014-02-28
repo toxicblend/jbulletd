@@ -56,7 +56,7 @@ public class DefaultNearCallback extends NearCallback {
 				}
 				else {
 					// continuous collision detection query, time of impact (toi)
-					float toi = collisionPair.algorithm.calculateTimeOfImpact(colObj0, colObj1, dispatchInfo, contactPointResult);
+					double toi = collisionPair.algorithm.calculateTimeOfImpact(colObj0, colObj1, dispatchInfo, contactPointResult);
 					if (dispatchInfo.timeOfImpact > toi) {
 						dispatchInfo.timeOfImpact = toi;
 					}

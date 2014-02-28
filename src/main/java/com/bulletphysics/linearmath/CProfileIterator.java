@@ -102,7 +102,7 @@ public class CProfileIterator {
 		return currentChild.getTotalCalls();
 	}
 
-	public float getCurrentTotalTime() {
+	public double getCurrentTotalTime() {
 		return currentChild.getTotalTime();
 	}
 
@@ -116,7 +116,7 @@ public class CProfileIterator {
 		return currentParent.getTotalCalls();
 	}
 
-	public float getCurrentParentTotalTime() {
+	public double getCurrentParentTotalTime() {
 		return currentParent.getTotalTime();
 	}
 	

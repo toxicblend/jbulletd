@@ -25,7 +25,7 @@ package com.bulletphysics;
 
 import com.bulletphysics.linearmath.CProfileManager;
 import com.bulletphysics.linearmath.Clock;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * Bullet statistics and profile support.
@@ -47,8 +47,8 @@ public class BulletStats {
 	public static int gTotalBytesAlignedAllocs;	
 	
 	public static int gPickingConstraintId = 0;
-	public static final Vector3f gOldPickingPos = new Vector3f();
-	public static float gOldPickingDist = 0.f;
+	public static final Vector3d gOldPickingPos = new Vector3d();
+	public static double gOldPickingDist = 0.f;
 	
 	public static int gOverlappingPairs = 0;
 	public static int gRemovePairs = 0;
@@ -81,7 +81,7 @@ public class BulletStats {
 		return ticks;
 	}
 
-	public static float profileGetTickRate() {
+	public static double profileGetTickRate() {
 		//return 1000000f;
 		return 1000f;
 	}

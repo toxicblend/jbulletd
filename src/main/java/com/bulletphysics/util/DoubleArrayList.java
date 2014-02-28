@@ -27,12 +27,12 @@ package com.bulletphysics.util;
  *
  * @author jezek2
  */
-public class FloatArrayList {
+public class DoubleArrayList {
 
-	private float[] array = new float[16];
+	private double[] array = new double[16];
 	private int size;
 	
-	public void add(float value) {
+	public void add(double value) {
 		if (size == array.length) {
 			expand();
 		}
@@ -41,25 +41,25 @@ public class FloatArrayList {
 	}
 	
 	private void expand() {
-		float[] newArray = new float[array.length << 1];
+		double[] newArray = new double[array.length << 1];
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		array = newArray;
 	}
 
-	public float remove(int index) {
+	public double remove(int index) {
 		if (index >= size) throw new IndexOutOfBoundsException();
-		float old = array[index];
+		double old = array[index];
 		System.arraycopy(array, index+1, array, index, size - index - 1);
 		size--;
 		return old;
 	}
 
-	public float get(int index) {
+	public double get(int index) {
 		if (index >= size) throw new IndexOutOfBoundsException();
 		return array[index];
 	}
 
-	public void set(int index, float value) {
+	public void set(int index, double value) {
 		if (index >= size) throw new IndexOutOfBoundsException();
 		array[index] = value;
 	}

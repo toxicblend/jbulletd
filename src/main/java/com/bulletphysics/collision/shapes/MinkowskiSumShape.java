@@ -26,7 +26,7 @@ package com.bulletphysics.collision.shapes;
 import com.bulletphysics.collision.broadphase.BroadphaseNativeType;
 import com.bulletphysics.linearmath.MatrixUtil;
 import com.bulletphysics.linearmath.Transform;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 /**
  * MinkowskiSumShape is only for advanced users. This shape represents implicit
@@ -49,10 +49,10 @@ public class MinkowskiSumShape extends ConvexInternalShape {
 	}
 	
 	@Override
-	public Vector3f localGetSupportingVertexWithoutMargin(Vector3f vec, Vector3f out) {
-		Vector3f tmp = new Vector3f();
-		Vector3f supVertexA = new Vector3f();
-		Vector3f supVertexB = new Vector3f();
+	public Vector3d localGetSupportingVertexWithoutMargin(Vector3d vec, Vector3d out) {
+		Vector3d tmp = new Vector3d();
+		Vector3d supVertexA = new Vector3d();
+		Vector3d supVertexB = new Vector3d();
 
 		// btVector3 supVertexA = m_transA(m_shapeA->localGetSupportingVertexWithoutMargin(-vec*m_transA.getBasis()));
 		tmp.negate(vec);
@@ -71,7 +71,7 @@ public class MinkowskiSumShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3f[] vectors, Vector3f[] supportVerticesOut, int numVectors) {
+	public void batchedUnitVectorGetSupportingVertexWithoutMargin(Vector3d[] vectors, Vector3d[] supportVerticesOut, int numVectors) {
 		//todo: could make recursive use of batching. probably this shape is not used frequently.
 		for (int i = 0; i < numVectors; i++) {
 			localGetSupportingVertexWithoutMargin(vectors[i], supportVerticesOut[i]);
@@ -79,7 +79,7 @@ public class MinkowskiSumShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void getAabb(Transform t, Vector3f aabbMin, Vector3f aabbMax) {
+	public void getAabb(Transform t, Vector3d aabbMin, Vector3d aabbMax) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -89,7 +89,7 @@ public class MinkowskiSumShape extends ConvexInternalShape {
 	}
 
 	@Override
-	public void calculateLocalInertia(float mass, Vector3f inertia) {
+	public void calculateLocalInertia(double mass, Vector3d inertia) {
 		assert (false);
 		inertia.set(0, 0, 0);
 	}
@@ -100,7 +100,7 @@ public class MinkowskiSumShape extends ConvexInternalShape {
 	}
 	
 	@Override
-	public float getMargin() {
+	public double getMargin() {
 		return shapeA.getMargin() + shapeB.getMargin();
 	}
 
