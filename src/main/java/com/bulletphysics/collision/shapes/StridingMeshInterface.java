@@ -35,7 +35,7 @@ import javax.vecmath.Vector3d;
  */
 public abstract class StridingMeshInterface {
 
-	protected final Vector3d scaling = new Vector3d(1f, 1f, 1f);
+	protected final Vector3d scaling = new Vector3d(1d, 1d, 1d);
 	
 	public void internalProcessAllTriangles(InternalTriangleIndexCallback callback, Vector3d aabbMin, Vector3d aabbMax) {
 		int graphicssubparts = getNumSubParts();
