@@ -80,7 +80,7 @@ public class TriangleIndexVertexArray extends StridingMeshInterface {
 		//#ifdef BT_USE_DOUBLE_PRECISION
 		//type = PHY_DOUBLE;
 		//#else
-		data.vertexType = ScalarType.FLOAT;
+		data.vertexType = ScalarType.DOUBLE;
 		//#endif
 		data.vertexStride = mesh.vertexStride;
 
