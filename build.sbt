@@ -8,4 +8,9 @@ javacOptions ++= Seq("-Xlint:unchecked")
  
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
-libraryDependencies += "java3d" % "vecmath" % "1.3.1"
+libraryDependencies ++= Seq(
+        "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
+        "java3d" % "vecmath" % "1.5.2"
+)
+
+resolvers += "Geotoolkit.org" at "http://maven.geotoolkit.org"
