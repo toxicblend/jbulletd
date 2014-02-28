@@ -55,18 +55,18 @@ public class ByteBufferVertexData extends VertexData {
 	@Override
 	public <T extends Tuple3d> T getVertex(int idx, T out) {
 		int off = idx*vertexStride;
-		out.x = vertexData.getDouble(off+4*0);
-		out.y = vertexData.getDouble(off+4*1);
-		out.z = vertexData.getDouble(off+4*2);
+		out.x = vertexData.getDouble(off+8*0);
+		out.y = vertexData.getDouble(off+8*1);
+		out.z = vertexData.getDouble(off+8*2);
 		return out;
 	}
 
 	@Override
 	public void setVertex(int idx, double x, double y, double z) {
 		int off = idx*vertexStride;
-		vertexData.putDouble(off+4*0, x);
-		vertexData.putDouble(off+4*1, y);
-		vertexData.putDouble(off+4*2, z);
+		vertexData.putDouble(off+8*0, x);
+		vertexData.putDouble(off+8*1, y);
+		vertexData.putDouble(off+8*2, z);
 	}
 
 	@Override
