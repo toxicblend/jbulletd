@@ -5,3 +5,8 @@
 *.jar
 *.war
 *.ear
+.cache
+.project
+.settings
+project/
+target/
