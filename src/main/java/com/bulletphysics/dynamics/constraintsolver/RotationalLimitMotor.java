@@ -23,7 +23,7 @@
 
 /*
 2007-09-09
-btGeneric6DofConstraint Refactored by Francisco Le�n
+btGeneric6DofConstraint Refactored by Francisco Le���n
 email: projectileman@yahoo.com
 http://gimpact.sf.net
 */
@@ -32,8 +32,6 @@ package com.bulletphysics.dynamics.constraintsolver;
 
 import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.dynamics.RigidBody;
-import cz.advel.stack.Stack;
-import cz.advel.stack.StaticAlloc;
 import javax.vecmath.Vector3f;
 
 /**
@@ -134,7 +132,7 @@ public class RotationalLimitMotor {
 	/**
 	 * Apply the correction impulses for two bodies.
 	 */
-	@StaticAlloc
+	//@StaticAlloc
 	public float solveAngularLimits(float timeStep, Vector3f axis, float jacDiagABInv, RigidBody body0, RigidBody body1) {
 		if (needApplyTorques() == false) {
 			return 0.0f;
@@ -152,9 +150,9 @@ public class RotationalLimitMotor {
 		maxMotorForce *= timeStep;
 
 		// current velocity difference
-		Vector3f vel_diff = body0.getAngularVelocity(Stack.alloc(Vector3f.class));
+		Vector3f vel_diff = body0.getAngularVelocity(new Vector3f());
 		if (body1 != null) {
-			vel_diff.sub(body1.getAngularVelocity(Stack.alloc(Vector3f.class)));
+			vel_diff.sub(body1.getAngularVelocity(new Vector3f()));
 		}
 
 		float rel_vel = axis.dot(vel_diff);
@@ -190,7 +188,7 @@ public class RotationalLimitMotor {
 
 		clippedMotorImpulse = accumulatedImpulse - oldaccumImpulse;
 
-		Vector3f motorImp = Stack.alloc(Vector3f.class);
+		Vector3f motorImp = new Vector3f();
 		motorImp.scale(clippedMotorImpulse, axis);
 
 		body0.applyTorqueImpulse(motorImp);
