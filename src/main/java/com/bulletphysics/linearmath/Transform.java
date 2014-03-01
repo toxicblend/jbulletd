@@ -63,6 +63,13 @@ public class Transform {
 		set(tr);
 	}
 	
+	public Transform(Vector3d origin, Vector3d quatVector, double quatAngle) {
+	  Quat4d qFrom = new Quat4d();
+	  QuaternionUtil.setRotation(qFrom, quatVector, quatAngle);
+	  this.basis.set(qFrom);
+	  this.origin.set(origin);  
+	}
+	
 	public void set(Transform tr) {
 		basis.set(tr.basis);
 		origin.set(tr.origin);
