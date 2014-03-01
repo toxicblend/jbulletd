@@ -8,6 +8,7 @@ import com.bulletphysics.collision.shapes.BvhTriangleMeshShape
 import com.bulletphysics.collision.shapes.CollisionShape
 import com.bulletphysics.collision.shapes.TriangleIndexVertexArray
 import com.bulletphysics.collision.shapes.ConeShapeZ
+import com.bulletphysics.collision.shapes.SphereShape
 import com.bulletphysics.collision.shapes.ConvexShape
 import com.bulletphysics.collision.shapes.UniformScalingShape
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration
@@ -16,6 +17,7 @@ import com.bulletphysics.collision.dispatch.CollisionFlags
 import com.bulletphysics.collision.dispatch.CollisionWorld
 import com.bulletphysics.collision.dispatch.CollisionObject
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback
+import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestConvexResultCallback
 import com.bulletphysics.linearmath.Transform
 import com.bulletphysics.linearmath.DefaultMotionState
 import com.bulletphysics.linearmath.VectorUtil
@@ -23,12 +25,14 @@ import scala.collection.mutable.ArrayBuffer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.vecmath.Vector3d
+import javax.vecmath.Matrix3d
+import javax.vecmath.AxisAngle4d
 
 /**
  * A wrapper for the collision world, collision shapes and all the other references needed to simulate a collision.
  * This code is more or less just copy&paste from the toxicblend jbullet tests
  */
-class CollisionWrapper(val models:IndexedSeq[Model]) {
+class CollisionWrapper(val models:IndexedSeq[Model], val zMinMod:Double) {
   
   val collisionShapes = new ObjectArrayList[CollisionShape]();
   val convexShapes = new ArrayBuffer[ConvexShape]
@@ -50,8 +54,8 @@ class CollisionWrapper(val models:IndexedSeq[Model]) {
       new AABB
     }
   }
-  val zMin = aabbAllModels.getMin.z-1f
-  val zMax = aabbAllModels.getMax.z+1f
+  val zMin = aabbAllModels.getMin.z-zMinMod
+  val zMax = aabbAllModels.getMax.z+1d
   
   (0 until totalVerts).foreach(index => {
     val v = models(0).getVertices(index)
@@ -87,14 +91,10 @@ class CollisionWrapper(val models:IndexedSeq[Model]) {
   val collisionConfiguration = new DefaultCollisionConfiguration()
   val dispatcher = new CollisionDispatcher(collisionConfiguration)
   val broadphase:BroadphaseInterface = if (true) {
-      val worldMin = models(0).getBounds.getMin
-      val worldMax = models(0).getBounds.getMax
-      //println("worldMin=" + worldMin)
-      //println("worldMax=" + worldMax)
-      new AxisSweep3_32(worldMin, worldMax, 1500000/2);
+      new AxisSweep3_32(aabbAllModels.getMin, aabbAllModels.getMax, 1500000/2);
     } else {
-    new DbvtBroadphase
-  }
+      new DbvtBroadphase
+    }
   
   //val broadphase:BroadphaseInterface = new DbvtBroadphase()
   val collisionWorld = new CollisionWorld(dispatcher, broadphase, collisionConfiguration)
@@ -118,20 +118,30 @@ class CollisionWrapper(val models:IndexedSeq[Model]) {
     collisionobject
   }
   
-  def addVCutter(radius:Double, height:Double):ConvexShape = {
-    val margin = 0.02;
-     val colShape:ConvexShape = new ConeShapeZ(2d, 2d);
-     colShape.setMargin(margin)
-     collisionShapes.add(colShape);
-     val convexShape = new UniformScalingShape(colShape, 1d)
-     convexShapes.append(convexShape)
-     convexShape
+  def addConeShapeZ(radius:Double, height:Double, margin:Double):ConvexShape = {
+    val colShape:ConvexShape = new ConeShapeZ(radius, height);
+    colShape.setMargin(margin)
+    collisionShapes.add(colShape);
+    colShape
+    //val convexShape = new UniformScalingShape(colShape, 1f)
+    //convexShapes.append(convexShape)
+    //convexShape
   }
   
-  def destroy = {
-    collisionWorld.destroy
+   def addShereShape(radius:Double):ConvexShape = {
+    val colShape:ConvexShape = new SphereShape(radius);
+    collisionShapes.add(colShape);
+    colShape
+    //val convexShape = new UniformScalingShape(colShape, 1f)
+    //convexShapes.append(convexShape)
+    //convexShape
   }
   
+  def destroy = collisionWorld.destroy
+  
+  /**
+   * perform an inefficient rayTest
+   */
   def rayTest(rayFromWorld:Vector3d,rayToWorld:Vector3d, result:Vector3d) = {
     val cb = new ClosestRayResultCallback(rayFromWorld,rayToWorld)
     collisionWorld.rayTest(rayFromWorld,rayToWorld,cb)
@@ -147,6 +157,36 @@ class CollisionWrapper(val models:IndexedSeq[Model]) {
       false
     } else {
       VectorUtil.setInterpolate3(result, rayFromWorld, rayToWorld, cb.closestHitFraction)
+      true
+    }
+  }
+  
+  /**
+   * perform an inefficient convexSweepTest
+   */
+  def convexSweepTest(convexShape:ConvexShape, rayFromWorld:Vector3d, rayToWorld:Vector3d, rot:AxisAngle4d, result:Vector3d) = {
+    val fromTransform = new Transform()
+    fromTransform.basis.set(rot)
+    fromTransform.origin.set(rayFromWorld)
+    
+    val toTransform = new Transform()
+    toTransform.basis.set(rot)
+    toTransform.origin.set(rayToWorld)
+
+    val convexCallback = new ClosestConvexResultCallback(new Vector3d(rayFromWorld), new Vector3d(rayToWorld))
+    collisionWorld.convexSweepTest(convexShape, fromTransform, toTransform, convexCallback);
+    if (!convexCallback.hasHit()) {
+      // no hit
+      result.x=rayToWorld.x
+      result.y=rayToWorld.y
+      result.z=rayToWorld.z-10
+      false
+    } else {
+      VectorUtil.setInterpolate3(result, rayFromWorld, rayToWorld, convexCallback.closestHitFraction)
+      //result.x=convexCallback.hitPointWorld.x 
+      //result.y=convexCallback.hitPointWorld.y
+      //result.z=convexCallback.hitPointWorld.z
+      // VectorUtil.setInterpolate3(result, rayFromWorld, rayToWorld, convexCallback.closestHitFraction)
       true
     }
   }

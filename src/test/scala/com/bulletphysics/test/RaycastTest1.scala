@@ -14,7 +14,7 @@ class RaycastTest1 extends FlatSpec with Matchers {
   //model.addTriangle(new Vector3d(1,1,1), new Vector3d(1,2,1), new Vector3d(2,1,1))
   
   val models = Array(model)
-  val jbcw = new CollisionWrapper(models)
+  val jbcw = new CollisionWrapper(models,5)
   
   "ray test1" should "collide just fine" in {
     val fromV = new Vector3d(0.1,0.1,10)
