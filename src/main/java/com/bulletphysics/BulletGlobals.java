@@ -40,10 +40,10 @@ public class BulletGlobals {
 	public static final double SIMD_EPSILON = FLT_EPSILON;
 	
 	public static final double SIMD_2_PI = 2.0*java.lang.Math.PI;
-	public static final double SIMD_PI = SIMD_2_PI * 0.5;
-	public static final double SIMD_HALF_PI = SIMD_2_PI * 0.25;
-	public static final double SIMD_RADS_PER_DEG = SIMD_2_PI / 360;
-	public static final double SIMD_DEGS_PER_RAD = 360 / SIMD_2_PI;
+	public static final double SIMD_PI = java.lang.Math.PI;
+	public static final double SIMD_HALF_PI = java.lang.Math.PI * 0.5;
+	public static final double SIMD_RADS_PER_DEG = java.lang.Math.PI / 180d;
+	public static final double SIMD_DEGS_PER_RAD = 180d / java.lang.Math.PI;
 	public static final double SIMD_INFINITY = Double.MAX_VALUE;
 
 	////////////////////////////////////////////////////////////////////////////
