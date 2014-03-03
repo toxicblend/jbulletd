@@ -27,6 +27,7 @@ import java.nio.ByteOrder
 import javax.vecmath.Vector3d
 import javax.vecmath.Matrix3d
 import javax.vecmath.AxisAngle4d
+import com.bulletphysics.linearmath.AABB
 
 /**
  * A wrapper for the collision world, collision shapes and all the other references needed to simulate a collision.

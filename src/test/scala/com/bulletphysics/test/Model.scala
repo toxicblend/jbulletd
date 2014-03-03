@@ -4,6 +4,7 @@ import javax.vecmath.Vector3d
 import com.bulletphysics.linearmath.AabbUtil2
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import com.bulletphysics.linearmath.AABB
 
 class Model (val vertices:ArrayBuffer[Vector3d], val faces:ArrayBuffer[IndexedSeq[Int]]){
   /**

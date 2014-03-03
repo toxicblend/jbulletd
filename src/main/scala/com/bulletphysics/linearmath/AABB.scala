@@ -1,7 +1,6 @@
-package com.bulletphysics.test
+package com.bulletphysics.linearmath
 
 import javax.vecmath.Vector3d
-import com.bulletphysics.linearmath.AabbUtil2
 
 class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
   /**
