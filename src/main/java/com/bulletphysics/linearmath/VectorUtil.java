@@ -24,6 +24,7 @@
 package com.bulletphysics.linearmath;
 
 import javax.vecmath.Vector3d;
+import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector4d;
 
 /**
@@ -108,7 +109,7 @@ public class VectorUtil {
 		}
 	}
 
-	public static void setInterpolate3(Vector3d dest, Vector3d v0, Vector3d v1, double rt) {
+	public static void setInterpolate3(Tuple3d dest, Tuple3d v0, Tuple3d v1, double rt) {
 		double s = 1f - rt;
 		dest.x = s * v0.x + rt * v1.x;
 		dest.y = s * v0.y + rt * v1.y;
