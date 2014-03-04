@@ -1,5 +1,6 @@
 package com.bulletphysics.linearmath
 import javax.vecmath.Tuple3d
+import javax.vecmath.Tuple3f
 
 trait Tuple3dTrait extends Tuple3d {
    
@@ -56,6 +57,38 @@ trait Tuple3dTrait extends Tuple3d {
    */
   def clampMinSelf(clamp:Double):this.type = {
     clampMin(clamp)
+    this
+  }
+  
+  /**
+   * same as set, it only returns 'this'
+   */
+  def setSelf(t:Tuple3d):this.type = {
+    set(t)
+    this
+  }
+  
+  /**
+   * same as set, it only returns 'this'
+   */
+  def setSelf(t:Tuple3f):this.type = {
+    set(t)
+    this
+  }
+  
+  /**
+   * same as set, it only returns 'this'
+   */
+  def setSelf(x:Double,y:Double,z:Double):this.type = {
+    set(x,y,z)
+    this
+  }
+  
+  /**
+   * same as set, it only returns 'this'
+   */
+  def setSelf(x:Float,y:Float,z:Float):this.type = {
+    set(x,y,z)
     this
   }
 }

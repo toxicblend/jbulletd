@@ -76,4 +76,12 @@ class Matrix4dE(__v00:Double, __v01:Double, __v02:Double, __v03:Double,
     transform(aabb.aabbMin)
     this
   }
+  
+  /**
+   * Inverts this matrix in place and returns this
+   */
+  def invertSelf = {
+    invert
+    this
+  }
 }
