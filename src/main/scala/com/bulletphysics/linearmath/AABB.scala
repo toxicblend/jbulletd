@@ -6,12 +6,12 @@ import javax.vecmath.Point3d
 
 class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
   /**
-   * create new zero extend AABB with center at (0,0,0)
+   * create new zero extend AABB with center at (0,0,0) and minus Double.MaxValue extent
    */
-  def this() = this(new Vector3d, new Vector3d)
+  def this() = this(new Vector3d(AABB.UNINITIALIZED_AABBMIN), new Vector3d(AABB.UNINITIALIZED_AABBMAX))
   
   def this(aabb:AABB) = this(new Vector3d(aabb.aabbMin), new Vector3d(aabb.aabbMax))
-  
+   
   def this(aabbs:Iterable[AABB]) = {
     this(aabbs.head)
     aabbs.tail.foreach(aabb => this.union(aabb))
@@ -53,4 +53,9 @@ class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
   override def toString = {
     "Min:" +aabbMin.toString + " Max:" + aabbMax
   }
+}
+
+object AABB {
+  val UNINITIALIZED_AABBMIN = new Point3d(Double.MaxValue,Double.MaxValue,Double.MaxValue)
+  val UNINITIALIZED_AABBMAX = new Point3d(-Double.MaxValue,-Double.MaxValue,-Double.MaxValue)
 }
