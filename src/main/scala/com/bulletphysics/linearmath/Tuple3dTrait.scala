@@ -91,4 +91,14 @@ trait Tuple3dTrait extends Tuple3d {
     set(x,y,z)
     this
   }
+  
+  /**
+   * Gives the distance between two point in the xy plane (Z is ignored)
+   */
+  @inline
+  def xyDistance(that:Tuple3d):Double = {
+    val deltaX = this.x-that.x
+    val deltaY = this.y-that.y
+    math.sqrt(deltaX*deltaX+deltaY*deltaY)
+  }
 }
