@@ -15,21 +15,21 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
   //model.addTriangle(new Vector3d(1,1,1), new Vector3d(1,2,1), new Vector3d(2,1,1))
   
   val models = Array(model)
-  val jbcw = new CollisionWrapper(models,5)
+  val facade = new BulletFacade(models,5)
   val epsilon = 0.01
   //val convexShape = jbcw.addShereShape(0.5)
   val margin = 0.0001
   val coneHeight = 1d
   val coneZCorrection = -coneHeight*0.5
   val coneRadius = 1d
-  val convexShape = jbcw.addConeShapeZ(coneRadius-margin, coneHeight-margin, margin)
+  val convexShape = facade.addConeShapeZ(coneRadius-margin, coneHeight-margin, margin)
   val rot = new AxisAngle4d(1d,0,0,math.Pi) // cone needs to be flipped upside down
   
   "convex test1" should "collide on the tip" in {
     val fromV = new Vector3d(0.1, 0.1, 10)
     val toV = new Vector3d(0.1, 0.1, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     //println("toV:" + toV)
     //println("result:" + result)
     rv should be (true)
@@ -42,7 +42,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(CLOSETO1, CLOSETO1, 10)
     val toV = new Vector3d(CLOSETO1, CLOSETO1, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     //result.x should be ((toV.x) +- epsilon)
     //result.y should be ((toV.y) +- epsilon)
@@ -53,7 +53,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(-CLOSETO1, CLOSETO1, 10)
     val toV = new Vector3d(-CLOSETO1, CLOSETO1, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     //result.x should be ((toV.x) +- epsilon)
     //result.y should be ((toV.y) +- epsilon)
@@ -64,7 +64,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(0, -CLOSETO1, 10)
     val toV = new Vector3d(0, -CLOSETO1, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     //result.x should be ((toV.x) +- epsilon)
     //result.y should be ((toV.y) +- epsilon)
@@ -75,7 +75,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(-CLOSETO1, -CLOSETO1, 10)
     val toV = new Vector3d(-CLOSETO1, -CLOSETO1, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     //result.x should be ((toV.x) +- epsilon)
     //result.y should be ((toV.y) +- epsilon)
@@ -86,7 +86,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(-5d, 0, 0)
     val toV = new Vector3d(5d, 0, 0)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     result.x should be ((-1d-coneRadius) +- epsilon)
     result.y should be ((toV.y) +- epsilon)
@@ -97,7 +97,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(5d, 0, 0)
     val toV = new Vector3d(-5d, 0, 0)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     result.x should be ((1d+coneRadius) +- epsilon)
     result.y should be ((toV.y) +- epsilon)
@@ -108,7 +108,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(1d+CLOSETO1, 0, 10)
     val toV = new Vector3d(1d+CLOSETO1, 0, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     result.x should be ((toV.x) +- epsilon)
     result.y should be ((toV.y) +- epsilon)
@@ -119,7 +119,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(2.01d, 0, 10)
     val toV = new Vector3d(2.01d, 0, -10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (false)
   }
   
@@ -127,7 +127,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(0, 0, -10)
     val toV = new Vector3d(0, 0, 10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     result.x should be ((toV.x) +- epsilon)
     result.y should be ((toV.y) +- epsilon)
@@ -138,7 +138,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(1.5d, 0, -10)
     val toV = new Vector3d(1.5d, 0, 10)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     result.x should be ((toV.x) +- epsilon)
     result.y should be ((toV.y) +- epsilon)
@@ -149,7 +149,7 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
     val fromV = new Vector3d(10, -CLOSETO1, -coneZCorrection)
     val toV = new Vector3d(-10, -CLOSETO1, -coneZCorrection)
     val result = new Vector3d()
-    val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+    val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
     rv should be (true)
     result.x should be ((1d+coneRadius) +- epsilon)
     result.y should be ((toV.y) +- epsilon)
@@ -157,6 +157,6 @@ class ConvexSweepTest2 extends FlatSpec with Matchers {
   }
   
   "convex test cleanup" should "not fail" in {
-    jbcw.destroy
+    facade.destroy
   }
 }

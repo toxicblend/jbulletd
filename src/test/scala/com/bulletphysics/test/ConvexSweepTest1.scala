@@ -15,14 +15,14 @@ class ConvexSweepTest1 extends FlatSpec with Matchers {
   //model.addTriangle(new Vector3d(1,1,1), new Vector3d(1,2,1), new Vector3d(2,1,1))
   
   val models = Array(model)
-  val jbcw = new CollisionWrapper(models,5)
+  val facade = new BulletFacade(models,5)
   val epsilon = 0.01
   val rot = new AxisAngle4d(1d,0,0,math.Pi)
   val margin = 0.0001
   val coneHeight = 1d
   val coneZCorrection = -coneHeight*0.5
   val coneRadius = 1d
-  val convexShape = jbcw.addConeShapeZ(coneRadius-margin,coneHeight-margin,margin)
+  val convexShape = facade.addConeShapeZ(coneRadius-margin,coneHeight-margin,margin)
   //val convexShape = jbcw.addConeShapeZ(1, 1, margin)  
       
   "convex test0" should "collide on the tip" in {
@@ -33,7 +33,7 @@ class ConvexSweepTest1 extends FlatSpec with Matchers {
       //val convexShape = jbcw.addShereShape(0.001)
       
       //println("fromV:" + fromV + " toV " + toV)
-      val rv = jbcw.convexSweepTest(convexShape,fromV,toV,rot,result)
+      val rv = facade.convexSweepTest(convexShape,fromV,toV,rot,result)
       //println("toV:" + toV)
       //println("result:" + result.x)
       rv should be (true)
@@ -46,6 +46,6 @@ class ConvexSweepTest1 extends FlatSpec with Matchers {
   }
   
   "convex test cleanup" should "not fail" in {
-    jbcw.destroy
+    facade.destroy
   }
 }

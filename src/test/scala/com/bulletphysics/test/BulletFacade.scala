@@ -33,36 +33,29 @@ import com.bulletphysics.linearmath.AABB
  * A wrapper for the collision world, collision shapes and all the other references needed to simulate a collision.
  * This code is more or less just copy&paste from the toxicblend jbullet tests
  */
-class CollisionWrapper(val models:IndexedSeq[Model], val zMinMod:Double) {
+class BulletFacade(val models:IndexedSeq[Model], val zMinMod:Double) {
   
   val collisionShapes = new ObjectArrayList[CollisionShape]();
   val convexShapes = new ArrayBuffer[ConvexShape]
  
-  val vertStride = 3 * CollisionWrapper.VERTEX_S
-  val indexStride = 3 * CollisionWrapper.INDEX_S
+  val vertStride = 3 * BulletFacade.VERTEX_S
+  val indexStride = 3 * BulletFacade.INDEX_S
   val totalVerts = models(0).getVertices.size
   val totalTriangles = models(0).getFaces.size
    
-  val gVertices = ByteBuffer.allocateDirect(totalVerts * 3 * CollisionWrapper.VERTEX_S).order(ByteOrder.nativeOrder());
-  val gIndices = ByteBuffer.allocateDirect(totalTriangles * 3 * CollisionWrapper.INDEX_S).order(ByteOrder.nativeOrder());
+  val gVertices = ByteBuffer.allocateDirect(totalVerts * 3 * BulletFacade.VERTEX_S).order(ByteOrder.nativeOrder());
+  val gIndices = ByteBuffer.allocateDirect(totalTriangles * 3 * BulletFacade.INDEX_S).order(ByteOrder.nativeOrder());
   
-  val aabbAllModels = {
-    if (models.size > 0){
-      val aabbTmp = models(0).getBounds.copy
-      models.tail.foreach(b => aabbTmp.union(b.getBounds))
-      aabbTmp
-    } else {
-      new AABB
-    }
-  }
+  val aabbAllModels = new AABB(models.map(m=>m.bounds))
+   
   val zMin = aabbAllModels.getMin.z-zMinMod
   val zMax = aabbAllModels.getMax.z+1d
   
   (0 until totalVerts).foreach(index => {
     val v = models(0).getVertices(index)
-    gVertices.putDouble((index*3 + 0) * CollisionWrapper.VERTEX_S, v.x)
-    gVertices.putDouble((index*3 + 1) * CollisionWrapper.VERTEX_S, v.y)
-    gVertices.putDouble((index*3 + 2) * CollisionWrapper.VERTEX_S, v.z)
+    gVertices.putDouble((index*3 + 0) * BulletFacade.VERTEX_S, v.x)
+    gVertices.putDouble((index*3 + 1) * BulletFacade.VERTEX_S, v.y)
+    gVertices.putDouble((index*3 + 2) * BulletFacade.VERTEX_S, v.z)
   });
   
   {
@@ -73,15 +66,15 @@ class CollisionWrapper(val models:IndexedSeq[Model], val zMinMod:Double) {
       val face = faces(index)
       if (face.size > 3 ) throw new BulletException("JBullet mesh must be triangulated")
       else if (face.size == 3) {
-        gIndices.putInt((index*3 + 0) * CollisionWrapper.INDEX_S, face(0))
-        gIndices.putInt((index*3 + 1) * CollisionWrapper.INDEX_S, face(1))
-        gIndices.putInt((index*3 + 2) * CollisionWrapper.INDEX_S, face(2))
+        gIndices.putInt((index*3 + 0) * BulletFacade.INDEX_S, face(0))
+        gIndices.putInt((index*3 + 1) * BulletFacade.INDEX_S, face(1))
+        gIndices.putInt((index*3 + 2) * BulletFacade.INDEX_S, face(2))
       }
       // silently ignore edges and unconnected vertices
     })
   }
   
-  val indexVertexArrays = new TriangleIndexVertexArray(totalTriangles,gIndices,indexStride,totalVerts,gVertices,vertStride)
+  val indexVertexArrays = new TriangleIndexVertexArray(totalTriangles, gIndices, indexStride, totalVerts, gVertices, vertStride)
   
   val useQuantizedAabbCompression = true
   
@@ -92,7 +85,7 @@ class CollisionWrapper(val models:IndexedSeq[Model], val zMinMod:Double) {
   val collisionConfiguration = new DefaultCollisionConfiguration()
   val dispatcher = new CollisionDispatcher(collisionConfiguration)
   val broadphase:BroadphaseInterface = if (true) {
-      new AxisSweep3_32(aabbAllModels.getMin, aabbAllModels.getMax, 1500000/2);
+      new AxisSweep3_32(aabbAllModels.getMin, aabbAllModels.getMax, 1500000/2);;
     } else {
       new DbvtBroadphase
     }
@@ -143,8 +136,8 @@ class CollisionWrapper(val models:IndexedSeq[Model], val zMinMod:Double) {
   /**
    * perform an inefficient rayTest
    */
-  def rayTest(rayFromWorld:Vector3d,rayToWorld:Vector3d, result:Vector3d) = {
-    val cb = new ClosestRayResultCallback(rayFromWorld,rayToWorld)
+  def rayTest(rayFromWorld:Vector3d, rayToWorld:Vector3d, result:Vector3d) = {
+    val cb = new ClosestRayResultCallback(rayFromWorld, rayToWorld)
     collisionWorld.rayTest(rayFromWorld,rayToWorld,cb)
     val hitPointWorld = new Vector3d
     //println("rayFromWorld=" + rayFromWorld)
@@ -193,7 +186,7 @@ class CollisionWrapper(val models:IndexedSeq[Model], val zMinMod:Double) {
   }
 }
 
-object CollisionWrapper {
+object BulletFacade {
   val VERTEX_S = 8 // a double
   val INDEX_S = 4  // an int
   
