@@ -13,13 +13,13 @@ class Vector3dE(__x:Double,__y:Double,__z:Double) extends Vector3d(__x,__y,__z) 
   def this(x:IndexedSeq[Double]) = this(x(0),x(1),x(2))
   
   @inline
-  def normalizeSelf = {
+  final def normalizeSelf = {
     normalize
     this
   }
   
   @inline
-  def crossSelf(v:Tuple3d) = {
+  final def crossSelf(v:Tuple3d) = {
     val cx = y*v.z-v.y*z
     val cy = z*v.x-v.z*x
     z = x*v.y-v.x*y
@@ -33,12 +33,31 @@ class Vector3dE(__x:Double,__y:Double,__z:Double) extends Vector3d(__x,__y,__z) 
    * @param v1 the other vector
    * @return the xy dot product of this and v1
    */
-  def xyDot(v1:Vector3d) = {
+  final def xyDot(v1:Vector3d) = {
     this.x*v1.x + this.y*v1.y
   }
+  
+  /**
+   * Returns the length of this vector projected on xy plane.
+   * @return the length of this vector projected on xy plane
+   */
+  final def xyLength = {
+    math.sqrt(this.x*this.x + this.y*this.y);
+  }
+    
+  /** 
+   * Returns the angle in radians between this vector and the vector
+   * parameter; the return value is constrained to the range [0,PI]. 
+   * @param v1    the other vector 
+   * @return   the angle in radians in the range [0,PI] 
+   */   
+  final def xyAngle(v1:Vector3dE) = { 
+    var vDot = this.xyDot(v1) / ( this.xyLength * v1.xyLength );
+    if( vDot < -1.0) vDot = -1.0;
+    if( vDot >  1.0) vDot =  1.0;
+    math.acos( vDot )
+  } 
 }
-
-
 
 object Vector3dE {
   // 'readonly' vetors, don't change the content of these
