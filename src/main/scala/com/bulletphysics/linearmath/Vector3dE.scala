@@ -27,7 +27,18 @@ class Vector3dE(__x:Double,__y:Double,__z:Double) extends Vector3d(__x,__y,__z) 
     x = cx
     this
   }
+  
+  /**
+   * Returns the dot product of this vector and vector v1 if they were two dimensional
+   * @param v1 the other vector
+   * @return the xy dot product of this and v1
+   */
+  def xyDot(v1:Vector3d) = {
+    this.x*v1.x + this.y*v1.y
+  }
 }
+
+
 
 object Vector3dE {
   // 'readonly' vetors, don't change the content of these
