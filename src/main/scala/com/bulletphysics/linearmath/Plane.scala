@@ -4,6 +4,10 @@ import javax.vecmath.Tuple3d
 import com.bulletphysics.BulletGlobals
 
 object Plane {
+  val ONE_P = 1d + BulletGlobals.FLT_EPSILON
+  val ONE_M = 1d - BulletGlobals.FLT_EPSILON
+  val ZERO_P = BulletGlobals.FLT_EPSILON
+  val ZERO_M = -BulletGlobals.FLT_EPSILON
   
   object Classifier extends Enumeration {
    type Classifier = Value
@@ -61,7 +65,7 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
   }
   
   /**
-   * Calculates the intersection point between plane and line3d.
+   * Calculates the intersection point between a plane and a line3d.
    * 
    * @param line
    * @param tmp intermediate storage
@@ -76,6 +80,11 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     }
   }
   
+  /**
+   * Calculates the intersection points between this plane and the triangle
+   * But it does it by assuming this is a plane with a normal perpendicular to (0,0,1)
+   * so i guess the whole thing should be renamed
+   */
   def getZIntersectionWithTriangle(tri:Triangle, currentPos:Line3d, result:Plane.IntersectionResult) = {
     if (currentPos.dir.x == 0 && currentPos.dir.y == 0 && currentPos.dir.z == 0 ) {
       println("no direction at all, wtf?. Debug me!")
@@ -88,26 +97,56 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     result.acL.dir.setSelf(tri.c).sub(tri.a)
     result.bcL.origin.set(tri.b)
     result.bcL.dir.setSelf(tri.c).sub(tri.b)
-       
+     
+    //var distanceAB = 0d;
     {
-      val distance = getIntersectionWithLine(result.abL,result.tmpV)
-      result.hasAb = !(distance.isNaN || distance < 0 || distance > 1)
-      if (result.hasAb) {
-        result.abL.getPointAtDistance(result.abP, distance)
+      val distanceAB = getIntersectionWithLine(result.abL,result.tmpV)
+      if (distanceAB < Plane.ZERO_P && distanceAB > Plane.ZERO_M) {
+        result.hasAb = true
+        result.abP.set(tri.a)
+      } else 
+      if( distanceAB < Plane.ONE_P && distanceAB > Plane.ONE_M) {
+        result.hasAb = true
+        result.abP.set(tri.b)
+      } else {
+        result.hasAb = !(distanceAB.isNaN || distanceAB < 0 || distanceAB > 1)
+        if (result.hasAb) {
+          result.abL.getPointAtDistance(result.abP, distanceAB)
+        }  
       }
     }
+    //var distanceAC = 0d;
     {
-      val distance = getIntersectionWithLine(result.acL,result.tmpV)
-      result.hasAc = !(distance.isNaN || distance < 0 || distance > 1)
-      if (result.hasAc) {
-        result.acL.getPointAtDistance(result.acP, distance)
+      val distanceAC = getIntersectionWithLine(result.acL,result.tmpV)
+      if (distanceAC < Plane.ZERO_P && distanceAC > Plane.ZERO_M) {
+        result.hasAc = true
+        result.acP.set(tri.a)
+      } else 
+      if( distanceAC < Plane.ONE_P && distanceAC > Plane.ONE_M) {
+        result.hasAc = true
+        result.acP.set(tri.c)
+      } else {
+        result.hasAc = !(distanceAC.isNaN || distanceAC < 0 || distanceAC > 1)
+        if (result.hasAc) {
+          result.acL.getPointAtDistance(result.acP, distanceAC)
+        }
       }
     }
+    //var distanceBC = 0d;
     {
-      val distance = getIntersectionWithLine(result.bcL,result.tmpV)
-      result.hasBc = !(distance.isNaN || distance < 0 || distance > 1)
-      if (result.hasBc) {
-        result.bcL.getPointAtDistance(result.bcP, distance)
+      val distanceBC = getIntersectionWithLine(result.bcL,result.tmpV)
+      if (distanceBC < Plane.ZERO_P && distanceBC > Plane.ZERO_M) {
+        result.hasBc = true
+        result.bcP.set(tri.b)
+      } else 
+      if( distanceBC < Plane.ONE_P && distanceBC > Plane.ONE_M) {
+        result.hasBc = true
+        result.bcP.set(tri.c)
+      } else {
+        result.hasBc = !(distanceBC.isNaN || distanceBC < 0 || distanceBC > 1)
+        if (result.hasBc) {
+          result.bcL.getPointAtDistance(result.bcP, distanceBC)
+        }
       }
     }
     
@@ -119,6 +158,9 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
         result.hasAc = false
       }
     }
+    
+    // calculate the distances from currentPos.origin to the two remaining edge points. 
+    // Do it with a sign so that the point behind currentPos.origin, in currentPos.dir direction, have a negative distance
     if (result.hasAb) {
       result.abD = result.tmpV.setSelf(result.abP).subSelf(currentPos.origin).xyDot(currentPos.dir).signum*currentPos.origin.xyDistanceSqr(result.abP)
     }
@@ -127,6 +169,22 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     }
     if (result.hasBc) {
       result.bcD = result.tmpV.setSelf(result.bcP).subSelf(currentPos.origin).xyDot(currentPos.dir).signum*currentPos.origin.xyDistanceSqr(result.bcP)
+    }
+    
+    if (result.hasAb && result.abD < 0) {
+      if (result.hasAc && result.acD < 0) {
+        result.hasAb = false
+        result.hasAc = false
+      } else if (result.hasBc && result.bcD < 0) {
+        result.hasAb = false
+        result.hasBc = false
+      }
+    } 
+    else if (result.hasAc && result.acD < 0) {
+      if (result.hasBc && result.bcD < 0) {
+        result.hasAc = false
+        result.hasBc = false
+      }
     }
     
     if (result.hasAb) {
@@ -208,8 +266,8 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
           result.hasResult = true
           //List(result.bcP,result.bcP)
         } else {
-          // should not really happend
-          System.err.println("A triangle with no plane intersection at all?")
+          // should not really happend if the triangle collision would work
+          //System.err.println("A triangle with no plane intersection at all?")
           result.hasResult = false
         }
       }

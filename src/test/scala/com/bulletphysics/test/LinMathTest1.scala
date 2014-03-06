@@ -21,7 +21,7 @@ class LinMathTest1 extends FlatSpec with Matchers {
     rv
   }
   
-  "ray to plane 0" should "work" in {
+  "Line3d to plane 0" should "work" in {
     val r100 = new Line3d(new Vector3dE(1,0,0))
     val r010 = new Line3d(new Vector3dE(0,1,0))
     val r001 = new Line3d(new Vector3dE(0,0,1))
