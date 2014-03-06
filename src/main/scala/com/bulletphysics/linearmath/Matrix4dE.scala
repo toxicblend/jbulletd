@@ -78,6 +78,16 @@ class Matrix4dE(__v00:Double, __v01:Double, __v02:Double, __v03:Double,
   }
   
   /**
+   * transforms the Triangle in place
+   */
+  def transform(triangle:Triangle):Matrix4dE = {
+    transform(triangle.a)
+    transform(triangle.b)
+    transform(triangle.c)
+    this
+  }
+  
+  /**
    * Inverts this matrix in place and returns this
    */
   def invertSelf = {
