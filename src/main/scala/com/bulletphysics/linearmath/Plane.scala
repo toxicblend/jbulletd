@@ -93,6 +93,7 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     }
     
     // setup the trigometry
+    
     result.abL.origin.set(tri.a)
     result.abL.dir.setSelf(tri.b).sub(tri.a)
     result.acL.origin.set(tri.a)
@@ -171,17 +172,17 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     }
     
     // set both point points to invalid if they all have negative distance
-    if (result.hasAb && result.abD <= Plane.ZERO_M) {
-      if (result.hasAc && result.acD <= Plane.ZERO_M) {
+    if (result.hasAb && result.abD < 0) {
+      if (result.hasAc && result.acD < 0) {
         result.hasAb = false
         result.hasAc = false
-      } else if (result.hasBc && result.bcD <= Plane.ZERO_M) {
+      } else if (result.hasBc && result.bcD < 0) {
         result.hasAb = false
         result.hasBc = false
       }
     } 
-    else if (result.hasAc && result.acD <= Plane.ZERO_M) {
-      if (result.hasBc && result.bcD <= Plane.ZERO_M) {
+    else if (result.hasAc && result.acD < 0) {
+      if (result.hasBc && result.bcD < 0) {
         result.hasAc = false
         result.hasBc = false
       }
