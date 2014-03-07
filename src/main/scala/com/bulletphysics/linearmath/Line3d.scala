@@ -1,8 +1,7 @@
 package com.bulletphysics.linearmath
 
 /**
- * origin is read only
- * dir may get normalized
+ * origin and dir will not be modified
  */
 class Line3d(val origin:Point3dE, val dir:Vector3dE) { 
   def this() = this(new Point3dE, new Vector3dE(Vector3dE.VECTOR001))

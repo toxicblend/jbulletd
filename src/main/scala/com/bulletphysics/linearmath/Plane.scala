@@ -83,10 +83,12 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
   /**
    * Calculates the intersection points between this plane and the triangle
    * But it does it by assuming this is a plane with a normal perpendicular to (0,0,1)
-   * so i guess the whole thing should be renamed
+   * so i guess the whole thing should be renamed and or moved to Line3d
    */
   def getZIntersectionWithTriangle(tri:Triangle, currentPos:Line3d, result:Plane.IntersectionResult) = {
-    if (currentPos.dir.x == 0 && currentPos.dir.y == 0 && currentPos.dir.z == 0 ) {
+    if (currentPos.dir.x < Plane.ZERO_P && currentPos.dir.x > Plane.ZERO_M && 
+        currentPos.dir.y < Plane.ZERO_P && currentPos.dir.y > Plane.ZERO_M &&
+        currentPos.dir.z < Plane.ZERO_P && currentPos.dir.z > Plane.ZERO_M ) {
       println("no direction at all, wtf?. Debug me!")
     }
     
@@ -98,7 +100,6 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     result.bcL.origin.set(tri.b)
     result.bcL.dir.setSelf(tri.c).sub(tri.b)
      
-    //var distanceAB = 0d;
     {
       val distanceAB = getIntersectionWithLine(result.abL,result.tmpV)
       if (distanceAB < Plane.ZERO_P && distanceAB > Plane.ZERO_M) {
@@ -115,7 +116,6 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
         }  
       }
     }
-    //var distanceAC = 0d;
     {
       val distanceAC = getIntersectionWithLine(result.acL,result.tmpV)
       if (distanceAC < Plane.ZERO_P && distanceAC > Plane.ZERO_M) {
@@ -132,7 +132,6 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
         }
       }
     }
-    //var distanceBC = 0d;
     {
       val distanceBC = getIntersectionWithLine(result.bcL,result.tmpV)
       if (distanceBC < Plane.ZERO_P && distanceBC > Plane.ZERO_M) {
@@ -143,14 +142,14 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
         result.hasBc = true
         result.bcP.set(tri.c)
       } else {
-        result.hasBc = !(distanceBC.isNaN || distanceBC < 0 || distanceBC > 1)
+        result.hasBc = !(distanceBC.isNaN || distanceBC < 0 || distanceBC > 1) // Double.Nan is already > 1, no need to test for nan
         if (result.hasBc) {
           result.bcL.getPointAtDistance(result.bcP, distanceBC)
         }
       }
     }
     
-    // reduce to two hits at maximum
+    // reduce to two hits, one of the hits must be a duplicate if all three are found
     if (result.hasAb && result.hasAc && result.hasBc) {
       if (result.abP.equals(result.acP) || result.abP.equals(result.bcP)){
         result.hasAb = false
@@ -171,17 +170,18 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
       result.bcD = result.tmpV.setSelf(result.bcP).subSelf(currentPos.origin).xyDot(currentPos.dir).signum*currentPos.origin.xyDistanceSqr(result.bcP)
     }
     
-    if (result.hasAb && result.abD < 0) {
-      if (result.hasAc && result.acD < 0) {
+    // set both point points to invalid if they all have negative distance
+    if (result.hasAb && result.abD <= Plane.ZERO_M) {
+      if (result.hasAc && result.acD <= Plane.ZERO_M) {
         result.hasAb = false
         result.hasAc = false
-      } else if (result.hasBc && result.bcD < 0) {
+      } else if (result.hasBc && result.bcD <= Plane.ZERO_M) {
         result.hasAb = false
         result.hasBc = false
       }
     } 
-    else if (result.hasAc && result.acD < 0) {
-      if (result.hasBc && result.bcD < 0) {
+    else if (result.hasAc && result.acD <= Plane.ZERO_M) {
+      if (result.hasBc && result.bcD <= Plane.ZERO_M) {
         result.hasAc = false
         result.hasBc = false
       }
@@ -190,29 +190,25 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     if (result.hasAb) {
       if (result.hasAc) {
         if (result.hasBc) {
-          System.err.println("All 3 points are present. This should not happend, point reduction does not work. Debug me")
+          System.err.println("All 3 points are still present. This should not happend, point reduction does not work. Debug me")
           if (result.abD > result.acD) {
             result.nextPoint.set(result.abP)
             result.prevPoint.set(result.acP)
             result.hasResult = true
-            //List(result.abP,result.acP)
           } else {
             result.nextPoint.set(result.acP)
             result.prevPoint.set(result.abP)
             result.hasResult = true
-            //List(result.acP,result.abP)
           }
         } else {
           if (result.abD > result.acD) {
             result.nextPoint.set(result.abP)
             result.prevPoint.set(result.acP)
             result.hasResult = true
-            //List(result.abP,result.acP)
           } else {
             result.nextPoint.set(result.acP)
             result.prevPoint.set(result.abP)
             result.hasResult = true
-            //List(result.acP,result.abP)
           }
         }
       } else {
@@ -222,19 +218,16 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
             result.nextPoint.set(result.abP)
             result.prevPoint.set(result.bcP)
             result.hasResult = true
-            //List(result.abP,result.bcP)
           } else {
             result.nextPoint.set(result.bcP)
             result.prevPoint.set(result.abP)
             result.hasResult = true
-            //List(result.bcP,result.abP)
           }
         } else {
           System.err.println("A triangle with only one plane intersection?")
           result.nextPoint.set(result.abP)
           result.prevPoint.set(result.abP)
           result.hasResult = true
-          //List(result.abP,result.abP)
         }
       }
     } else {
@@ -244,19 +237,16 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
             result.nextPoint.set(result.acP)
             result.prevPoint.set(result.bcP)
             result.hasResult = true
-            //List(result.acP,result.bcP)
           } else {
             result.nextPoint.set(result.bcP)
             result.prevPoint.set(result.acP)
             result.hasResult = true
-            //List(result.bcP,result.acP)
           }          
         } else {
           System.err.println("A triangle with only one plane intersection?")
           result.nextPoint.set(result.acP)
           result.prevPoint.set(result.acP)
           result.hasResult = true
-          //List(result.acP,result.acP)
         }
       } else {
         if (result.hasBc) {
@@ -264,38 +254,14 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
           result.nextPoint.set(result.bcP)
           result.prevPoint.set(result.bcP)
           result.hasResult = true
-          //List(result.bcP,result.bcP)
         } else {
-          // should not really happend if the triangle collision would work
+          // should not really happend if the triangle collision works as it should
           //System.err.println("A triangle with no plane intersection at all?")
           result.hasResult = false
         }
       }
     }
     result.hasResult
-    /*
-    val l3 = l1.distinct
-    val l4 = l3.map(p => (p,result.tmpV.setSelf(p).subSelf(currentPos.origin).xyDot(currentPos.dir).signum*currentPos.origin.xyDistanceSqr(p)))
-    val l5 = l4.sortBy(line => -line._2)
-    if (l5.size == 0) {
-      println("no intersections at all, wtf?")
-      println("  currentPos="+ currentPos)
-      println("  tri="+ tri)
-      println("  hasAb="+ result.hasAb)
-      println("  hasAc="+ result.hasAc)
-      println("  result="+ result.hasBc)
-      println("")
-    }
-    val l6 = (l5.head,l5.last)
-    if (l6._1._2 < 0) {
-      println("Closest forward intersection is behind us, wtf?")
-      println("  currentPos="+ currentPos)
-      println("  intersection="+ l6._1._1)
-      val v = new Vector3dE(l6._1._1).subSelf(currentPos.origin)
-      println("  dir.dot(v_to_intersection)=" +  currentPos.dir.xyDot(v) )
-      println("")
-    }
-    l6*/
   }
   
   override
