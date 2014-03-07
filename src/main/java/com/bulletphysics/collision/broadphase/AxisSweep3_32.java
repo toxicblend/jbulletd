@@ -27,6 +27,7 @@
 package com.bulletphysics.collision.broadphase;
 
 import javax.vecmath.Vector3d;
+import javax.vecmath.Point3d;
 
 /**
  * AxisSweep3_32 allows higher precision quantization and more objects compared
@@ -37,15 +38,15 @@ import javax.vecmath.Vector3d;
  */
 public class AxisSweep3_32 extends AxisSweep3Internal {
 
-	public AxisSweep3_32(Vector3d worldAabbMin, Vector3d worldAabbMax) {
+	public AxisSweep3_32(Point3d worldAabbMin, Point3d worldAabbMax) {
 		this(worldAabbMin, worldAabbMax, 1500000, null);
 	}
 
-	public AxisSweep3_32(Vector3d worldAabbMin, Vector3d worldAabbMax, int maxHandles) {
+	public AxisSweep3_32(Point3d worldAabbMin, Point3d worldAabbMax, int maxHandles) {
 		this(worldAabbMin, worldAabbMax, maxHandles, null);
 	}
 	
-	public AxisSweep3_32(Vector3d worldAabbMin, Vector3d worldAabbMax, int maxHandles/* = 1500000*/, OverlappingPairCache pairCache/* = 0*/) {
+	public AxisSweep3_32(Point3d worldAabbMin, Point3d worldAabbMax, int maxHandles/* = 1500000*/, OverlappingPairCache pairCache/* = 0*/) {
 		super(worldAabbMin, worldAabbMax, 0xfffffffe, 0x7fffffff, maxHandles, pairCache);
 		// 1 handle is reserved as sentinel
 		assert (maxHandles > 1 && maxHandles < 2147483647);

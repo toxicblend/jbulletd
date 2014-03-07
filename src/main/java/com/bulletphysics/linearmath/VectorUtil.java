@@ -148,13 +148,13 @@ public class VectorUtil {
 		dest.z = v1.z / v2.z;
 	}
 	
-	public static void setMin(Vector3d a, Vector3d b) {
+	public static void setMin(Tuple3d a, Tuple3d b) {
 		a.x = Math.min(a.x, b.x);
 		a.y = Math.min(a.y, b.y);
 		a.z = Math.min(a.z, b.z);
 	}
 	
-	public static void setMax(Vector3d a, Vector3d b) {
+	public static void setMax(Tuple3d a, Tuple3d b) {
 		a.x = Math.max(a.x, b.x);
 		a.y = Math.max(a.y, b.y);
 		a.z = Math.max(a.z, b.z);

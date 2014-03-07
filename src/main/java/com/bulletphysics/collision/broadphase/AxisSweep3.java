@@ -26,7 +26,7 @@
 
 package com.bulletphysics.collision.broadphase;
 
-import javax.vecmath.Vector3d;
+import javax.vecmath.Point3d;
 
 /**
  * AxisSweep3 is an efficient implementation of the 3D axis sweep and prune broadphase.<p>
@@ -40,15 +40,15 @@ import javax.vecmath.Vector3d;
  */
 public class AxisSweep3 extends AxisSweep3Internal {
 
-	public AxisSweep3(Vector3d worldAabbMin, Vector3d worldAabbMax) {
+	public AxisSweep3(Point3d worldAabbMin, Point3d worldAabbMax) {
 		this(worldAabbMin, worldAabbMax, 16384, null);
 	}
 
-	public AxisSweep3(Vector3d worldAabbMin, Vector3d worldAabbMax, int maxHandles) {
+	public AxisSweep3(Point3d worldAabbMin, Point3d worldAabbMax, int maxHandles) {
 		this(worldAabbMin, worldAabbMax, maxHandles, null);
 	}
 	
-	public AxisSweep3(Vector3d worldAabbMin, Vector3d worldAabbMax, int maxHandles/* = 16384*/, OverlappingPairCache pairCache/* = 0*/) {
+	public AxisSweep3(Point3d worldAabbMin, Point3d worldAabbMax, int maxHandles/* = 16384*/, OverlappingPairCache pairCache/* = 0*/) {
 		super(worldAabbMin, worldAabbMax, 0xfffe, 0xffff, maxHandles, pairCache);
 		// 1 handle is reserved as sentinel
 		assert (maxHandles > 1 && maxHandles < 32767);

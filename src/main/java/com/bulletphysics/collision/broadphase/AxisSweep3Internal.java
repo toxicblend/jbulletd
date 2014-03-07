@@ -27,11 +27,11 @@
 package com.bulletphysics.collision.broadphase;
 
 import com.bulletphysics.BulletStats;
-import com.bulletphysics.collision.broadphase.AxisSweep3Internal.Handle;
 import com.bulletphysics.linearmath.MiscUtil;
 import com.bulletphysics.linearmath.VectorUtil;
 import com.bulletphysics.util.ObjectArrayList;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Point3d;
 
 /**
  * AxisSweep3Internal is an internal base class that implements sweep and prune.
@@ -44,8 +44,8 @@ public abstract class AxisSweep3Internal extends BroadphaseInterface {
 	protected int bpHandleMask;
 	protected int handleSentinel;
 	
-	protected final Vector3d worldAabbMin = new Vector3d(); // overall system bounds
-	protected final Vector3d worldAabbMax = new Vector3d(); // overall system bounds
+	protected final Point3d worldAabbMin = new Point3d(); // overall system bounds
+	protected final Point3d worldAabbMax = new Point3d(); // overall system bounds
 
 	protected final Vector3d quantize = new Vector3d();     // scaling factor for quantization
 
@@ -68,7 +68,7 @@ public abstract class AxisSweep3Internal extends BroadphaseInterface {
 	// JAVA NOTE: added
 	protected int mask;
 	
-	AxisSweep3Internal(Vector3d worldAabbMin, Vector3d worldAabbMax, int handleMask, int handleSentinel, int userMaxHandles/* = 16384*/, OverlappingPairCache pairCache/*=0*/) {
+	AxisSweep3Internal(Point3d worldAabbMin, Point3d worldAabbMax, int handleMask, int handleSentinel, int userMaxHandles/* = 16384*/, OverlappingPairCache pairCache/*=0*/) {
 		this.bpHandleMask = handleMask;
 		this.handleSentinel = handleSentinel;
 		this.pairCache = pairCache;

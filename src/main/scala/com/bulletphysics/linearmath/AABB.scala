@@ -4,13 +4,13 @@ import javax.vecmath.Tuple3d
 import javax.vecmath.Vector3d
 import javax.vecmath.Point3d
 
-class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
+class AABB(val aabbMin:Point3d, val aabbMax:Point3d){
   /**
    * create new zero extend AABB with center at (0,0,0) and minus Double.MaxValue extent
    */
-  def this() = this(new Vector3d(AABB.UNINITIALIZED_AABBMIN), new Vector3d(AABB.UNINITIALIZED_AABBMAX))
+  def this() = this(new Point3d(AABB.UNINITIALIZED_AABBMIN), new Point3d(AABB.UNINITIALIZED_AABBMAX))
   
-  def this(aabb:AABB) = this(new Vector3d(aabb.aabbMin), new Vector3d(aabb.aabbMax))
+  def this(aabb:AABB) = this(new Point3d(aabb.aabbMin), new Point3d(aabb.aabbMax))
    
   def this(aabbs:Iterable[AABB]) = {
     this(aabbs.head)
@@ -20,7 +20,7 @@ class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
   /**
    * create new zero extend AABB with center at @origin
    */
-  def this(origin:Tuple3d) = this(new Vector3d(origin), new Vector3d(origin))
+  def this(origin:Tuple3d) = this(new Point3d(origin), new Point3d(origin))
   
   def aabbExpand(point:Tuple3d) = {
     if (point.x < aabbMin.x) aabbMin.x = point.x
@@ -34,9 +34,7 @@ class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
   def getMin = aabbMin
   def getMax = aabbMax
   
-  def copy:AABB = {
-    new  AABB(new Vector3d(aabbMin), new Vector3d(aabbMax)) 
-  }
+  def copy:AABB = new  AABB(new Point3d(aabbMin), new Point3d(aabbMax))
   
   /**
    * sets this AABB as the union of this and the other AABB
@@ -48,6 +46,13 @@ class AABB(val aabbMin:Vector3d, val aabbMax:Vector3d){
     if (that.aabbMax.x > aabbMax.x) aabbMax.x = that.aabbMax.x
     if (that.aabbMax.y > aabbMax.y) aabbMax.y = that.aabbMax.y
     if (that.aabbMax.z > aabbMax.z) aabbMax.z = that.aabbMax.z
+    this
+  }
+  
+  def reset = {
+    aabbMin.set(AABB.UNINITIALIZED_AABBMIN)
+    aabbMax.set(AABB.UNINITIALIZED_AABBMAX)
+    this
   }
   
   override def toString = {
