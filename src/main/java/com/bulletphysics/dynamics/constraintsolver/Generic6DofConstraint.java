@@ -23,7 +23,7 @@
 
 /*
 2007-09-09
-btGeneric6DofConstraint Refactored by Francisco Le���n
+btGeneric6DofConstraint Refactored by Francisco Leon
 email: projectileman@yahoo.com
 http://gimpact.sf.net
 */
@@ -34,15 +34,10 @@ import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.MatrixUtil;
 import com.bulletphysics.linearmath.Transform;
-
-
-/// 
 import com.bulletphysics.linearmath.VectorUtil;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
-/*!
 
-*/
 /**
  * Generic6DofConstraint between two rigidbodies each with a pivot point that descibes
  * the axis location in local space.<p>
