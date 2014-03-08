@@ -1,7 +1,9 @@
 package com.bulletphysics.linearmath
+
 import javax.vecmath.Tuple3d
 import javax.vecmath.Tuple3f
 import javax.vecmath.Vector3d
+import com.bulletphysics.BulletGlobals
 
 /**
  * Extends Vector3d with some methods from Tuple3dTrait
@@ -57,6 +59,15 @@ class Vector3dE(__x:Double,__y:Double,__z:Double) extends Vector3d(__x,__y,__z) 
     if( vDot >  1.0) vDot =  1.0;
     math.acos( vDot )
   } 
+  
+  /**
+   * Check if this vector is zero
+   */
+  final def isZeroVector() = {
+    math.abs(x) < BulletGlobals.FLT_EPSILON &&
+    math.abs(y) < BulletGlobals.FLT_EPSILON &&
+    math.abs(z) < BulletGlobals.FLT_EPSILON 
+  }
 }
 
 object Vector3dE {
