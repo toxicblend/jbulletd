@@ -36,6 +36,7 @@ public class BulletGlobals {
 	public static final boolean DEBUG = false;
 	
 	public static final double CONVEX_DISTANCE_MARGIN = 0.04;
+	public static final double CONVEX_DISTANCE_MARGIN_2 = CONVEX_DISTANCE_MARGIN*CONVEX_DISTANCE_MARGIN;
 	public static final double FLT_EPSILON = 1.19209290e-07;
 	public static final double SIMD_EPSILON = FLT_EPSILON;
 	
