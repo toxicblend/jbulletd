@@ -2,6 +2,7 @@ package com.bulletphysics.linearmath
 import javax.vecmath.Matrix4d
 import javax.vecmath.Vector3d
 import javax.vecmath.Tuple3d
+import javax.vecmath.AxisAngle4d
 
 class Matrix4dE(__v00:Double, __v01:Double, __v02:Double, __v03:Double,
                 __v10:Double, __v11:Double, __v12:Double, __v13:Double,  
@@ -55,15 +56,25 @@ class Matrix4dE(__v00:Double, __v01:Double, __v02:Double, __v03:Double,
   /**
    * converts this matrix into a scale and translate matrix (in place)
    */
-  def setThis(translate:Vector3d,scale:Double):Matrix4dE = {
+  def setSelf(translate:Vector3d,scale:Double):Matrix4dE = {
     this.set(scale,translate)
+    this
+  }
+  
+  /**
+   * Sets the value of this matrix to the matrix conversion of the
+   * double precision axis and angle argument.
+   * @param a1 the axis and angle to be converted
+   */
+  def setSelf(rotation:AxisAngle4d):Matrix4dE = {
+    this.set(rotation)
     this
   }
   
   /**
    * converts this matrix into a scale and translate matrix (in place)
    */
-  def setThis(scale:Double,translate:Vector3d):Matrix4dE = {
+  def setSelf(scale:Double,translate:Vector3d):Matrix4dE = {
     this.set(scale,translate)
     this
   }
