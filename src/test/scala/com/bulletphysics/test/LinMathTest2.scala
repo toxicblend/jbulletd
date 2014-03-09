@@ -26,7 +26,7 @@ class LinMathTest2 extends FlatSpec with Matchers {
   }
   
   "line to plane 0" should "work" in {
-    val pos = new Line3d(new Vector3dE(.1,.1,0))
+    val pos = new Line3d(new Point3dE(0,0,0), new Vector3dE(.1,.1,0))
     val t = new Triangle(new Point3dE(-1,-1,-1), new Point3dE(1,-1,1), new Point3dE(0,1,1))
     val m = new Matrix4dE
     
