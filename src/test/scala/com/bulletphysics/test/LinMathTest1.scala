@@ -17,7 +17,7 @@ class LinMathTest1 extends FlatSpec with Matchers {
     val rv = new Plane.IntersectionResult()
     val p = new Plane
     pos.getZPlane(p)
-    p.getZIntersectionWithTriangle(t, pos, rv)
+    p.getZIntersectionWithTriangle(t, pos, pos.origin, rv)
     rv
   }
   

@@ -87,7 +87,7 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
    * But it does it by assuming this is a plane with a normal perpendicular to (0,0,1)
    * so i guess the whole thing should be renamed and/or moved.
    */
-  def getZIntersectionWithTriangle(tri:Triangle, samplePos:Line3d, result:Plane.IntersectionResult) = {
+  def getZIntersectionWithTriangle(tri:Triangle, samplePos:Line3d, distanceToPos:Point3dE, result:Plane.IntersectionResult) = {
     if (samplePos.dir.isZeroVector) {
       println("no direction at all?? Debug me!")
     }
@@ -161,16 +161,16 @@ class Plane(val origin:Point3dE, val normal:Vector3dE) {
     // calculate the distances from samplePos.origin to the two remaining edge points. 
     // Do it with a sign so that the point behind samplePos.origin, in samplePos.dir direction, have a negative distance
     if (result.hasAb) {
-      result.abD = result.tmpV.setSelf(result.abP).subSelf(samplePos.origin).xyDot(samplePos.dir).signum*samplePos.origin.xyDistanceSqr(result.abP)
+      result.abD = result.tmpV.setSelf(result.abP).subSelf(distanceToPos).xyDot(samplePos.dir).signum*distanceToPos.xyDistanceSqr(result.abP)
     }
     if (result.hasAc) {
-      result.acD = result.tmpV.setSelf(result.acP).subSelf(samplePos.origin).xyDot(samplePos.dir).signum*samplePos.origin.xyDistanceSqr(result.acP)
+      result.acD = result.tmpV.setSelf(result.acP).subSelf(distanceToPos).xyDot(samplePos.dir).signum*distanceToPos.xyDistanceSqr(result.acP)
     }
     if (result.hasBc) {
-      result.bcD = result.tmpV.setSelf(result.bcP).subSelf(samplePos.origin).xyDot(samplePos.dir).signum*samplePos.origin.xyDistanceSqr(result.bcP)
+      result.bcD = result.tmpV.setSelf(result.bcP).subSelf(distanceToPos).xyDot(samplePos.dir).signum*distanceToPos.xyDistanceSqr(result.bcP)
     }
    
-    // set both point points to invalid if they all have negative distance to samplePos
+    // set both point points to invalid if they all have negative distance to distanceToPos
     /*
     if (result.hasAb && result.abD < -BulletGlobals.CONVEX_DISTANCE_MARGIN_2) {
       if (result.hasAc && result.acD < -BulletGlobals.CONVEX_DISTANCE_MARGIN_2) {
