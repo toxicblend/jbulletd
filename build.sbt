@@ -4,14 +4,14 @@ version := "0.1"
 
 exportJars := true
 
-scalaVersion := "2.11.0"
+scalaVersion := "2.11.1"
 
 javacOptions ++= Seq("-Xlint:unchecked")
  
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 libraryDependencies ++= Seq(
-  "org.scalatest" % "scalatest_2.11" % "2.1.4" % "test",
+  "org.scalatest" % "scalatest_2.11" % "2.2.0" % "test",
   "java3d" % "vecmath" % "1.5.2"
 )
 
