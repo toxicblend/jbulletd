@@ -4,7 +4,7 @@ version := "0.1"
 
 exportJars := true
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.4"
 
 javacOptions ++= Seq("-Xlint:unchecked")
  
