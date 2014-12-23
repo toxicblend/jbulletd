@@ -26,7 +26,6 @@
 
 package com.bulletphysics.collision.broadphase;
 
-import javax.vecmath.Vector3d;
 import javax.vecmath.Point3d;
 
 /**

@@ -26,18 +26,20 @@
 package com.bulletphysics.collision.broadphase;
 
 import com.bulletphysics.BulletGlobals;
-import com.bulletphysics.collision.broadphase.Dbvt.Node;
 import com.bulletphysics.linearmath.MiscUtil;
 import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.util.IntArrayList;
 import com.bulletphysics.util.ObjectArrayList;
+
 import java.util.Collections;
+
 import javax.vecmath.Vector3d;
 
 /**
  *
  * @author jezek2
  */
+@SuppressWarnings("rawtypes")
 public class Dbvt {
 	
 	public static final int SIMPLE_STACKSIZE = 64;
@@ -767,7 +769,8 @@ public class Dbvt {
 
 	private static Vector3d[] axis = new Vector3d[] { new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1) };
 	
-	private static Node topdown(Dbvt pdbvt, ObjectArrayList<Node> leaves, int bu_treshold) {
+	@SuppressWarnings("unchecked")
+  private static Node topdown(Dbvt pdbvt, ObjectArrayList<Node> leaves, int bu_treshold) {
 		if (leaves.size() > 1) {
 			if (leaves.size() > bu_treshold) {
 				DbvtAabbMm vol = bounds(leaves);
@@ -853,13 +856,6 @@ public class Dbvt {
 
 			DbvtAabbMm.swap(p.volume, n.volume);
 			return p;
-		}
-		return n;
-	}
-	
-	private static Node walkup(Node n, int count) {
-		while (n != null && (count--) != 0) {
-			n = n.parent;
 		}
 		return n;
 	}

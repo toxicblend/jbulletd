@@ -36,9 +36,7 @@ import javax.vecmath.Vector3d;
 public class SimpleBroadphase extends BroadphaseInterface {
 
 	private final ObjectArrayList<SimpleBroadphaseProxy> handles = new ObjectArrayList<SimpleBroadphaseProxy>();
-	private int maxHandles;						// max number of handles
 	private OverlappingPairCache pairCache;
-	private boolean ownsPairCache;
 
 	public SimpleBroadphase() {
 		this(16384, null);
@@ -53,7 +51,6 @@ public class SimpleBroadphase extends BroadphaseInterface {
 
 		if (overlappingPairCache == null) {
 			pairCache = new HashedOverlappingPairCache();
-			ownsPairCache = true;
 		}
 	}
 

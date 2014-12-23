@@ -34,9 +34,10 @@ import java.util.RandomAccess;
  *
  * @author jezek2
  */
+
 public final class ObjectArrayList<T> extends AbstractList<T> implements RandomAccess, Externalizable {
 
-	private T[] array;
+  private T[] array;
 	private int size;
 
 	public ObjectArrayList() {
@@ -83,9 +84,10 @@ public final class ObjectArrayList<T> extends AbstractList<T> implements RandomA
 		return prev;
     }
 	
-	@SuppressWarnings("unchecked")
+
 	private void expand() {
-		T[] newArray = (T[])new Object[array.length << 1];
+		@SuppressWarnings("unchecked")
+    T[] newArray = (T[]) new Object[array.length << 1];
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		array = newArray;
 	}
@@ -148,11 +150,13 @@ public final class ObjectArrayList<T> extends AbstractList<T> implements RandomA
 			out.writeObject(array[i]);
 		}
 	}
-
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+	
+	@SuppressWarnings("unchecked")
+  public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		size = in.readInt();
 		int cap = 16;
 		while (cap < size) cap <<= 1;
+	  
 		array = (T[])new Object[cap];
 		for (int i=0; i<size; i++) {
 			array[i] = (T)in.readObject();

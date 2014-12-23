@@ -35,7 +35,6 @@ import com.bulletphysics.collision.broadphase.OverlappingPairCache;
 import com.bulletphysics.collision.narrowphase.ConvexCast;
 import com.bulletphysics.collision.narrowphase.ConvexCast.CastResult;
 import com.bulletphysics.collision.narrowphase.GjkConvexCast;
-import com.bulletphysics.collision.narrowphase.GjkEpaPenetrationDepthSolver;
 import com.bulletphysics.collision.narrowphase.SubsimplexConvexCast;
 import com.bulletphysics.collision.narrowphase.TriangleConvexcastCallback;
 import com.bulletphysics.collision.narrowphase.TriangleRaycastCallback;
@@ -413,7 +412,6 @@ public class CollisionWorld {
 
 			ConvexShape convexShape = (ConvexShape) collisionShape;
 			VoronoiSimplexSolver simplexSolver = new VoronoiSimplexSolver();
-			GjkEpaPenetrationDepthSolver gjkEpaPenetrationSolver = new GjkEpaPenetrationDepthSolver();
 
 			// JAVA TODO: should be convexCaster1
 			//ContinuousConvexCollision convexCaster1(castShape,convexShape,&simplexSolver,&gjkEpaPenetrationSolver);
@@ -787,13 +785,11 @@ public class CollisionWorld {
 	private static class BridgeTriangleRaycastCallback extends TriangleRaycastCallback {
 		public RayResultCallback resultCallback;
 		public CollisionObject collisionObject;
-		public ConcaveShape triangleMesh;
 
 		public BridgeTriangleRaycastCallback(Vector3d from, Vector3d to, RayResultCallback resultCallback, CollisionObject collisionObject, ConcaveShape triangleMesh) {
 			super(from, to);
 			this.resultCallback = resultCallback;
 			this.collisionObject = collisionObject;
-			this.triangleMesh = triangleMesh;
 		}
 	
 		public double reportHit(Vector3d hitNormalLocal, double hitFraction, int partId, int triangleIndex) {

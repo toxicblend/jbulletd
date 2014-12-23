@@ -118,10 +118,6 @@ public class ContactConstraint {
 
 		jacobiansPool.release(jac);
 
-		double a;
-		a = jacDiagABInv;
-
-
 		rel_vel = normal.dot(vel);
 
 		// todo: move this into proper structure

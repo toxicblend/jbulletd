@@ -475,17 +475,10 @@ public class KinematicCharacterController extends ActionInterface {
 			Vector3d reflectDir = computeReflectionDirection(movementDirection, hitNormal, new Vector3d());
 			reflectDir.normalize();
 
-			Vector3d parallelDir = parallelComponent(reflectDir, hitNormal, new Vector3d());
+			//Vector3d parallelDir = parallelComponent(reflectDir, hitNormal, new Vector3d());
 			Vector3d perpindicularDir = perpindicularComponent(reflectDir, hitNormal, new Vector3d());
 
 			targetPosition.set(currentPosition);
-			if (false) //tangentMag != 0.0)
-			{
-				Vector3d parComponent = new Vector3d();
-				parComponent.scale(tangentMag * movementLength, parallelDir);
-				//printf("parComponent=%f,%f,%f\n",parComponent[0],parComponent[1],parComponent[2]);
-				targetPosition.add(parComponent);
-			}
 
 			if (normalMag != 0.0f) {
 				Vector3d perpComponent = new Vector3d();
@@ -624,26 +617,6 @@ public class KinematicCharacterController extends ActionInterface {
 		else {
 			// we dropped the full height
 			currentPosition.set(targetPosition);
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	private static class KinematicClosestNotMeRayResultCallback extends CollisionWorld.ClosestRayResultCallback {
-		protected CollisionObject me;
-
-		public KinematicClosestNotMeRayResultCallback(CollisionObject me) {
-			super(new Vector3d(), new Vector3d());
-			this.me = me;
-		}
-
-		@Override
-		public double addSingleResult(CollisionWorld.LocalRayResult rayResult, boolean normalInWorldSpace) {
-			if (rayResult.collisionObject == me) {
-				return 1.0f;
-			}
-
-			return super.addSingleResult(rayResult, normalInWorldSpace);
 		}
 	}
 

@@ -34,11 +34,12 @@ import java.util.Map;
  * 
  * @author jezek2
  */
+@SuppressWarnings("rawtypes")
 public class ArrayPool<T> {
 
-	private Class componentType;
-	private ObjectArrayList list = new ObjectArrayList();
-	private Comparator comparator;
+  private Class componentType;
+  private ObjectArrayList list = new ObjectArrayList();
+  private Comparator comparator;
 	private IntValue key = new IntValue();
 	
 	/**

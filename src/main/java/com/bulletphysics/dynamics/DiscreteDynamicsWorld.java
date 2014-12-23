@@ -23,7 +23,6 @@
 
 package com.bulletphysics.dynamics;
 
-import com.bulletphysics.collision.dispatch.CollisionWorld.LocalConvexResult;
 import java.util.Comparator;
 import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.BulletStats;
@@ -37,14 +36,11 @@ import com.bulletphysics.collision.broadphase.OverlappingPairCache;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld;
-import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestConvexResultCallback;
 import com.bulletphysics.collision.dispatch.SimulationIslandManager;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.bulletphysics.collision.narrowphase.PersistentManifold;
 import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.collision.shapes.InternalTriangleIndexCallback;
 import com.bulletphysics.collision.shapes.SphereShape;
-import com.bulletphysics.collision.shapes.TriangleCallback;
 import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
 import com.bulletphysics.dynamics.constraintsolver.ContactSolverInfo;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;

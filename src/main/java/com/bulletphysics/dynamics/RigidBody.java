@@ -87,7 +87,6 @@ public class RigidBody extends CollisionObject {
 	private double additionalDampingFactor;
 	private double additionalLinearDampingThresholdSqr;
 	private double additionalAngularDampingThresholdSqr;
-	private double additionalAngularDampingFactor;
 
 	private double linearSleepingThreshold;
 	private double angularSleepingThreshold;
@@ -138,7 +137,6 @@ public class RigidBody extends CollisionObject {
 		additionalDampingFactor = constructionInfo.additionalDampingFactor;
 		additionalLinearDampingThresholdSqr = constructionInfo.additionalLinearDampingThresholdSqr;
 		additionalAngularDampingThresholdSqr = constructionInfo.additionalAngularDampingThresholdSqr;
-		additionalAngularDampingFactor = constructionInfo.additionalAngularDampingFactor;
 
 		if (optionalMotionState != null)
 		{

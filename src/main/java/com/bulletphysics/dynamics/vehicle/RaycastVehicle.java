@@ -55,11 +55,8 @@ public class RaycastVehicle extends TypedConstraint {
 	protected DoubleArrayList forwardImpulse = new DoubleArrayList();
 	protected DoubleArrayList sideImpulse = new DoubleArrayList();
 
-	private double tau;
-	private double damping;
+
 	private VehicleRaycaster vehicleRaycaster;
-	private double pitchControl = 0f;
-	private double steeringValue; 
 	private double currentVehicleSpeedKmHour;
 
 	private RigidBody chassisBody;
@@ -80,7 +77,6 @@ public class RaycastVehicle extends TypedConstraint {
 	
 	private void defaultInit(VehicleTuning tuning) {
 		currentVehicleSpeedKmHour = 0f;
-		steeringValue = 0f;
 	}
 
 	/**
@@ -312,8 +308,7 @@ public class RaycastVehicle extends TypedConstraint {
 
 		int i = 0;
 		for (i = 0; i < wheelInfo.size(); i++) {
-			double depth;
-			depth = rayCast(wheelInfo.getQuick(i));
+			rayCast(wheelInfo.getQuick(i));
 		}
 
 		updateSuspension(step);
@@ -487,15 +482,11 @@ public class RaycastVehicle extends TypedConstraint {
 
 		Vector3d tmp = new Vector3d();
 
-		int numWheelsOnGround = 0;
 
 		// collapse all those loops into one!
 		for (int i = 0; i < getNumWheels(); i++) {
-			WheelInfo wheel_info = wheelInfo.getQuick(i);
-			RigidBody groundObject = (RigidBody) wheel_info.raycastInfo.groundObject;
-			if (groundObject != null) {
-				numWheelsOnGround++;
-			}
+			//WheelInfo wheel_info = wheelInfo.getQuick(i);
+
 			sideImpulse.set(i, 0f);
 			forwardImpulse.set(i, 0f);
 		}
@@ -648,10 +639,6 @@ public class RaycastVehicle extends TypedConstraint {
 	
 	public int getNumWheels() {
 		return wheelInfo.size();
-	}
-
-	public void setPitchControl(double pitch) {
-		this.pitchControl = pitch;
 	}
 
 	public RigidBody getRigidBody() {

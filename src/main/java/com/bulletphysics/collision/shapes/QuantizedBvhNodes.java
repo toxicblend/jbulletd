@@ -87,7 +87,6 @@ public class QuantizedBvhNodes implements Serializable {
 	}
 	
 	public void set(int destId, QuantizedBvhNodes srcNodes, int srcId) {
-		assert (STRIDE == 4);
 
 		// save field access:
 		int[] buf = this.buf;
@@ -100,7 +99,6 @@ public class QuantizedBvhNodes implements Serializable {
 	}
 	
 	public void swap(int id1, int id2) {
-		assert (STRIDE == 4);
 		
 		// save field access:
 		int[] buf = this.buf;

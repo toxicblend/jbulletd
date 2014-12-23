@@ -31,6 +31,7 @@ import java.util.Map;
  * 
  * @author jezek2
  */
+@SuppressWarnings("rawtypes")
 public class ObjectPool<T> {
 	
 	private Class<T> cls;
