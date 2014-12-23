@@ -61,6 +61,6 @@ class AABB(val aabbMin:Point3d, val aabbMax:Point3d){
 }
 
 object AABB {
-  val UNINITIALIZED_AABBMIN = new Point3d(Double.MaxValue,Double.MaxValue,Double.MaxValue)
-  val UNINITIALIZED_AABBMAX = new Point3d(-Double.MaxValue,-Double.MaxValue,-Double.MaxValue)
+  val UNINITIALIZED_AABBMIN = new Point3d(Double.PositiveInfinity,Double.PositiveInfinity,Double.PositiveInfinity)
+  val UNINITIALIZED_AABBMAX = new Point3d(Double.NegativeInfinity,Double.NegativeInfinity,Double.NegativeInfinity)
 }

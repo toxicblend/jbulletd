@@ -71,7 +71,7 @@ class Vector3dE(__x:Double,__y:Double,__z:Double) extends Vector3d(__x,__y,__z) 
 }
 
 object Vector3dE {
-  // 'readonly' vetors, don't change the content of these
+  // 'readonly' vectors, don't change the content of these
   val VECTOR100 = new Vector3dE(1,0,0)
   val VECTOR010 = new Vector3dE(0,1,0)
   val VECTOR001 = new Vector3dE(0,0,1)
